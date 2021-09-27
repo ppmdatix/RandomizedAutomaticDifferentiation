@@ -1,0 +1,1 @@
+python rnn_mnist_launch.py --exp_name=irnn_baseline2 --seed=1 --batch_size=150 --dataset=mnist --lr=1e-4 --keep_frac=1.0 --hidden_size=100 --weight_decay=0. --clip=1. --save_inter=10 --data_root="data_dir" --exp_root="exp_dirBaseline2" --augment=False --use_writer=False --with_replace=True --simple=True --max_iterations=1600 --simple_test_eval_frequency=400

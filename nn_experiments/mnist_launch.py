@@ -47,7 +47,7 @@ args_template = rputils.ParameterMap(
     gamma=0.2,
 
     # disables CUDA training
-    no_cuda=False,
+    no_cuda=True,
 
     # random seed. do not set seed if 0.
     seed=0,
@@ -131,6 +131,16 @@ args_template = rputils.ParameterMap(
 
     # If true, also uses RAD on ReLU layers.
     rand_relu=False,
+
+    supersub=False,
+
+    heuristic="random",
+
+    split="None",
+
+    kBandit=1,
+
+    plot=False
 )
 
 
@@ -150,6 +160,11 @@ def main(additional_args):
         args.simple_model_checkpoint_frequency = 5000
         args.save_inter = 1
 
+        ######################
+        args.hidden_size = 10
+        ######################
+
+
         args.batch_size = 150
         args.gamma = 0.6
         args.training_schedule = 'epoch_step'
@@ -159,6 +174,13 @@ def main(additional_args):
         args.augment = False
         args.validation = False
         args.lr_drop_step = 1
+        args.supersub = False
+        args.heuristic = "one_per_raw"
+        args.kBandit = 2
+        args.split = "None"
+        args.seed = 42
+        args.no_cuda = True
+        args.plot = False
         rputils.override_arguments(args, additional_args)
 
     if not os.path.exists(args.exp_root):
@@ -193,6 +215,8 @@ def main(additional_args):
         os.mkdir(args.pickle_dir)
 
     use_cuda = not args.no_cuda and torch.cuda.is_available()
+    if use_cuda:
+        print("GPU is used.")
     print('Seed is {}'.format(args.seed))
     torch.manual_seed(args.seed)
     torch.backends.cudnn.deterministic = True
@@ -209,8 +233,15 @@ def main(additional_args):
     rp_args['full_random'] = args.full_random
     rp_args['sparse'] = args.sparse
 
+
+    rp_args['supersub'] = args.supersub
+    rp_args['heuristic'] = args.heuristic
+    rp_args['kBandit'] = args.kBandit
+    rp_args['split'] = args.split
+    rp_args['device'] = device
+
     models = [
-        (rpmodels.MNISTFCNet(hidden_size=args.hidden_size, rp_args=rp_args, rand_relu=args.rand_relu), args.exp_name + "mnistfcnet8", args.exp_name + "mnistfcnet8"),
+        (rpmodels.MNISTFCNet(hidden_size=args.hidden_size, rp_args=rp_args, rand_relu=args.rand_relu, supersub=rp_args['supersub'], seed=args.seed), args.exp_name + "mnistfcnet8", args.exp_name + "mnistfcnet8"),
     ]
 
     # Check if correct dataset is used for each model.
@@ -223,6 +254,8 @@ def main(additional_args):
     for model, pickle_string, model_string in models:
         run_model(model, args, device, None, pickle_string, model_string)
 
+    if args.plot:
+        os.system("python plot_mnist.py")
 
 if __name__ == '__main__':
     main(sys.argv[1:])

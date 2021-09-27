@@ -1,0 +1,22 @@
+python rnn_mnist_launch.py `
+		--exp_name=irnn_small_batch `
+		--seed=1 `
+		--batch_size=21 `
+		--dataset=mnist `
+		--lr=1e-4 `
+		--keep_frac=0.5 `
+		--hidden_size=12 `
+		--weight_decay=0. `
+		--clip=1. `
+		--save_inter=10 `
+		--data_root="data_dir" `
+		--exp_root="exp_dir_test" `
+		--augment=False `
+		--use_writer=False `
+		--with_replace=True `
+		--simple=True `
+		--max_iterations=1600 `
+		--simple_test_eval_frequency=400 `
+		--supersub=True `
+		--heuristic="one_per_raw" `
+		--kBandit=3

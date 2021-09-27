@@ -21,7 +21,7 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
     all_checkpoints = []
     before_epoch = time.time()
     iteration = 0
-
+    old_loss = torch.tensor(100.0)
     while iteration < args.max_iterations:
         for data, target in train_loader:
             iteration += 1
@@ -37,8 +37,29 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
                 torch.random.manual_seed(random_seed)
                 output = model(data)
 
+            if args.supersub:
+                # model.fc1.activation_weights.pull()
+                # model.fc2.activation_weights.pull()
+                model.fc3.activation_weights.pull()
+                # model.fc4.activation_weights.pull()
+
             loss = F.nll_loss(output, target)
             loss.backward()
+
+            if args.supersub:
+                if args["heuristic"] == "random":
+                    pass
+                else:
+                    reward = old_loss - loss
+                    reward = reward.tolist()
+                    # model.fc1.activation_weights.get_reward(reward)
+                    # model.fc2.activation_weights.get_reward(reward)
+                    model.fc3.activation_weights.get_reward(reward)
+                    # model.fc4.activation_weights.get_reward(reward)
+                    old_loss = torch.clone(loss)
+                    # print("p_weights have been updated")
+
+
 
             optimizer.step()
 
