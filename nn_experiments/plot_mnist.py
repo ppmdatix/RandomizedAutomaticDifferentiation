@@ -119,13 +119,15 @@ def plot_everything(workers, exp_name="test"):
     fig.savefig(EXP_ROOT +'/' + exp_name + '.pdf')
 
 
-exp_root = "COMPheuristic-per_column-UCB-0.7"
-seed = 9
-folders = [exp_root + "-" + str(i) for i in range(seed + 1)]
+exp_root = "COMPheuristic-per_column-Thompson0.5"
+seed = 4
+folders = [exp_root + "" + str(i) for i in range(seed + 1)]
 supersubs = [(f, "SS", "b", "h") for f in folders]
 bases = [ ("base" + str(i), "base", "r", "^") for i in range(seed + 1) ]
 workers = supersubs + bases
 
+
+print(workers)
 
 #colors = ["b", "g", "r", "c", "m", "y", "k", "bisque", "lime",  "b" ]
 #folder_names = ['COMPheuristic-per_column-0.' + str(i) for i in range(1,11)]

@@ -1,4 +1,4 @@
-exp_name: COMPheuristic-per_column-Thompson0.51
+exp_name: COMPheuristic-per_column-Thompson0.50
 batch_size: 150
 dataset: mnist
 test_batch_size: 1000
@@ -6,7 +6,7 @@ epochs: 20
 lr: 0.000527
 gamma: 0.6
 no_cuda: True
-seed: 1
+seed: 56556481
 log_interval: 10
 keep_frac: 0.5
 hidden_size: 10
@@ -42,4 +42,4 @@ heuristic: Thompson
 split: per_column
 kBandit: 2
 plot: False
-exp_dir: COMPheuristic-per_column-Thompson0.5\COMPheuristic-per_column-Thompson0.51
+exp_dir: COMPheuristic-per_column-Thompson0.5\COMPheuristic-per_column-Thompson0.50

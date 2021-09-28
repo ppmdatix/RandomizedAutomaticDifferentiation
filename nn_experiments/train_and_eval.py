@@ -39,7 +39,7 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
 
             if args.supersub:
                 # model.fc1.activation_weights.pull()
-                # model.fc2.activation_weights.pull()
+                model.fc2.activation_weights.pull()
                 model.fc3.activation_weights.pull()
                 # model.fc4.activation_weights.pull()
 
@@ -53,7 +53,7 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
                     reward = old_loss - loss
                     reward = reward.tolist()
                     # model.fc1.activation_weights.get_reward(reward)
-                    # model.fc2.activation_weights.get_reward(reward)
+                    model.fc2.activation_weights.get_reward(reward)
                     model.fc3.activation_weights.get_reward(reward)
                     # model.fc4.activation_weights.get_reward(reward)
                     old_loss = torch.clone(loss)

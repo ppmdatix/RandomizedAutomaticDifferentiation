@@ -6,18 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="43ed2f08-42c4-4393-b81d-53c3e8ef50e2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifar_launch.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/cifar_launch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/draft.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/draft.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/exp_dirBaseline/irnn_baseline/experiment_args.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/exp_dirBaseline/irnn_baseline/irnn_baselinemnistirnn.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/exp_dirBaseline/irnn_baseline/pickles/irnn_baselinemnistirnn.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/layers.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/layers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/mnist_launch.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/mnist_launch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/mnistffcommands.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/mnistffcommands.ps1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/mnistffcommands.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/COMPheuristic-per_column-Thompson0.5/COMPheuristic-per_column-Thompson0.51/experiment_args.txt" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/COMPheuristic-per_column-Thompson0.5/COMPheuristic-per_column-Thompson0.51/experiment_args.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/COMPheuristic-per_column-Thompson0.5/COMPheuristic-per_column-Thompson0.51/intermediate_checkpoints/iteration_000005000.pt" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/COMPheuristic-per_column-Thompson0.5/COMPheuristic-per_column-Thompson0.51/intermediate_checkpoints/iteration_000005000.pt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/launch.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/launch.ps1" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nn_experiments/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nn_experiments/plot_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plot_mnist.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/rnn_mnist_launch.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/rnn_mnist_launch.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nn_experiments/train_and_eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/train_and_eval.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -37,8 +30,8 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/nn_experiments/mnist_launch.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/nn_experiments/layers.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/nn_experiments/mnist_launch.py" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1xU4EVqaqi04hg8vfnWcY7HxYIZ" />
   <component name="ProjectViewState">
@@ -48,7 +41,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../pymaBandits" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.general" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
