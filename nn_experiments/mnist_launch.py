@@ -217,6 +217,8 @@ def main(additional_args):
     use_cuda = not args.no_cuda and torch.cuda.is_available()
     if use_cuda:
         print("GPU is used.")
+    else:
+        print("CPU is used.")
     print('Seed is {}'.format(args.seed))
     torch.manual_seed(args.seed)
     torch.backends.cudnn.deterministic = True
@@ -254,8 +256,6 @@ def main(additional_args):
     for model, pickle_string, model_string in models:
         run_model(model, args, device, None, pickle_string, model_string)
 
-    if args.plot:
-        os.system("python plot_mnist.py")
 
 if __name__ == '__main__':
     main(sys.argv[1:])

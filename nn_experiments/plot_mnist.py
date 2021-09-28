@@ -7,10 +7,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from IPython.display import display, HTML
 
-exp_name = "COMPheuristic-per_column"
 
-
-EXP_ROOT = './' + exp_name
 
 params = {
   'axes.labelsize': 12,
@@ -24,9 +21,11 @@ params = {
    }
 plt.rcParams.update(params)
 
-def plot_everything(workers):
+def plot_everything(workers, exp_name="test"):
 
-    print(workers)
+
+
+    EXP_ROOT = './' + exp_name
 
     worker_dirs = [os.path.join(EXP_ROOT, f[0]) for f in workers]
     worker_names = [f[1] for f in workers]
@@ -62,13 +61,6 @@ def plot_everything(workers):
     labeled = []
     for worker, worker_name, color, marker in zip(worker_dirs, worker_names, worker_colors, worker_markers):
         one_pickle_dir = os.path.join(worker, 'pickles')
-
-        print("000000000000")
-        print(one_pickle_dir)
-        print("000000000000")
-        print(os.listdir(one_pickle_dir))
-        print("000000000000")
-
 
         one_pickle = os.path.join(one_pickle_dir, os.listdir(one_pickle_dir)[0])
         with open(one_pickle, 'rb') as f:
@@ -127,12 +119,11 @@ def plot_everything(workers):
     fig.savefig(EXP_ROOT +'/' + exp_name + '.pdf')
 
 
-
-
-folders = [exp_name + "-" + str(i) for i in range(11)]
+exp_root = "COMPheuristic-per_column-UCB-0.7"
+seed = 9
+folders = [exp_root + "-" + str(i) for i in range(seed + 1)]
 supersubs = [(f, "SS", "b", "h") for f in folders]
-bases = [ ("base-" + str(i), "base", "r", "^") for i in range(11) ]
-
+bases = [ ("base" + str(i), "base", "r", "^") for i in range(seed + 1) ]
 workers = supersubs + bases
 
 
@@ -146,4 +137,4 @@ workers = supersubs + bases
 #    ('COMPheuristic-per_column-0.8b', 'SS', 'b', 'h'),
 #]
 
-plot_everything(workers)
+plot_everything(workers, exp_name=exp_root)
