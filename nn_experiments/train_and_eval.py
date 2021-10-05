@@ -37,6 +37,9 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
                 torch.random.manual_seed(random_seed)
                 output = model(data)
 
+
+            print(model.fc1.activation_weights.weights)
+
             if args.supersub:
                 model.fc1.activation_weights.pull()
                 model.fc2.activation_weights.pull()

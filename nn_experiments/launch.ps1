@@ -2,7 +2,7 @@
 $split="None"
 $keep_frac=0.6
 $heuristic="Thompson" 
-$folder = "stuck-heur-rand--2-3-layers" + "-" + $split + "-" + $heuristic + $keep_frac
+$folder = "0001-stuck-heur-rand--2-3-layers" + "-" + $split + "-" + $heuristic + $keep_frac
 $lr=0.000527
 $batch_size = 128
 $files = "stuck-heur-rand--2-3-layers" + "-" + $split + "-" + $heuristic + $keep_frac
