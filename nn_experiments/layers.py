@@ -9,7 +9,7 @@ from torch.distributions import Beta
 
 @torch.no_grad()
 class MAB():
-    def __init__(self, nb_arms, device=None, heuristic=None, keep_reward_track=False):
+    def __init__(self, nb_arms, device=None, heuristic=None, keep_reward_track=False, k=1):
         self.nb_arms = nb_arms
         self.chosen = torch.zeros(nb_arms, device=device)
         self.active = torch.zeros(nb_arms, device=device)
@@ -24,6 +24,13 @@ class MAB():
         elif self.heuristic == "Thompson":
             self.alphas = torch.ones(nb_arms, device=self.device)
             self.betas  = torch.ones(nb_arms, device=self.device)
+        elif self.heuristic == "stuck":
+            _random = torch.random(nb_arms, device=self.device)
+            bests = torch.reshape(_random, [self.nb_arms]).topk(k).indices.tolist()
+            for best in bests:
+                self.chosen[best] = 1.0
+            self.chosen = torch.reshape(self.chosen, _random.shape)
+
         self.keep_reward_track = keep_reward_track
         if keep_reward_track:
             self.rewards = []
@@ -63,6 +70,8 @@ class MAB():
             for best in bests:
                 result[best] = 1.0
             result = torch.reshape(result, probas.shape)
+        elif self.heuristic == "stuck":
+            result = self.chosen
 
         else:
             chosen_indices = torch.multinomial(ws, k)
@@ -131,7 +140,9 @@ class Weights:
             mab_count = self.m
             self.nb_arms = n
 
-        self.MABs = [MAB(nb_arms=self.nb_arms, device=self.device, heuristic=self.heuristic) for _ in range(mab_count)]
+
+
+        self.MABs = [MAB(nb_arms=self.nb_arms, device=self.device, heuristic=self.heuristic, k=k_bandits) for _ in range(mab_count)]
 
     @torch.no_grad()
     def normalize_rows(self):
@@ -244,7 +255,7 @@ class RandLinearSuperSub(torch.nn.Linear):
         self.heuristic = kept_dict_supersub['heuristic']
         self.split     = kept_dict_supersub['split']
 
-        if self.split is None:
+        if self.split is None or self.split =="None":
             number_of_weights = shape[0] * shape[1]
             self.k_bandits = int(np.round(np.sqrt(keep_frac * number_of_weights)))
         elif self.split=="per_raw":

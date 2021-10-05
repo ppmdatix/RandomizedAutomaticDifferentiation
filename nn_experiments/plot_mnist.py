@@ -21,11 +21,26 @@ params = {
    }
 plt.rcParams.update(params)
 
-def plot_everything(workers, exp_name="test"):
-
-
+def plot_everything(exp_name="test"):
 
     EXP_ROOT = './' + exp_name
+    print(EXP_ROOT)
+    folders = [folder for folder in os.listdir(exp_name) if os.path.isdir(exp_name + "/" + folder)]
+
+    print(folders)
+    projects = set([folder[:-4] for folder in folders])
+
+    cs = ["b", "g", "r", "c", "m", "y", "k", "bisque", "lime",  "b" ]
+    colors = {}
+    c = 0
+    for project in projects:
+        colors[project] = cs[c]
+        c += 1
+
+    workers = [(folder, folder[:-4][-8:], colors[folder[:-4]], "^") for folder in folders]
+    # workers = [(folder, colors[folder[:-4]], colors[folder[:-4]], "^") for folder in folders]
+    for w in workers:
+        print(w)
 
     worker_dirs = [os.path.join(EXP_ROOT, f[0]) for f in workers]
     worker_names = [f[1] for f in workers]
@@ -119,24 +134,19 @@ def plot_everything(workers, exp_name="test"):
     fig.savefig(EXP_ROOT +'/' + exp_name + '.pdf')
 
 
-exp_root = "COMPheuristic-per_column-Thompson0.5"
-seed = 4
-folders = [exp_root + "" + str(i) for i in range(seed + 1)]
-supersubs = [(f, "SS", "b", "h") for f in folders]
-bases = [ ("base" + str(i), "base", "r", "^") for i in range(seed + 1) ]
-workers = supersubs + bases
+exp_root = "stuck-heur-rand--2-3-layers-None-Thompson0.6"
+# seed = 4
+# folders = [exp_root + "" + str(i) for i in range(seed + 1)]
+# supersubs = [(f, "SS", "b", "h") for f in folders]
+# bases = [ ("base" + str(i), "base", "r", "^") for i in range(seed + 1) ]
+# workers = supersubs + bases
 
 
-print(workers)
 
 #colors = ["b", "g", "r", "c", "m", "y", "k", "bisque", "lime",  "b" ]
 #folder_names = ['COMPheuristic-per_column-0.' + str(i) for i in range(1,11)]
 #custom_workers = [(folder_names[i-1], str(i), colors[i], "^") for i in range(1,10)]
 #custom_workers.append(('base', 'base', 'pink', 'h'))
 
-#workers = [
-#    ('COMPheuristic-per_column-0.8a', 'SS', 'b', 'h'),
-#    ('COMPheuristic-per_column-0.8b', 'SS', 'b', 'h'),
-#]
 
-plot_everything(workers, exp_name=exp_root)
+plot_everything(exp_name=exp_root)

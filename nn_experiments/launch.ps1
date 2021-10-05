@@ -1,6 +1,6 @@
 
-$split="per_column"
-$keep_frac=0.5
+$split="None"
+$keep_frac=0.6
 $heuristic="Thompson" 
 $folder = "stuck-heur-rand--2-3-layers" + "-" + $split + "-" + $heuristic + $keep_frac
 $lr=0.000527
@@ -8,7 +8,7 @@ $batch_size = 128
 $files = "stuck-heur-rand--2-3-layers" + "-" + $split + "-" + $heuristic + $keep_frac
 $supersub="True"
 
-$seeds = 0..3
+$seeds = 0..2
 For($i=0;$i -lt 3;$i++) 
 { 
    $seed = $seeds[$i]
@@ -24,6 +24,14 @@ For($i=0;$i -lt 3;$i++)
    		--split=$split --seed=$seed --batch_size=$batch_size 
 
    $heuristic="Thompson" 
+   $files = "stuck-heur-rand--2-3-layers" + "-" + $split + "-" + $heuristic + $keep_frac
+   $file = $files + $seed 
+   python mnist_launch.py `
+   		--exp_root=$folder --exp_name=$file --simple=True --lr=$lr --weight_decay=1.009799e-03 `
+   		--keep_frac=$keep_frac --bootstrap_train=True --supersub=$supersub --heuristic=$heuristic `
+   		--split=$split --seed=$seed --batch_size=$batch_size 
+
+   $heuristic="greedy" 
    $files = "stuck-heur-rand--2-3-layers" + "-" + $split + "-" + $heuristic + $keep_frac
    $file = $files + $seed 
    python mnist_launch.py `

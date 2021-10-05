@@ -23,21 +23,21 @@ class MNISTFCNet(torch.nn.Module):
 
         if supersub:
             torch.manual_seed(seed)
-            self.fc1 = torch.nn.Linear(784, hidden_size, bias=True, device=kept_dict_supersub["device"], dtype=None)#rpn.RandLinear(784, hidden_size, **kept_dict)
-            self.relu1 = torch.nn.ReLU()
-            self.fc2 = rpn.RandLinearSuperSub(hidden_size, out_features=hidden_size, kept_dict_supersub=kept_dict_supersub, **kept_dict)
-            self.relu2 = rpn.RandReLULayer(**kept_dict)
-            self.fc3   = rpn.RandLinearSuperSub(hidden_size, out_features=hidden_size, kept_dict_supersub=kept_dict_supersub, **kept_dict)
-            self.relu3 = rpn.RandReLULayer(**kept_dict)
-            self.fc4 = torch.nn.Linear(hidden_size, 10, bias=True, device=kept_dict_supersub["device"], dtype=None)
-
-            # self.fc1   = rpn.RandLinearSuperSub(784,         out_features=hidden_size, kept_dict_supersub=kept_dict_supersub, **kept_dict)
-            # self.relu1 = rpn.RandReLULayer(**kept_dict)
-            # self.fc2   = rpn.RandLinearSuperSub(hidden_size, out_features=hidden_size, kept_dict_supersub=kept_dict_supersub, **kept_dict)
+            # self.fc1 = torch.nn.Linear(784, hidden_size, bias=True, device=kept_dict_supersub["device"], dtype=None)#rpn.RandLinear(784, hidden_size, **kept_dict)
+            # self.relu1 = torch.nn.ReLU()
+            # self.fc2 = rpn.RandLinearSuperSub(hidden_size, out_features=hidden_size, kept_dict_supersub=kept_dict_supersub, **kept_dict)
             # self.relu2 = rpn.RandReLULayer(**kept_dict)
             # self.fc3   = rpn.RandLinearSuperSub(hidden_size, out_features=hidden_size, kept_dict_supersub=kept_dict_supersub, **kept_dict)
             # self.relu3 = rpn.RandReLULayer(**kept_dict)
-            # self.fc4   = rpn.RandLinearSuperSub(hidden_size, out_features=10,          kept_dict_supersub=kept_dict_supersub, **kept_dict)
+            # self.fc4 = torch.nn.Linear(hidden_size, 10, bias=True, device=kept_dict_supersub["device"], dtype=None)
+
+            self.fc1   = rpn.RandLinearSuperSub(784,         out_features=hidden_size, kept_dict_supersub=kept_dict_supersub, **kept_dict)
+            self.relu1 = rpn.RandReLULayer(**kept_dict)
+            self.fc2   = rpn.RandLinearSuperSub(hidden_size, out_features=hidden_size, kept_dict_supersub=kept_dict_supersub, **kept_dict)
+            self.relu2 = rpn.RandReLULayer(**kept_dict)
+            self.fc3   = rpn.RandLinearSuperSub(hidden_size, out_features=hidden_size, kept_dict_supersub=kept_dict_supersub, **kept_dict)
+            self.relu3 = rpn.RandReLULayer(**kept_dict)
+            self.fc4   = rpn.RandLinearSuperSub(hidden_size, out_features=10,          kept_dict_supersub=kept_dict_supersub, **kept_dict)
         elif kept_dict["keep_frac"] == 1:
             torch.manual_seed(seed)
             self.fc1 = torch.nn.Linear(784, hidden_size, bias=True, device=kept_dict_supersub["device"], dtype=None)#rpn.RandLinear(784, hidden_size, **kept_dict)
@@ -65,13 +65,13 @@ class MNISTFCNet(torch.nn.Module):
 
         if self.supersub:
             x = nn.Flatten()(x)
-            x = self.fc1(x)
-            x = self.relu1(x)
+            x = self.fc1(x, retain=retain, skip_rand=skip_rand)
+            x = self.relu1(x, skip_rand=skip_relu)
             x = self.fc2(x, retain=retain, skip_rand=skip_rand)
             x = self.relu2(x, skip_rand=skip_relu)
             x = self.fc3(x, retain=retain, skip_rand=skip_rand)
             x = self.relu3(x, skip_rand=skip_relu)
-            x = self.fc4(x)
+            x = self.fc4(x, retain=retain, skip_rand=skip_rand)
         else:
             x = nn.Flatten()(x)
             x = self.fc1(x)

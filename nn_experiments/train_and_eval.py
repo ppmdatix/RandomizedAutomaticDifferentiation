@@ -38,10 +38,10 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
                 output = model(data)
 
             if args.supersub:
-                # model.fc1.activation_weights.pull()
+                model.fc1.activation_weights.pull()
                 model.fc2.activation_weights.pull()
                 model.fc3.activation_weights.pull()
-                # model.fc4.activation_weights.pull()
+                model.fc4.activation_weights.pull()
 
             loss = F.nll_loss(output, target)
             loss.backward()
@@ -52,10 +52,10 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
                 else:
                     reward = old_loss - loss
                     reward = reward.tolist()
-                    # model.fc1.activation_weights.get_reward(reward)
+                    model.fc1.activation_weights.get_reward(reward)
                     model.fc2.activation_weights.get_reward(reward)
                     model.fc3.activation_weights.get_reward(reward)
-                    # model.fc4.activation_weights.get_reward(reward)
+                    model.fc4.activation_weights.get_reward(reward)
                     old_loss = torch.clone(loss)
                     # print("p_weights have been updated")
 
