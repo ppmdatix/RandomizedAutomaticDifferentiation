@@ -6,11 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="43ed2f08-42c4-4393-b81d-53c3e8ef50e2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/draft.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/draft.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nn_experiments/launch.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/launch.ps1" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nn_experiments/layers.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/layers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/plot_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plot_mnist.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nn_experiments/train_and_eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/train_and_eval.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -63,7 +60,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>372</line>
+          <line>380</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -73,17 +70,17 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>191</line>
+          <line>199</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>614</line>
+          <line>622</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>380</line>
+          <line>388</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>

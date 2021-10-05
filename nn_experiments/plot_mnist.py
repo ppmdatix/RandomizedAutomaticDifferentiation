@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import imageio
 from IPython.display import display, HTML
 
 
@@ -132,6 +133,15 @@ def plot_everything(exp_name="test"):
     ax5.legend()
 
     fig.savefig(EXP_ROOT +'/' + exp_name + '.pdf')
+
+
+    for folder in folders:
+
+        filenames = [filename for filename in os.listdir(folder + '/weights') filename.endswith('.png')]
+        images = []
+        for filename in filenames:
+            images.append(imageio.imread(filename))
+        imageio.mimsave(folder + '/weights_history.gif', images)
 
 
 exp_root = "stuck-heur-rand--2-3-layers-None-Thompson0.6"

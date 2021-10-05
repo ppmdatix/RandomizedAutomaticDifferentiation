@@ -25,7 +25,7 @@ class MAB():
             self.alphas = torch.ones(nb_arms, device=self.device)
             self.betas  = torch.ones(nb_arms, device=self.device)
         elif self.heuristic == "stuck":
-            _random = torch.random(nb_arms, device=self.device)
+            _random = torch.rand(nb_arms, device=self.device)
             bests = torch.reshape(_random, [self.nb_arms]).topk(k).indices.tolist()
             for best in bests:
                 self.chosen[best] = 1.0
@@ -37,6 +37,7 @@ class MAB():
 
     def pull(self, k, ws):
         result = torch.zeros_like(ws, device=self.device)
+        result = torch.reshape(result, [self.nb_arms,1])
         if k is None:
             result = torch.bernoulli(ws)
         elif self.heuristic == "random":
@@ -69,7 +70,7 @@ class MAB():
             bests = torch.reshape(probas, [self.nb_arms]).topk(k).indices.tolist()
             for best in bests:
                 result[best] = 1.0
-            result = torch.reshape(result, probas.shape)
+            result = torch.reshape(result, ws.shape)
         elif self.heuristic == "stuck":
             result = self.chosen
 
@@ -82,6 +83,7 @@ class MAB():
         result = result.to(self.device)
         self.chosen = result.reshape([self.nb_arms]) + self.chosen
         self.active = result
+
         return result
 
     def update_reward(self, reward):
@@ -130,7 +132,7 @@ class Weights:
 
         mab_count = 0
         self.nb_arms = 0
-        if self.split is None:
+        if self.split is None or self.split == "None":
             mab_count = 1
             self.nb_arms = n * m
         elif self.split == "per_raw":
@@ -139,8 +141,6 @@ class Weights:
         elif self.split == "per_column":
             mab_count = self.m
             self.nb_arms = n
-
-
 
         self.MABs = [MAB(nb_arms=self.nb_arms, device=self.device, heuristic=self.heuristic, k=k_bandits) for _ in range(mab_count)]
 
@@ -157,7 +157,7 @@ class Weights:
     def pull(self):
 
         k = min(self.k_bandits, self.nb_arms)
-        if self.split is None:
+        if self.split is None or self.split == "None":
             self.mask = self.MABs[0].pull(k, self.weights)
         elif self.split == "per_raw":
             k = min(self.k_bandits, self.m)
@@ -171,9 +171,14 @@ class Weights:
             self.mask = torch.transpose(t_activated, -2, -1)
 
     @torch.no_grad()
-    def get_reward(self, reward, gamma=0.2,epsilon=0.1):
+    def get_reward(self, reward, gamma=0.2, epsilon=0.1, print_mode=False):
+
+        if print_mode:
+            print("mask:")
+            print(self.mask)
 
         t = self.weights + gamma * ((reward > 0.0) * 2.0 - 1.0)
+
         ones = torch.ones_like(self.weights)
         updated = torch.min(ones - epsilon, torch.max(t, ones * epsilon))
         self.weights = torch.where(self.mask > 0.5, updated, self.weights)
@@ -187,6 +192,10 @@ class Weights:
 
         for mab in self.MABs:
             mab.update_reward(reward)
+
+        if print_mode:
+            print("after:")
+            print(self.weights)
 
 
 class RandLinear(torch.nn.Linear):
