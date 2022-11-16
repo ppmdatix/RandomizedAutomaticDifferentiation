@@ -6,10 +6,10 @@ epochs: 20
 lr: 0.000645
 gamma: 0.6
 no_cuda: False
-seed: 17390474
+seed: 77469823
 log_interval: 10
 keep_frac: 1.0
-hidden_size: 10
+hidden_size: 300
 lr_drop_step: 1
 weight_decay: 5.687505e-05
 save_model: True
@@ -36,9 +36,6 @@ simple_scheduler_step_frequency: 2000
 simple_model_checkpoint_frequency: 5000
 bootstrap_train: True
 sparse: False
-rand_relu: False
 supersub: False
-heuristic: one_per_raw
-split: None
-kBandit: 2
+rand_relu: False
 exp_dir: mnistexperiments\0006-smallbatch

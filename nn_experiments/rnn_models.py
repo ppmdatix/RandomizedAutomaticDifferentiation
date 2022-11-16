@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from layers import RandLinear, RandLinearSuperSub
+from layers import RandLinear
 
 
 def irnn_initializer(m: nn.Module):
@@ -26,11 +26,6 @@ class MNISTIRNN(nn.Module):
         kept_keys = ['keep_frac', 'full_random', 'sparse']
         kept_dict = {key: rp_args[key] for key in kept_keys}
 
-        kept_keys_supersub = ['heuristic', 'kBandit']
-        kept_dict_supersub = {key: rp_args[key] for key in kept_keys_supersub}
-
-        print(kept_dict_supersub)
-
         self._hidden_size = hidden_size
 
         if kept_dict['keep_frac'] == 1.:
@@ -38,11 +33,6 @@ class MNISTIRNN(nn.Module):
             self.h2h = nn.Linear(hidden_size, hidden_size)
             self.h2o = nn.Linear(hidden_size, num_classes)
             print("Using nn.Linear layers")
-        elif rp_args['supersub']:
-            self.i2h = RandLinearSuperSub(1, out_features=hidden_size, kept_dict_supersub=kept_dict_supersub, **kept_dict)
-            self.h2h = RandLinearSuperSub(hidden_size, out_features=hidden_size, kept_dict_supersub=kept_dict_supersub, **kept_dict)
-            self.h2o = RandLinearSuperSub(hidden_size, out_features=num_classes, kept_dict_supersub=kept_dict_supersub, **kept_dict)
-            print("Using RandLinearSupeSub layers")
         else:
             self.i2h = RandLinear(1, hidden_size, **kept_dict)
             self.h2h = RandLinear(hidden_size, hidden_size, **kept_dict)
@@ -57,13 +47,11 @@ class MNISTIRNN(nn.Module):
         batch_size = inputs.shape[0]
         hidden = self._init_hidden(batch_size)
         inputs = inputs.view(batch_size, -1, 1).permute(1, 0, 2)   # (781, batch_size, 1)
-
         for t in range(inputs.shape[0]):
             hidden_part = self.h2h(hidden)
             input_part = self.i2h(inputs[t])
             hidden = F.relu(hidden_part + input_part)
         output_logits = F.log_softmax(self.h2o(hidden), dim=1)
-
         return output_logits
 
     def _init_hidden(self, batch_size):

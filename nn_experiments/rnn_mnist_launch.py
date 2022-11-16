@@ -121,14 +121,6 @@ args_template = rputils.ParameterMap(
 
     # Whether to resume training from the most recent checkpoint (if it exists)
     resume=False,
-
-    supersub=False,
-
-    split=None,
-
-    heuristic="random",
-
-    kBandit=None,
 )
 
 
@@ -154,7 +146,6 @@ def main(additional_args):
         args.with_replace = True
         args.augment = False
         args.validation = False
-        args.split = None
         rputils.override_arguments(args, additional_args)
 
     if not os.path.exists(args.exp_root):
@@ -205,29 +196,12 @@ def main(additional_args):
 
     rp_args = {}
     rp_args['rp_layer'] = args.rp_layer
-    print(args.keep_frac)
-    rp_args['keep_frac'] = float(args.keep_frac)
+    rp_args['keep_frac'] = args.keep_frac
     rp_args['rand_noise'] = args.rand_noise
     rp_args['full_random'] = args.full_random
     rp_args['sparse'] = args.sparse
 
-
-    rp_args['supersub'] = args.supersub
-    rp_args['heuristic'] = args.heuristic
-    rp_args['kBandit'] = args.kBandit
-    print("00000000000000000000000000000")
-    print("00000000000000000000000000000")
-    print("00000000000000000000000000000")
-    print("00000000000000000000000000000")
-    print("00000000000000000000000000000")
-    print("00000000000000000000000000000")
-    print(rp_args['kBandit'])
-    rp_args['split'] = args.split
-
     model = rnn_rpmodels.MNISTIRNN(hidden_size=args.hidden_size, rp_args=rp_args)
-
-    print(model)
-
     pickle_string, model_string = args.exp_name + "mnistirnn", args.exp_name + "mnistirnn"
 
     optimizer_state_dict, iteration = None, 0

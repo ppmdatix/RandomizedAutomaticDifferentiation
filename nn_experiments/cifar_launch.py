@@ -160,7 +160,6 @@ def main(additional_args):
         args.augment = False
         args.validation = False
         args.lr_drop_step = 1
-        args.split = None
         rputils.override_arguments(args, additional_args)
 
     if not os.path.exists(args.exp_root):

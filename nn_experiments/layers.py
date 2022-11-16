@@ -4,200 +4,10 @@ import torchvision
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.distributions import Beta
 
 
-@torch.no_grad()
-class MAB():
-    def __init__(self, nb_arms, device=None, heuristic=None, keep_reward_track=False, k=1):
-        self.nb_arms = nb_arms
-        self.chosen = torch.zeros(nb_arms, device=device)
-        self.active = torch.zeros(nb_arms, device=device)
-        self.reward = 0.0
-        self.device = device
-        self.pull_count = 0
-        self.epsilon = 0.1
-        self.heuristic = heuristic
-        if self.heuristic == "UCB":
-            self.at = torch.zeros(nb_arms, device=self.device)
-            self.xt = torch.zeros(nb_arms, device=self.device)
-        elif self.heuristic == "Thompson":
-            self.alphas = torch.ones(nb_arms, device=self.device)
-            self.betas  = torch.ones(nb_arms, device=self.device)
-        elif self.heuristic == "stuck":
-            _random = torch.rand(nb_arms, device=self.device)
-            bests = torch.reshape(_random, [self.nb_arms]).topk(k).indices.tolist()
-            for best in bests:
-                self.chosen[best] = 1.0
-            self.chosen = torch.reshape(self.chosen, _random.shape)
-
-        self.keep_reward_track = keep_reward_track
-        if keep_reward_track:
-            self.rewards = []
-
-    def pull(self, k, ws):
-        result = torch.zeros_like(ws, device=self.device)
-        result = torch.reshape(result, [self.nb_arms,1])
-        if k is None:
-            result = torch.bernoulli(ws)
-        elif self.heuristic == "random":
-            result = torch.reshape(result, [self.nb_arms])
-            bests = torch.reshape(ws, [self.nb_arms]).topk(k).indices.tolist()
-            for best in bests:
-                result[best] = 1.0
-            result = torch.reshape(result, ws.shape)
-        elif self.heuristic == "greedy":
-            if np.random.choice(2, p=[1 - self.epsilon, self.epsilon]) == 1:
-                result = torch.bernoulli(ws)
-            else:
-                result = torch.reshape(result, [self.nb_arms])
-                bests  = torch.reshape(ws, [self.nb_arms]).topk(k).indices.tolist()
-                for best in bests:
-                    result[best] = 1.0
-                result = torch.reshape(result, ws.shape)
-        elif self.heuristic == "UCB":
-            ones = torch.ones_like(ws, device=self.device)
-            self.at = torch.mul(2 * torch.log(ones * self.pull_count + 1), torch.div(ones, self.pull_count + 1)).sqrt()
-            xt_active = torch.div(torch.mul(self.xt, self.chosen - 1) + self.reward, self.chosen)
-            self.xt = torch.where(self.active == 1.0, xt_active, self.xt)
-            bests = torch.reshape(self.xt, [self.nb_arms]).topk(k).indices.tolist()
-            for best in bests:
-                result[best] = 1.0
-            result = torch.reshape(result, ws.shape)
-        elif self.heuristic == "Thompson":
-            m = Beta(self.alphas, self.betas)
-            probas = m.sample()
-            bests = torch.reshape(probas, [self.nb_arms]).topk(k).indices.tolist()
-            for best in bests:
-                result[best] = 1.0
-            result = torch.reshape(result, ws.shape)
-        elif self.heuristic == "stuck":
-            result = self.chosen
-
-        else:
-            chosen_indices = torch.multinomial(ws, k)
-            result = torch.zeros(self.nb_arms)
-            for j in chosen_indices:
-                result[j.tolist()] = 1.0
-
-        result = result.to(self.device)
-        self.chosen = result.reshape([self.nb_arms]) + self.chosen
-        self.active = result
-
-        return result
-
-    def update_reward(self, reward):
-        if self.keep_reward_track:
-            self.rewards.append(reward)
-
-        self.reward = reward
-
-
-class Weights:
-    """
-    Associated arm bandit probabilities to a Linear layer.
-
-    n = 3 ; m = 3 might result into
-    weight:
-        0.2  0.1  0.6  0.1
-        0.8  0.8  0.1  0.2
-        0.6  0.2  0.2  0.9
-
-
-    mask:
-        1    0    0   1
-        0    0    1   0
-        0    1    1   1
-
-    @param split: indicates how many bandits game are played.
-        If set to None, there is only one game and each weight is an arm of it.
-        If set to "per_raw", there is self.n games with self.m arms for each one.
-        If set to "per_column", there is self.m games with self.n arms for each one.
-
-    """
-    def __init__(self, n, m, heuristic="random", k_bandits=1, split=None, device=None):
-        self.weights = torch.Tensor(np.random.rand(n, m))
-        self.device = device
-        self.weights = self.weights.to(self.device)
-        self.weights.requires_grad_(False)
-        self.mask = torch.Tensor(np.zeros((n, m), float))
-        self.mask = self.mask.to(self.device)
-        self.mask.requires_grad_(False)
-        self.n = n
-        self.m = m
-        self.last_reward = torch.zeros_like(self.weights)
-        self.heuristic = heuristic
-        self.split = split
-        self.k_bandits = k_bandits
-
-        mab_count = 0
-        self.nb_arms = 0
-        if self.split is None or self.split == "None":
-            mab_count = 1
-            self.nb_arms = n * m
-        elif self.split == "per_raw":
-            mab_count = self.n
-            self.nb_arms = m
-        elif self.split == "per_column":
-            mab_count = self.m
-            self.nb_arms = n
-
-        self.MABs = [MAB(nb_arms=self.nb_arms, device=self.device, heuristic=self.heuristic, k=k_bandits) for _ in range(mab_count)]
-
-    @torch.no_grad()
-    def normalize_rows(self):
-        sum_of_rows = self.weights.sum(axis=1)
-        self.weights = self.weights / (sum_of_rows[:, np.newaxis] * 1.0)
-
-    @torch.no_grad()
-    def normalize_columns(self):
-        self.weights = self.weights / self.weights.sum(0, keepdim=True)[0]
-
-    @torch.no_grad()
-    def pull(self):
-
-        k = min(self.k_bandits, self.nb_arms)
-        if self.split is None or self.split == "None":
-            self.mask = self.MABs[0].pull(k, self.weights)
-        elif self.split == "per_raw":
-            k = min(self.k_bandits, self.m)
-            for i in range(self.n):
-                self.mask[i] = self.MABs[i].pull(k, self.weights[i])
-        elif self.split == "per_column":
-            t_weights   = torch.transpose(self.weights, -2, -1)
-            t_activated = torch.transpose(self.mask, -2, -1)
-            for i in range(self.m):
-                t_activated[i] = self.MABs[i].pull(k, t_weights[i])
-            self.mask = torch.transpose(t_activated, -2, -1)
-
-    @torch.no_grad()
-    def get_reward(self, reward, gamma=0.2, epsilon=0.1, print_mode=False):
-
-        if print_mode:
-            print("mask:")
-            print(self.mask)
-
-        t = self.weights + gamma * ((reward > 0.0) * 2.0 - 1.0)
-
-        ones = torch.ones_like(self.weights)
-        updated = torch.min(ones - epsilon, torch.max(t, ones * epsilon))
-        self.weights = torch.where(self.mask > 0.5, updated, self.weights)
-
-        if self.split == "per_raw":
-            self.normalize_rows()
-        if self.split == "per_column":
-            self.normalize_columns()
-
-        self.last_reward = torch.where(self.mask > 0.5, torch.ones_like(self.mask) * reward, self.last_reward)
-
-        for mab in self.MABs:
-            mab.update_reward(reward)
-
-        if print_mode:
-            print("after:")
-            print(self.weights)
-
-
+def shp(t):
+    return tuple(t.size())
 class RandLinear(torch.nn.Linear):
     """
     Linear layer with randomized automatic differentiation. Supports both 
@@ -211,15 +21,14 @@ class RandLinear(torch.nn.Linear):
         sparse: Sampling if true, random projections if false.
     """
 
-    def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, **kwargs):
-        print("000000000000000000")
-        print(locals())
-        print("000000000000000000")
+    def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False, **kwargs):
         super(RandLinear, self).__init__(*args, **kwargs)
         self.keep_frac = keep_frac
         self.full_random = full_random
         self.random_seed = torch.randint(low=10000000000, high=99999999999, size=(1,))
         self.sparse = sparse
+        self.supersub = supersub
+        self.k = (0, 10)
 
     def forward(self, input, retain=False, skip_rand=False):
         """
@@ -235,65 +44,7 @@ class RandLinear(torch.nn.Linear):
             keep_frac = 1.0
         else:
             keep_frac = self.keep_frac
-
-        return RandMatMul.apply(input, self.weight, self.bias, keep_frac, self.full_random, self.random_seed, self.sparse)
-
-
-class RandLinearSuperSub(torch.nn.Linear):
-    """
-    TODO
-    Linear layer with randomized automatic differentiation. Supports both
-    random projections (sparse=False) and sampling (sparse=True).
-
-    Arguments:
-        *args, **kwargs: The regular arguments to torch.nn.Linear.
-        keep_frac: The fraction of hidden units to keep after reduction with randomized autodiff.
-        full_random: If true, different hidden units are sampled for each batch element.
-        Only compatible with sparse=True, as it leads to extreme memory usage with random projections.
-        sparse: Sampling if true, random projections if false.
-    """
-
-    def __init__(self, *args, kept_dict_supersub={}, keep_frac=0.5, full_random=False, sparse=False, **kwargs):
-        super(RandLinearSuperSub, self).__init__(*args, **kwargs)
-        self.keep_frac = keep_frac
-        self.full_random = full_random
-        self.random_seed = torch.randint(low=10000000000, high=99999999999, size=(1,))
-        self.sparse = sparse
-        shape = self.weight.shape
-        self.device = kept_dict_supersub['device']
-        self.heuristic = kept_dict_supersub['heuristic']
-        self.split     = kept_dict_supersub['split']
-
-        if self.split is None or self.split =="None":
-            number_of_weights = shape[0] * shape[1]
-            self.k_bandits = int(np.round(np.sqrt(keep_frac * number_of_weights)))
-        elif self.split=="per_raw":
-            self.k_bandits = int(np.round(keep_frac * shape[0]))
-        elif self.split=="per_column":
-            self.k_bandits = int(np.round(keep_frac * shape[1]))
-
-        self.activation_weights = Weights(shape[0], shape[1], heuristic=self.heuristic, split=self.split, k_bandits=self.k_bandits,device=self.device)
-
-    def forward(self, input, retain=False, skip_rand=False):
-        """
-        If retain is True, uses the same random projection or sample as the last time this was called.
-        This is achieved through reusing random seeds.
-
-        If skip_rand is True, behaves like a regular torch.nn.Linear layer (sets keep_frac=1.0).
-        """
-        if not retain:
-            self.random_seed = torch.randint(low=10000000000, high=99999999999, size=(1,))
-
-        return RandMatMulSuperSub.apply(input,
-                                        self.weight,
-                                        self.bias,
-                                        self.keep_frac,
-                                        self.full_random,
-                                        self.random_seed,
-                                        self.sparse,
-                                        self.activation_weights,
-                                        self.k_bandits)
-
+        return RandMatMul.apply(input, self.weight, self.bias, keep_frac, self.full_random, self.random_seed, self.sparse, self.supersub, self.k)
 
 
 class RandConv2dLayer(torch.nn.Conv2d):
@@ -356,12 +107,13 @@ class RandReLULayer(torch.nn.ReLU):
         sparse: Sampling if true, random projections if false.
     """
 
-    def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, **kwargs):
+    def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False, **kwargs):
         super(RandReLULayer, self).__init__(*args, **kwargs)
         self.keep_frac = keep_frac
         self.full_random = full_random
         self.random_seed = torch.randint(low=10000000000, high=99999999999, size=(1,))
         self.sparse = sparse
+        self.supersub = supersub
 
     def forward(self, input, retain=False, skip_rand=False):
         """
@@ -387,7 +139,7 @@ class RandReLULayer(torch.nn.ReLU):
 ###################################################################################################
 
 
-def input2rp(input, kept_feature_size, full_random=False, random_seed=None):
+def input2rp(input, kept_feature_size, full_random=False, random_seed=None, supersub=False):
     """
     Converts either a Linear layer or Conv2d layer input into a dimension reduced form
     using random projections.
@@ -407,10 +159,10 @@ def input2rp(input, kept_feature_size, full_random=False, random_seed=None):
         input: Tensor of size (batch size) x (hidden size) or (batch size) x (feature size) x (height) x (width)
         kept_feature_size: The number to reduce the dimension to.
         full_random: If true, different hidden units are sampled for each effective batch element.
+        supersub: If True, supersub mode is activated
         WARNING: Will lead to extensive memory use if set to True in this method.
         random_seed: Use this random seed if not None.
     """
-
     def shp(t):
         return tuple(t.size())
 
@@ -427,26 +179,48 @@ def input2rp(input, kept_feature_size, full_random=False, random_seed=None):
     else:
         rand_matrix_size = (feature_len, kept_feature_size)
         matmul_view = input.view(*batch_size, feature_len)
+    inputSize = shp(input)
 
     # Create random matrix
-    def gen_rad_mat(rm_size, feat_size, device):
-        bern = torch.randint(2, size=rm_size, device=device, requires_grad=False)
-        return (2.0 * bern - 1) / feat_size**0.5
+    # def gen_rad_mat(rm_size, feat_size, device):
+    #     if not supersub:
+    #         bern = torch.randint(2, size=rm_size, device=device, requires_grad=False)
+    #         return (2.0 * bern - 1) / feat_size**0.5
+    #     else:
+    #         prior = torch.randint(2, size=rm_size, device=device, requires_grad=False) - 1
+    #         unif = torch.rand(size=rm_size, device=device, requires_grad=False)
+    #         return torch.where(unif > prior, torch.ones(rm_size), torch.zeros(rm_size))
+
+    def gen_supersub_mat(input, rm_size, feat_size, device):
+        if not supersub:
+            bern = torch.randint(2, size=rm_size, device=device, requires_grad=False)
+            return (2.0 * bern - 1) / feat_size ** 0.5
+        else:
+
+                topK = torch.topk(torch.abs(input), kept_feature_size)
+                seuil = torch.min(topK.values)
+                fSeuil = float(seuil)
+                mask = torch.where(torch.abs(input) > fSeuil, torch.ones(input.size()), torch.zeros(input.size()))
+                return mask
+            # topK  = torch.topk(torch.abs(input), k)
+            # seuil = torch.min(topK.values, 1)
+            # seuil = seuil.values.reshape([input.size()[0],1]).repeat([1,input.size()[1]])
+            # mask  = torch.where(torch.abs(input) >= seuil, torch.ones(input.size()), torch.zeros(input.size()))
 
     if random_seed:
         with torch.random.fork_rng():
             torch.random.manual_seed(random_seed)
-            rand_matrix = gen_rad_mat(rand_matrix_size, kept_feature_size, input.device)
+            rand_matrix = gen_supersub_mat(input, rand_matrix_size, rand_matrix_size, input.device)
     else:
-        rand_matrix = gen_rad_mat(rand_matrix_size, kept_feature_size, input.device)
+        rand_matrix = gen_supersub_mat(input, rand_matrix_size, rand_matrix_size, input.device)
 
     with torch.autograd.grad_mode.no_grad():
         dim_reduced_input = \
-                torch.matmul(matmul_view, rand_matrix)
+                torch.mul(matmul_view, rand_matrix)
     return dim_reduced_input, rand_matrix
 
 
-def rp2input(dim_reduced_input, input_shape, rand_matrix=None, random_seed=None, full_random=False):
+def rp2input(dim_reduced_input, input_shape, rand_matrix=None, random_seed=None, full_random=False, mask=None):
     """
     Inverse of input2rp. Accepts the outputted reduced tensor from input2rp along with
     the expected size of the input.
@@ -462,10 +236,9 @@ def rp2input(dim_reduced_input, input_shape, rand_matrix=None, random_seed=None,
         rand_matrix: The random matrix generated by input2rp.
         random_seed: Set this random seed to the same one as input2rp to reconstruct the random indices.
         full_random: Must be set to the same value as when input2rp was called.
+        supersub: If True, supersub mode is activated
     """
 
-    def shp(t):
-        return tuple(t.size())
 
     if rand_matrix is None and random_seed is None:
         print("ERROR in rp2input: One of rand_matrix or random_seed must be provided.")
@@ -487,18 +260,8 @@ def rp2input(dim_reduced_input, input_shape, rand_matrix=None, random_seed=None,
     else:
         rand_matrix_shape = (feature_len, kept_feature_size)
 
-    # Create random matrix
-    def gen_rad_mat(rm_size, feat_size, device):
-        bern = torch.randint(2, size=rm_size, device=device, requires_grad=False)
-        return (2.0 * bern - 1) / feat_size**0.5
-
-    if random_seed is not None:
-        with torch.random.fork_rng():
-            torch.random.manual_seed(random_seed)
-            rand_matrix = gen_rad_mat(rand_matrix_shape, kept_feature_size, dim_reduced_input.device)
-
     with torch.autograd.grad_mode.no_grad():
-        input = torch.matmul(dim_reduced_input, torch.transpose(rand_matrix, -2, -1))
+        input = torch.mul(dim_reduced_input, mask) # torch.transpose(rand_matrix, -2, -1))
         input = input.view(input_shape)
 
     return input
@@ -680,7 +443,7 @@ class RandReLU(torch.autograd.Function):
 
 class RandMatMul(torch.autograd.Function):
     @staticmethod
-    def forward(ctx, input, weight, bias, keep_frac, full_random, random_seed, sparse):
+    def forward(ctx, input, weight, bias, keep_frac, full_random, random_seed, sparse, supersub, k):
         # Calculate dimensions according to input and keep_frac
         batch_size = input.size()[:-1]
         num_activations = input.size()[-1]
@@ -691,6 +454,10 @@ class RandMatMul(torch.autograd.Function):
         ctx.full_random = full_random
         ctx.random_seed = random_seed
         ctx.sparse = sparse
+        ctx.supersub = supersub
+        ctx.k = k
+        # print(ctx.k)
+        # print("\n\n\n\n\n\nooo\n\n\nooooo\n")
         kept_activations = int(num_activations * keep_frac + 0.999)
 
         # If we don't need to project, just fast-track.
@@ -702,7 +469,7 @@ class RandMatMul(torch.autograd.Function):
         if sparse:
             dim_reduced_input, _ = input2sparse(input, kept_activations, random_seed=random_seed, full_random=full_random)
         else:
-            dim_reduced_input, _ = input2rp(input, kept_activations, random_seed=random_seed, full_random=full_random)
+            dim_reduced_input, _ = input2rp(input, kept_activations, random_seed=random_seed, full_random=full_random, supersub=ctx.supersub)
 
         # Saved Tensors should be low rank
         ctx.save_for_backward(dim_reduced_input, weight, bias)
@@ -710,14 +477,43 @@ class RandMatMul(torch.autograd.Function):
         with torch.autograd.grad_mode.no_grad():
             return F.linear(input, weight, bias=bias)
 
+
+
     @staticmethod
     def backward(ctx, grad_output):
+
+        def reloadMask(ctx):
+            if ctx.k[0] == 0 or ctx.k[1] == ctx.k[0]:
+                ctx.k = (1, ctx.k[1])
+                return True
+            else:
+                ctx.k = (ctx.k[0] + 1, ctx.k[1])
+                return False
+
+        def gen_supersub_mat(ctx, input, rm_size, feat_size, device):
+            if not ctx.supersub:
+                bern = torch.randint(2, size=rm_size, device=device, requires_grad=False)
+                return (2.0 * bern - 1) / feat_size ** 0.5
+            else:
+                kept_feature_size = shp(dim_reduced_input)[-1]
+                topK = torch.topk(input, kept_feature_size)
+                seuil = torch.min(topK.values)
+                fSeuil = float(seuil)
+                mask = torch.where(torch.abs(input) > fSeuil, torch.ones(input.size()), torch.zeros(input.size()))
+                return mask
+
+
         if ctx.keep_frac < 1.0:
             dim_reduced_input, weight, bias = ctx.saved_tensors
             if ctx.sparse:
                 input = sparse2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
             else:
-                input = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
+                if reloadMask(ctx):
+                    mask = gen_supersub_mat(ctx, dim_reduced_input, None, None, dim_reduced_input.device)
+                    ctx.mask = mask
+                else:
+                    mask = ctx.mask
+                input = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random, mask=mask)
         else:
             input, weight, bias = ctx.saved_tensors
 
@@ -737,47 +533,72 @@ class RandMatMul(torch.autograd.Function):
         bias_grad_input, input_grad_input, weight_grad_input = output.grad_fn(grad_output)
 
         # Why are the gradients for F.linear like this???
-        return input_grad_input, weight_grad_input.T, bias_grad_input.sum(axis=0), None, None, None, None
+        return input_grad_input, weight_grad_input.T, bias_grad_input.sum(axis=0), None, None, None, None, None, None, None
 
-class RandMatMulSuperSub(torch.autograd.Function):
-    @staticmethod
-    def forward(ctx, input, weight, bias, keep_frac, full_random, random_seed, sparse, activation_weights, kBandit):
-        # Calculate dimensions according to input and keep_frac
-        batch_size = input.size()[:-1]
-        num_activations = input.size()[-1]
-
-        ctx.input_shape = tuple(input.size())
-        ctx.num_activations = num_activations
-        ctx.keep_frac = keep_frac
-        ctx.full_random = full_random
-        ctx.random_seed = random_seed
-        ctx.sparse = sparse
-
-        ctx.activation_weights = activation_weights
-        ctx.kBandit = kBandit
-        ctx.save_for_backward(input, weight, bias)
-        linear_out = F.linear(input, weight, bias=bias)
-        return linear_out
-
-    @staticmethod
-    def backward(ctx, grad_output):
-        input, weight, bias = ctx.saved_tensors
-
-        with torch.autograd.grad_mode.enable_grad():
-            output = F.linear(input, weight, bias=bias)
-        bias_grad_input, input_grad_input, weight_grad_input = output.grad_fn(grad_output)
-
-        ### C'est à cet endroit là qu'il faut appliquer un masque sur les gradients.
-        mask_weight_grad = ctx.activation_weights.mask ## activate(ctx.kBandit)
-
-
-        weight_grad_input = torch.mul(torch.transpose(mask_weight_grad, -2, -1), weight_grad_input)
-
-        # Why are the gradients for F.linear like this???
-        return input_grad_input, weight_grad_input.T, bias_grad_input.sum(axis=0), None, None, None, None, None, None
-
-
-
+# class SuperSubMatMul(torch.autograd.Function):
+#     @staticmethod
+#     def forward(ctx, input, weight, bias, keep_frac, full_random, random_seed, sparse):
+#         # Calculate dimensions according to input and keep_frac
+#         batch_size = input.size()[:-1]
+#         num_activations = input.size()[-1]
+#
+#         ctx.input_shape = tuple(input.size())
+#         ctx.num_activations = num_activations
+#         ctx.keep_frac = keep_frac
+#         ctx.full_random = full_random
+#         ctx.random_seed = random_seed
+#         ctx.sparse = sparse
+#         kept_activations = int(num_activations * keep_frac + 0.999)
+#
+#         # If we don't need to project, just fast-track.
+#         if ctx.keep_frac == 1.0:
+#             ctx.save_for_backward(input, weight, bias)
+#             linear_out = F.linear(input, weight, bias=bias)
+#             return linear_out
+#
+#         if sparse:
+#             dim_reduced_input, _ = input2sparse(input, kept_activations, random_seed=random_seed, full_random=full_random)
+#         else:
+#             dim_reduced_input, _ = input2rp(input, kept_activations, random_seed=random_seed, full_random=full_random)
+#
+#         # Saved Tensors should be low rank
+#         ctx.save_for_backward(dim_reduced_input, weight, bias)
+#
+#         with torch.autograd.grad_mode.no_grad():
+#             return F.linear(input, weight, bias=bias)
+#
+#     @staticmethod
+#     def backward(ctx, grad_output):
+#         if ctx.keep_frac < 1.0 and not ctx.supersub:
+#             dim_reduced_input, weight, bias = ctx.saved_tensors
+#             if ctx.sparse:
+#                 input = sparse2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
+#             else:
+#                 input = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
+#         else:
+#             input, weight, bias = ctx.saved_tensors
+#
+#         def cln(t):
+#             if t is None:
+#                 return None
+#             ct = t.clone().detach()
+#             ct.requires_grad_(True)
+#             return ct
+#
+#         cinput = cln(input)
+#         cweight = cln(weight)
+#         cbias = cln(bias)
+#
+#         with torch.autograd.grad_mode.enable_grad():
+#             output = F.linear(cinput, cweight, bias=cbias)
+#         bias_grad_input, input_grad_input, weight_grad_input = output.grad_fn(grad_output)
+#
+#         if ctx.supersub:
+#             weight_grad_input = torch.matmul(weight_grad_input, ctx.mask)
+#
+#         # Why are the gradients for F.linear like this???
+#         return input_grad_input, weight_grad_input.T, bias_grad_input.sum(axis=0), None, None, None, None
+#
 
 class RandConv2d(torch.autograd.Function):
     @staticmethod
@@ -799,13 +620,13 @@ class RandConv2d(torch.autograd.Function):
         if ctx.sparse:
             dim_reduced_input, _ = input2sparse(input, kept_image_size, full_random=full_random, random_seed=random_seed)
         else:
-            dim_reduced_input, _ = input2rp(input, kept_image_size, full_random=full_random, random_seed=random_seed)
+            dim_reduced_input, mask = input2rp(input, kept_image_size, full_random=full_random, random_seed=random_seed)
 
         with torch.autograd.grad_mode.no_grad():
             conv_out = F.conv2d(input, weight, bias=bias, **ctx.conv_params)
 
         # Save appropriate for backward pass.
-        ctx.save_for_backward(dim_reduced_input, weight, bias)
+        ctx.save_for_backward(dim_reduced_input, weight, bias, mask)
 
         with torch.autograd.grad_mode.no_grad():
             return conv_out
@@ -813,7 +634,7 @@ class RandConv2d(torch.autograd.Function):
     @staticmethod
     def backward(ctx, grad_output):
         if ctx.keep_frac < 1.0:
-            dim_reduced_input, weight, bias = ctx.saved_tensors
+            dim_reduced_input, weight, bias, mask = ctx.saved_tensors
             if ctx.sparse:
                 input = sparse2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
             else:

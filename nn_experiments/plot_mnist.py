@@ -5,10 +5,9 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import imageio
 from IPython.display import display, HTML
 
-
+EXP_ROOT = './mnistexperiments'
 
 params = {
   'axes.labelsize': 12,
@@ -16,33 +15,13 @@ params = {
   'legend.fontsize': 12,
   'xtick.labelsize': 12,
   'ytick.labelsize': 12,
-  'text.usetex': True,
+  'text.usetex': False,
   'figure.figsize': [6, 4],
   'text.latex.preamble': r'\usepackage{amsmath} \usepackage{amssymb}',
    }
 plt.rcParams.update(params)
 
-def plot_everything(exp_name="test"):
-
-    EXP_ROOT = './' + exp_name
-    print(EXP_ROOT)
-    folders = [folder for folder in os.listdir(exp_name) if os.path.isdir(exp_name + "/" + folder)]
-
-    print(folders)
-    projects = set([folder[:-4] for folder in folders])
-
-    cs = ["b", "g", "r", "c", "m", "y", "k", "bisque", "lime",  "b" ]
-    colors = {}
-    c = 0
-    for project in projects:
-        colors[project] = cs[c]
-        c += 1
-
-    workers = [(folder, folder[:-4][-8:], colors[folder[:-4]], "^") for folder in folders]
-    # workers = [(folder, colors[folder[:-4]], colors[folder[:-4]], "^") for folder in folders]
-    for w in workers:
-        print(w)
-
+def plot_everything(workers):
     worker_dirs = [os.path.join(EXP_ROOT, f[0]) for f in workers]
     worker_names = [f[1] for f in workers]
     worker_colors = [f[2] for f in workers]
@@ -77,7 +56,9 @@ def plot_everything(exp_name="test"):
     labeled = []
     for worker, worker_name, color, marker in zip(worker_dirs, worker_names, worker_colors, worker_markers):
         one_pickle_dir = os.path.join(worker, 'pickles')
-
+        print(worker)
+        print(worker_name)
+        print(color)
         one_pickle = os.path.join(one_pickle_dir, os.listdir(one_pickle_dir)[0])
         with open(one_pickle, 'rb') as f:
             struct = pickle.load(f)
@@ -132,31 +113,34 @@ def plot_everything(exp_name="test"):
     ax4.legend()
     ax5.legend()
 
-    fig.savefig(EXP_ROOT +'/' + exp_name + '.pdf')
+    fig.savefig('mnist_all_curves_full.pdf')
 
+workers = [
+    ('0000-supersub', 'Project', 'b', 'h'),
+    ('0001-supersub', 'Project', 'b', 'h'),
+    ('0002-supersub', 'Project', 'b', 'h'),
+    ('0003-supersub', 'Project', 'b', 'h'),
+    # ('0004-supersub', 'Project', 'b', 'h'),
+    ('0005-smallbatch', 'Reduced batch', 'r', '^'),
+    ('0006-smallbatch', 'Reduced batch', 'r', '^'),
+    ('0007-smallbatch', 'Reduced batch', 'r', '^'),
+    ('0008-smallbatch', 'Reduced batch', 'r', '^'),
+    ('0009-smallbatch', 'Reduced batch', 'r', '^'),
+    ('0010-baseline', 'Baseline', 'pink', 'o'),
+    ('0011-baseline', 'Baseline', 'pink', 'o'),
+    ('0012-baseline', 'Baseline', 'pink', 'o'),
+    ('0013-baseline', 'Baseline', 'pink', 'o'),
+    ('0014-baseline', 'Baseline', 'pink', 'o'),
+    ('0015-samesample', 'Same Sample', 'g', 'x'),
+    ('0016-samesample', 'Same Sample', 'g', 'x'),
+    ('0017-samesample', 'Same Sample', 'g', 'x'),
+    ('0018-samesample', 'Same Sample', 'g', 'x'),
+    ('0019-samesample', 'Same Sample', 'g', 'x'),
+    ('0020-diffsample', 'Different Sample', 'black', '*'),
+    ('0021-diffsample', 'Different Sample', 'black', '*'),
+    ('0022-diffsample', 'Different Sample', 'black', '*'),
+    ('0023-diffsample', 'Different Sample', 'black', '*'),
+    # ('0024-diffsample', 'Different Sample', 'black', '*'),
+]
 
-    for folder in folders:
-
-        filenames = [filename for filename in os.listdir(folder + '/weights') filename.endswith('.png')]
-        images = []
-        for filename in filenames:
-            images.append(imageio.imread(filename))
-        imageio.mimsave(folder + '/weights_history.gif', images)
-
-
-exp_root = "stuck-heur-rand--2-3-layers-None-Thompson0.6"
-# seed = 4
-# folders = [exp_root + "" + str(i) for i in range(seed + 1)]
-# supersubs = [(f, "SS", "b", "h") for f in folders]
-# bases = [ ("base" + str(i), "base", "r", "^") for i in range(seed + 1) ]
-# workers = supersubs + bases
-
-
-
-#colors = ["b", "g", "r", "c", "m", "y", "k", "bisque", "lime",  "b" ]
-#folder_names = ['COMPheuristic-per_column-0.' + str(i) for i in range(1,11)]
-#custom_workers = [(folder_names[i-1], str(i), colors[i], "^") for i in range(1,10)]
-#custom_workers.append(('base', 'base', 'pink', 'h'))
-
-
-plot_everything(exp_name=exp_root)
+plot_everything(workers)

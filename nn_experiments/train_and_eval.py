@@ -5,7 +5,6 @@ import time
 import pickle
 import argparse
 import numpy as np
-import matplotlib.pyplot as plt
 
 import data as rpdata
 import models as rpmodels
@@ -22,12 +21,6 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
     all_checkpoints = []
     before_epoch = time.time()
     iteration = 0
-    old_loss = torch.tensor(100.0)
-
-    weights_root = args.exp_root + '/' + args.exp_name + '/weights/'                    
-    if not os.path.exists(weights_root):
-        os.makedirs(weights_root)
-
 
     while iteration < args.max_iterations:
         for data, target in train_loader:
@@ -43,36 +36,9 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
             with torch.random.fork_rng():
                 torch.random.manual_seed(random_seed)
                 output = model(data)
-            if iteration % 1000 == 0:
-                plt.imshow(model.fc2.activation_weights.weights, cmap='gray')
-                plt.savefig(weights_root + str(iteration) + '.png')
-                plt.title('epoch:'+str(iteration))
-                plt.close()
-
-            if args.supersub:
-                model.fc1.activation_weights.pull()
-                model.fc2.activation_weights.pull()
-                model.fc3.activation_weights.pull()
-                model.fc4.activation_weights.pull()
 
             loss = F.nll_loss(output, target)
             loss.backward()
-
-            if args.supersub:
-                if args["heuristic"] == "random":
-                    pass
-                else:
-                    reward = old_loss - loss
-                    reward = reward.tolist()
-
-                    model.fc1.activation_weights.get_reward(reward)
-                    model.fc2.activation_weights.get_reward(reward, print_mode=False)
-                    model.fc3.activation_weights.get_reward(reward)
-                    model.fc4.activation_weights.get_reward(reward)
-                    old_loss = torch.clone(loss)
-                    # print("p_weights have been updated")
-
-
 
             optimizer.step()
 

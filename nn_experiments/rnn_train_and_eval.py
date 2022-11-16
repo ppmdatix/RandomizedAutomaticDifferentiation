@@ -9,7 +9,7 @@ import torch.nn.functional as F
 import numpy as np
 
 import data as rpdata
-from train_and_eval import test
+from train_and_eval import test, test_list
 
 def rnn_simple_train(args, model, device, train_loader, optimizer, test_loader, train_test_loader, iteration=0):
     all_checkpoints = []
@@ -17,8 +17,6 @@ def rnn_simple_train(args, model, device, train_loader, optimizer, test_loader, 
 
     params = list(model.parameters())
     while iteration < args.max_iterations:
-
-        old_loss = torch.tensor(100.0)
         for data, target in train_loader:
             iteration += 1
             if iteration > args.max_iterations:
@@ -35,16 +33,6 @@ def rnn_simple_train(args, model, device, train_loader, optimizer, test_loader, 
 
             loss = F.nll_loss(output, target)
             loss.backward()
-
-            if args.supersub:
-
-                delta = old_loss - loss
-                delta = delta.tolist()
-                model.i2h.activation_weights.update_weights(delta)
-                model.h2h.activation_weights.update_weights(delta)
-                model.h2o.activation_weights.update_weights(delta)
-                old_loss = torch.clone(loss)
-
 
             if args.clip: torch.nn.utils.clip_grad_norm_(params, args.clip)
 
