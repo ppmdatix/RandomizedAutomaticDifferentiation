@@ -116,11 +116,11 @@ def plot_everything(workers):
     fig.savefig('mnist_all_curves_full.pdf')
 
 workers = [
-    ('0000-supersub', 'Project', 'b', 'h'),
-    ('0001-supersub', 'Project', 'b', 'h'),
-    ('0002-supersub', 'Project', 'b', 'h'),
-    ('0003-supersub', 'Project', 'b', 'h'),
-    # ('0004-supersub', 'Project', 'b', 'h'),
+    ('0000-supersub', 'SuperSub', 'b', 'h'),
+    ('0001-supersub', 'SuperSub', 'b', 'h'),
+    ('0002-supersub', 'SuperSub', 'b', 'h'),
+    ('0003-supersub', 'SuperSub', 'b', 'h'),
+    ('0004-supersub', 'Project', 'b', 'h'),
     ('0005-smallbatch', 'Reduced batch', 'r', '^'),
     ('0006-smallbatch', 'Reduced batch', 'r', '^'),
     ('0007-smallbatch', 'Reduced batch', 'r', '^'),
@@ -140,7 +140,7 @@ workers = [
     ('0021-diffsample', 'Different Sample', 'black', '*'),
     ('0022-diffsample', 'Different Sample', 'black', '*'),
     ('0023-diffsample', 'Different Sample', 'black', '*'),
-    # ('0024-diffsample', 'Different Sample', 'black', '*'),
+    ('0024-diffsample', 'Different Sample', 'black', '*'),
 ]
 
 plot_everything(workers)
