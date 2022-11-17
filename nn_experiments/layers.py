@@ -108,7 +108,7 @@ class RandReLULayer(torch.nn.ReLU):
         sparse: Sampling if true, random projections if false.
     """
 
-    def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False, **kwargs):
+    def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False, kSupersub=10, **kwargs):
         super(RandReLULayer, self).__init__(*args, **kwargs)
         self.keep_frac = keep_frac
         self.full_random = full_random
