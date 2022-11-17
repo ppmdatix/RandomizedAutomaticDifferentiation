@@ -131,7 +131,7 @@ args_template = rputils.ParameterMap(
 
     supersub=False,
 
-    kSupersub=None,
+    kSupersub=10,
 
     # If true, also uses RAD on ReLU layers.
     rand_relu=False,
