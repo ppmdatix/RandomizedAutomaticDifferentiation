@@ -6,7 +6,7 @@ epochs: 20
 lr: 0.000645
 gamma: 0.6
 no_cuda: False
-seed: 30512391
+seed: 73156624
 log_interval: 10
 keep_frac: 1.0
 hidden_size: 300
@@ -38,4 +38,4 @@ bootstrap_train: True
 sparse: False
 supersub: False
 rand_relu: False
-exp_dir: mnistexperiments\0007-smallbatch
+exp_dir: mnistexperiments/0007-smallbatch
