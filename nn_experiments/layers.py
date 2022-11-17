@@ -21,14 +21,15 @@ class RandLinear(torch.nn.Linear):
         sparse: Sampling if true, random projections if false.
     """
 
-    def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False, **kwargs):
+    def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False, kSupersub=None, **kwargs):
         super(RandLinear, self).__init__(*args, **kwargs)
         self.keep_frac = keep_frac
         self.full_random = full_random
         self.random_seed = torch.randint(low=10000000000, high=99999999999, size=(1,))
         self.sparse = sparse
         self.supersub = supersub
-        self.k = (0, 10)
+        self.kSupersub = kSupersub
+        self.k = (0, self.kSupersub)
 
     def forward(self, input, retain=False, skip_rand=False):
         """
