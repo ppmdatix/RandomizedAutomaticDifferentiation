@@ -1,8 +1,8 @@
-python mnist_launch.py --validation=True --exp_root=mnistexperiments --exp_name=0000-supersub1   --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=True --kSupersub=1
-python mnist_launch.py --validation=True --exp_root=mnistexperiments --exp_name=0001-supersub1   --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=True --kSupersub=1
-python mnist_launch.py --validation=True --exp_root=mnistexperiments --exp_name=0002-supersub1   --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=True --kSupersub=1
-python mnist_launch.py --validation=True --exp_root=mnistexperiments --exp_name=0003-supersub1   --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=True --kSupersub=1
-python mnist_launch.py --validation=True --exp_root=mnistexperiments --exp_name=0004-supersub1   --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=True --kSupersub=1
+python mnist_launch.py --validation=True --exp_root=mnistexperiments --exp_name=0000-supersub100   --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=True --kSupersub=100
+python mnist_launch.py --validation=True --exp_root=mnistexperiments --exp_name=0001-supersub100   --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=True --kSupersub=100
+python mnist_launch.py --validation=True --exp_root=mnistexperiments --exp_name=0002-supersub100   --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=True --kSupersub=100
+python mnist_launch.py --validation=True --exp_root=mnistexperiments --exp_name=0003-supersub100   --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=True --kSupersub=100
+python mnist_launch.py --validation=True --exp_root=mnistexperiments --exp_name=0004-supersub100   --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=True --kSupersub=100
 
 python mnist_launch.py --validation=True --exp_root=mnistexperiments --exp_name=0000-supersub5   --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=True --kSupersub=5
 python mnist_launch.py --validation=True --exp_root=mnistexperiments --exp_name=0001-supersub5   --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=True --kSupersub=5
