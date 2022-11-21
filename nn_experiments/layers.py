@@ -11,6 +11,17 @@ def shp(t):
     return tuple(t.size())
 
 
+def gen_supersub_mat(red_input, rm_size, feat_size, device, use_supersub):
+    if not use_supersub:
+        bern = torch.randint(2, size=rm_size, device=device, requires_grad=False)
+        return (2.0 * bern - 1) / feat_size ** 0.5
+    else:
+        kept_feature_size = shp(red_input)[-1]
+        top_k = torch.topk(red_input, kept_feature_size)
+        seuil = torch.min(top_k.values)
+        f_seuil = float(seuil)
+        return torch.where(torch.abs(red_input) > f_seuil, torch.ones(red_input.size()), torch.zeros(red_input.size()))
+
 class RandLinear(torch.nn.Linear):
     """
     Linear layer with randomized automatic differentiation. Supports both 
@@ -35,6 +46,7 @@ class RandLinear(torch.nn.Linear):
         self.k = 0
         self.batch_size = batch_size
         self.mask = Variable(torch.zeros(batch_size, self.in_features), requires_grad=True)
+        self.reloadMask = True
 
     def forward(self, input, retain=False, skip_rand=False):
         """
@@ -52,16 +64,17 @@ class RandLinear(torch.nn.Linear):
             keep_frac = self.keep_frac
 
         if self.mask.grad is not None:
-            mask_grad = self.mask.grad
-            self.mask = Variable(mask_grad, requires_grad=True)
             if self.k == 0 or self.k == self.kSupersub:
                 self.mask = Variable(torch.zeros(self.batch_size, self.in_features), requires_grad=True)
+                self.reloadMask = True
+            else:
+                self.mask = Variable(self.mask.grad, requires_grad=True)
+                self.reloadMask = False
 
             self.k = self.k + 1
             if self.k >= self.kSupersub:
                 self.k = 0
-
-        return RandMatMul().apply(input, self.weight, self.bias, keep_frac, self.full_random, self.random_seed, self.sparse, self.supersub, self.k, self.mask)
+        return RandMatMul().apply(input, self.weight, self.bias, keep_frac, self.full_random, self.random_seed, self.sparse, self.supersub, self.reloadMask, self.mask)
 
 
 class RandConv2dLayer(torch.nn.Conv2d):
@@ -464,10 +477,9 @@ class RandReLU(torch.autograd.Function):
 class RandMatMul(torch.autograd.Function):
 
     @staticmethod
-    def forward(ctx, input, weight, bias, keep_frac, full_random, random_seed, sparse, supersub, k, mask):
+    def forward(ctx, input, weight, bias, keep_frac, full_random, random_seed, sparse, supersub, reloadMask, mask):
 
         # Calculate dimensions according to input and keep_frac
-        batch_size = input.size()[:-1]
         num_activations = input.size()[-1]
         ctx.input_shape = tuple(input.size())
         ctx.num_activations = num_activations
@@ -476,7 +488,7 @@ class RandMatMul(torch.autograd.Function):
         ctx.random_seed = random_seed
         ctx.sparse = sparse
         ctx.supersub = supersub
-        ctx.k = k
+        ctx.reloadMask = reloadMask
         ctx.mask = mask
 
         kept_activations = int(num_activations * keep_frac + 0.999)
@@ -502,34 +514,14 @@ class RandMatMul(torch.autograd.Function):
     @staticmethod
     def backward(ctx, grad_output, retain_variables=True):
 
-        def reloadMask(_ctx):
-            if _ctx.k[0] == 0 or _ctx.k[1] == _ctx.k[0]:
-                _ctx.k = (1, _ctx.k[1])
-                return True, _ctx
-            else:
-                _ctx.k = (_ctx.k[0] + 1, _ctx.k[1])
-                return False, _ctx
-
-        def gen_supersub_mat(ctx, input, rm_size, feat_size, device):
-            if not ctx.supersub:
-                bern = torch.randint(2, size=rm_size, device=device, requires_grad=False)
-                return (2.0 * bern - 1) / feat_size ** 0.5
-            else:
-                kept_feature_size = shp(dim_reduced_input)[-1]
-                topK = torch.topk(input, kept_feature_size)
-                seuil = torch.min(topK.values)
-                fSeuil = float(seuil)
-                mask = torch.where(torch.abs(input) > fSeuil, torch.ones(input.size()), torch.zeros(input.size()))
-                return mask
-
         if ctx.keep_frac < 1.0:
             dim_reduced_input, weight, bias = ctx.saved_tensors
             if ctx.sparse:
                 input = sparse2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed,
                                      full_random=ctx.full_random)
             else:
-                if torch.allclose(ctx.mask, torch.zeros(ctx.mask.size())):
-                    mask = gen_supersub_mat(ctx, dim_reduced_input, None, None, dim_reduced_input.device)
+                if ctx.reloadMask:
+                    mask = gen_supersub_mat(dim_reduced_input, None, None, dim_reduced_input.device, ctx.supersub)
                     ctx.mask = Variable(mask, requires_grad=False)
                 input = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed,
                                  full_random=ctx.full_random, mask=ctx.mask)
