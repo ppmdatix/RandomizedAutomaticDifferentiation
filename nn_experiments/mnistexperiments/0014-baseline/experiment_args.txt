@@ -6,7 +6,7 @@ epochs: 20
 lr: 0.00135
 gamma: 0.6
 no_cuda: False
-seed: 70779981
+seed: 56862239
 log_interval: 10
 keep_frac: 1.0
 hidden_size: 300
@@ -19,7 +19,7 @@ rp_layer: rpconv
 train_test_interval: 5
 data_root: ./data
 exp_root: mnistexperiments
-validation: False
+validation: True
 with_replace: True
 augment: False
 rand_noise: 0.0
@@ -37,5 +37,6 @@ simple_model_checkpoint_frequency: 5000
 bootstrap_train: True
 sparse: False
 supersub: False
+kSupersub: 10
 rand_relu: False
 exp_dir: mnistexperiments/0014-baseline
