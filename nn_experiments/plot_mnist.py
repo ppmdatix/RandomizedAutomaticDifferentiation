@@ -6,6 +6,8 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from IPython.display import display, HTML
+import matplotlib.colors as mcolors
+
 
 EXP_ROOT = './mnistexperiments'
 
@@ -115,57 +117,86 @@ def plot_everything(workers):
 
     fig.savefig('mnist_all_curves_full.pdf')
 
-workers = [
-    # ('0000-supersub', 'SuperSub', 'b', 'h'),
-    # ('0001-supersub', 'SuperSub', 'b', 'h'),
-    # ('0002-supersub', 'SuperSub', 'b', 'h'),
-    # ('0003-supersub', 'SuperSub', 'b', 'h'),
-    # ('0004-supersub', 'SuperSub', 'b', 'h'),
-    # ('0000-supersub1', 'SuperSubK1', 'm', 'h'),
-    # ('0001-supersub1', 'SuperSubK1', 'm', 'h'),
-    # ('0002-supersub1', 'SuperSubK1', 'm', 'h'),
-    # ('0003-supersub1', 'SuperSubK1', 'm', 'h'),
-    # ('0004-supersub1', 'SuperSubK1', 'm', 'h'),
-    # ('0000-supersub5', 'SuperSubK5', 'c', 'h'),
-    # ('0001-supersub5', 'SuperSubK5', 'c', 'h'),
-    # ('0002-supersub5', 'SuperSubK5', 'c', 'h'),
-    # ('0003-supersub5', 'SuperSubK5', 'c', 'h'),
-    # ('0004-supersub5', 'SuperSubK5', 'c', 'h'),
-    ('0000-supersub10', 'SuperSubK10', 'y', 'h'),
-    ('0001-supersub10', 'SuperSubK10', 'y', 'h'),
-    ('0002-supersub10', 'SuperSubK10', 'y', 'h'),
-    ('0003-supersub10', 'SuperSubK10', 'y', 'h'),
-    ('0004-supersub10', 'SuperSubK10', 'y', 'h'),
-    # ('0000-supersub20', 'SuperSubK20', 'y', '+'),
-    # ('0001-supersub20', 'SuperSubK20', 'y', '+'),
-    # ('0002-supersub20', 'SuperSubK20', 'y', '+'),
-    # ('0003-supersub20', 'SuperSubK20', 'y', '+'),
-    # ('0004-supersub20', 'SuperSubK20', 'y', '+'),
-    ('0000-supersub100', 'SuperSubK100', 'c', '+'),
-    ('0001-supersub100', 'SuperSubK100', 'c', '+'),
-    ('0002-supersub100', 'SuperSubK100', 'c', '+'),
-    ('0003-supersub100', 'SuperSubK100', 'c', '+'),
-    ('0004-supersub100', 'SuperSubK100', 'c', '+'),
-    ('0005-smallbatch', 'Reduced batch', 'r', '^'),
-    ('0006-smallbatch', 'Reduced batch', 'r', '^'),
-    ('0007-smallbatch', 'Reduced batch', 'r', '^'),
-    ('0008-smallbatch', 'Reduced batch', 'r', '^'),
-    ('0009-smallbatch', 'Reduced batch', 'r', '^'),
-    ('0010-baseline', 'Baseline', 'pink', 'o'),
-    ('0011-baseline', 'Baseline', 'pink', 'o'),
-    ('0012-baseline', 'Baseline', 'pink', 'o'),
-    ('0013-baseline', 'Baseline', 'pink', 'o'),
-    ('0014-baseline', 'Baseline', 'pink', 'o'),
-    ('0015-samesample', 'Same Sample', 'g', 'x'),
-    ('0016-samesample', 'Same Sample', 'g', 'x'),
-    ('0017-samesample', 'Same Sample', 'g', 'x'),
-    ('0018-samesample', 'Same Sample', 'g', 'x'),
-    ('0019-samesample', 'Same Sample', 'g', 'x'),
-    ('0020-diffsample', 'Different Sample', 'black', '*'),
-    ('0021-diffsample', 'Different Sample', 'black', '*'),
-    ('0022-diffsample', 'Different Sample', 'black', '*'),
-    ('0023-diffsample', 'Different Sample', 'black', '*'),
-    ('0024-diffsample', 'Different Sample', 'black', '*'),
+
+list_of_colors = list(mcolors.BASE_COLORS.keys())
+list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
+
+pre_workers = [
+
+    # "supersub-nobatch-10",
+    # "supersub-nobatch-62",
+    # "supersub-nobatch-124",
+    # "supersub1",
+    "supersub20",
+    "supersub100",
+    "baseline"
+    "",
 ]
+
+workers = []
+
+for j in range(len(pre_workers)):
+    pre_worker = pre_workers[j]
+    for i in range(4):
+        workers.append(('000%i-%s' % (i, pre_worker),  pre_worker,  list_of_colors[j],  list_of_markers[j]))
+
+
+# workers = [
+#     ('0000-supersub-nobatch-62', 'SuperSubnobatch-62', 'b', 'h'),
+#     ('0001-supersub-nobatch-62', 'SuperSubnobatch-62', 'b', 'h'),
+#     ('0002-supersub-nobatch-62', 'SuperSubnobatch-62', 'b', 'h'),
+#     ('0003-supersub-nobatch-62', 'SuperSubnobatch-62', 'b', 'h'),
+#     ('0004-supersub-nobatch-62', 'SuperSubnobatch-62', 'b', 'h'),
+#     ('0000-supersub-nobatch-10', 'SuperSubnobatch-10', 'c', 'h'),
+#     ('0001-supersub-nobatch-10', 'SuperSubnobatch-10', 'c', 'h'),
+#     ('0002-supersub-nobatch-10', 'SuperSubnobatch-10', 'c', 'h'),
+#     ('0003-supersub-nobatch-10', 'SuperSubnobatch-10', 'c', 'h'),
+#     ('0004-supersub-nobatch-10', 'SuperSubnobatch-10', 'c', 'h'),
+#     # ('0000-supersub1', 'SuperSubK1', 'm', 'h'),
+#     # ('0001-supersub1', 'SuperSubK1', 'm', 'h'),
+#     # ('0002-supersub1', 'SuperSubK1', 'm', 'h'),
+#     # ('0003-supersub1', 'SuperSubK1', 'm', 'h'),
+#     # ('0004-supersub1', 'SuperSubK1', 'm', 'h'),
+#     # ('0000-supersub5', 'SuperSubK5', 'c', 'h'),
+#     # ('0001-supersub5', 'SuperSubK5', 'c', 'h'),
+#     # ('0002-supersub5', 'SuperSubK5', 'c', 'h'),
+#     # ('0003-supersub5', 'SuperSubK5', 'c', 'h'),
+#     # ('0004-supersub5', 'SuperSubK5', 'c', 'h'),
+#     # ('0000-supersub10', 'SuperSubK10', 'y', 'h'),
+#     # ('0001-supersub10', 'SuperSubK10', 'y', 'h'),
+#     # ('0002-supersub10', 'SuperSubK10', 'y', 'h'),
+#     # ('0003-supersub10', 'SuperSubK10', 'y', 'h'),
+#     # ('0004-supersub10', 'SuperSubK10', 'y', 'h'),
+#     # ('0000-supersub20', 'SuperSubK20', 'y', '+'),
+#     # ('0001-supersub20', 'SuperSubK20', 'y', '+'),
+#     # ('0002-supersub20', 'SuperSubK20', 'y', '+'),
+#     # ('0003-supersub20', 'SuperSubK20', 'y', '+'),
+#     # ('0004-supersub20', 'SuperSubK20', 'y', '+'),
+#     # ('0000-supersub100', 'SuperSubK100', 'c', '+'),
+#     # ('0001-supersub100', 'SuperSubK100', 'c', '+'),
+#     # ('0002-supersub100', 'SuperSubK100', 'c', '+'),
+#     # ('0003-supersub100', 'SuperSubK100', 'c', '+'),
+#     # ('0004-supersub100', 'SuperSubK100', 'c', '+'),
+#     # ('0005-smallbatch', 'Reduced batch', 'r', '^'),
+#     # ('0006-smallbatch', 'Reduced batch', 'r', '^'),
+#     # ('0007-smallbatch', 'Reduced batch', 'r', '^'),
+#     # ('0008-smallbatch', 'Reduced batch', 'r', '^'),
+#     # ('0009-smallbatch', 'Reduced batch', 'r', '^'),
+#     ('0010-baseline', 'Baseline', 'pink', 'o'),
+#     ('0011-baseline', 'Baseline', 'pink', 'o'),
+#     ('0012-baseline', 'Baseline', 'pink', 'o'),
+#     ('0013-baseline', 'Baseline', 'pink', 'o'),
+#     ('0014-baseline', 'Baseline', 'pink', 'o'),
+#     # ('0015-samesample', 'Same Sample', 'g', 'x'),
+#     # ('0016-samesample', 'Same Sample', 'g', 'x'),
+#     # ('0017-samesample', 'Same Sample', 'g', 'x'),
+#     # ('0018-samesample', 'Same Sample', 'g', 'x'),
+#     # ('0019-samesample', 'Same Sample', 'g', 'x'),
+#     # ('0020-diffsample', 'Different Sample', 'black', '*'),
+#     # ('0021-diffsample', 'Different Sample', 'black', '*'),
+#     # ('0022-diffsample', 'Different Sample', 'black', '*'),
+#     # ('0023-diffsample', 'Different Sample', 'black', '*'),
+#     # ('0024-diffsample', 'Different Sample', 'black', '*'),
+# ]
 
 plot_everything(workers)

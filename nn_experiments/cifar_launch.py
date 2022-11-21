@@ -130,6 +130,10 @@ args_template = rputils.ParameterMap(
     # If false, uses random projections. If true, uses sampling.
     sparse=False,
 
+    supersub=False,
+
+    kSupersub=10,
+
     # If true, also uses RAD on ReLU layers.
     rand_relu=False,
 )
@@ -176,9 +180,10 @@ def main(additional_args):
     if args.override and os.path.exists(args.exp_dir):
         print("Overriding existing directory.")
         shutil.rmtree(args.exp_dir)
-    assert not os.path.exists(args.exp_dir)
+    # assert not os.path.exists(args.exp_dir)
     print("Creating experiment with name {} in {}".format(args.exp_name, args.exp_dir))
-    os.mkdir(args.exp_dir)
+    if not os.path.exists(args.exp_dir):
+        os.mkdir(args.exp_dir)
     with open(os.path.join(args.exp_dir, 'experiment_args.txt'), 'w') as f:
         f.write(str(args))
 
@@ -209,6 +214,9 @@ def main(additional_args):
     rp_args['width_multiplier'] = args.width_multiplier
     rp_args['full_random'] = args.full_random
     rp_args['sparse'] = args.sparse
+    rp_args['supersub'] = args.supersub
+    rp_args['kSupersub'] = args.kSupersub
+    rp_args['batch_size'] = args.batch_size
 
     models = [
         (rpmodels.CIFARConvNet(rp_args=rp_args, rand_relu=args.rand_relu), args.exp_name + "cifarconvnet8", args.exp_name + "cifarconvnet8"),

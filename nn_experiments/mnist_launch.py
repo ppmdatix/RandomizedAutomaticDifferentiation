@@ -113,7 +113,7 @@ args_template = rputils.ParameterMap(
     save_inter=0,
 
     # Whether to do simple iteration based training instead of epoch based.
-    simple=False,
+    simple=True,
 
     # Following are only used when simple is True.
     max_iterations=-1,
@@ -124,7 +124,7 @@ args_template = rputils.ParameterMap(
     simple_model_checkpoint_frequency=-1,
 
     # If true, samples training set with replacement.
-    bootstrap_train=False,
+    bootstrap_train=True,
 
     # If false, uses random projections. If true, uses sampling.
     sparse=False,
