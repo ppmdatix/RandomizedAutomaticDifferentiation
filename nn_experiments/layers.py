@@ -7,7 +7,6 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 
 
-
 def shp(t):
     return tuple(t.size())
 
@@ -25,7 +24,7 @@ class RandLinear(torch.nn.Linear):
         sparse: Sampling if true, random projections if false.
     """
 
-    def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False, kSupersub=None, **kwargs):
+    def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False, kSupersub=None, batch_size=150, **kwargs):
         super(RandLinear, self).__init__(*args, **kwargs)
         self.keep_frac = keep_frac
         self.full_random = full_random
@@ -33,9 +32,9 @@ class RandLinear(torch.nn.Linear):
         self.sparse = sparse
         self.supersub = supersub
         self.kSupersub = kSupersub
-        self.k = (0, self.kSupersub)
-        self.mask = Variable(torch.zeros(150, self.in_features), requires_grad=True)
-
+        self.k = 0
+        self.batch_size = batch_size
+        self.mask = Variable(torch.zeros(batch_size, self.in_features), requires_grad=True)
 
     def forward(self, input, retain=False, skip_rand=False):
         """
@@ -52,18 +51,15 @@ class RandLinear(torch.nn.Linear):
         else:
             keep_frac = self.keep_frac
 
-
-
         if self.mask.grad is not None:
-            maskGrad = self.mask.grad
-            self.mask = Variable(maskGrad, requires_grad=True)
-            if self.k[0] == 0 or self.k[1] == self.k[0]:
-                self.mask = Variable(torch.zeros(150, self.in_features), requires_grad=True)
+            mask_grad = self.mask.grad
+            self.mask = Variable(mask_grad, requires_grad=True)
+            if self.k == 0 or self.k == self.kSupersub:
+                self.mask = Variable(torch.zeros(self.batch_size, self.in_features), requires_grad=True)
 
-            self.k = (self.k[0] + 1, self.k[1])
-            if self.k[0] >= self.k[1]:
-                self.k = (0, self.k[1])
-
+            self.k = self.k + 1
+            if self.k >= self.kSupersub:
+                self.k = 0
 
         return RandMatMul().apply(input, self.weight, self.bias, keep_frac, self.full_random, self.random_seed, self.sparse, self.supersub, self.k, self.mask)
 
@@ -128,7 +124,7 @@ class RandReLULayer(torch.nn.ReLU):
         sparse: Sampling if true, random projections if false.
     """
 
-    def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False, kSupersub=10, **kwargs):
+    def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False, kSupersub=10, batch_size=150,**kwargs):
         super(RandReLULayer, self).__init__(*args, **kwargs)
         self.keep_frac = keep_frac
         self.full_random = full_random

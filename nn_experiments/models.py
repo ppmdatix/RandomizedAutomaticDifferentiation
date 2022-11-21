@@ -13,7 +13,7 @@ class MNISTFCNet(torch.nn.Module):
     def __init__(self, hidden_size, rand_relu=False, rp_args={}):
         super(MNISTFCNet, self).__init__()
         self.rand_relu = rand_relu
-        kept_keys = ['keep_frac', 'full_random', 'sparse', 'supersub', 'kSupersub']
+        kept_keys = ['keep_frac', 'full_random', 'sparse', 'supersub', 'kSupersub', 'batch_size']
         kept_dict = {key: rp_args[key] for key in kept_keys}
 
         self.fc1 = rpn.RandLinear(784, hidden_size, **kept_dict)

@@ -219,6 +219,7 @@ def main(additional_args):
     rp_args['sparse'] = args.sparse
     rp_args['supersub'] = args.supersub
     rp_args['kSupersub'] = args.kSupersub
+    rp_args['batch_size'] = args.batch_size
 
     models = [
         (rpmodels.MNISTFCNet(hidden_size=args.hidden_size, rp_args=rp_args, rand_relu=args.rand_relu), args.exp_name + "mnistfcnet8", args.exp_name + "mnistfcnet8"),
