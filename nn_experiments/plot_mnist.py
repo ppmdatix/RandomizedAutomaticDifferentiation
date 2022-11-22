@@ -47,7 +47,7 @@ def plot_everything(workers):
 
     ax4 = plt.subplot(514)
     plt.title('Test Accuracy vs Iterations for SmallFCNet on MNIST')
-    ax4.set_ylim((95, 100))
+    ax4.set_ylim((50, 100))
     ax4.grid(True)
 
     ax5 = plt.subplot(515)
@@ -123,7 +123,7 @@ list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', '
 
 pre_workers = [
 
-    # "supersub-nobatch-10",
+    "supersub-nobatch-10",
     # "supersub-nobatch-62",
     # "supersub-nobatch-124",
     # "supersub1",

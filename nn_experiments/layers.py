@@ -512,14 +512,7 @@ class RandMatMul(torch.autograd.Function):
             if ctx.sparse:
                 npt = sparse2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
             elif ctx.supersub:
-                if ctx.reloadMask:
-                    mask = gen_supersub_mask(dim_reduced_input,
-                                         random_matrix_size=ctx.input_shape,
-                                         device=dim_reduced_input.device,
-                                         use_supersub=ctx.supersub,
-                                         kept_activations=ctx.kept_activations)
-                    ctx.mask = Variable(mask, requires_grad=False)
-                npt = torch.mul(dim_reduced_input, ctx.mask)
+                npt = dim_reduced_input
             else:
                 npt = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
         else:
@@ -539,6 +532,17 @@ class RandMatMul(torch.autograd.Function):
         with torch.autograd.grad_mode.enable_grad():
             output = F.linear(cinput, cweight, bias=cbias)
         bias_grad_input, input_grad_input, weight_grad_input = output.grad_fn(grad_output)
+
+        if ctx.supersub:
+            if ctx.reloadMask:
+                mask = gen_supersub_mask(input_grad_input,
+                                         random_matrix_size=ctx.input_shape,
+                                         device=input_grad_input.device,
+                                         use_supersub=ctx.supersub,
+                                         kept_activations=ctx.kept_activations)
+                ctx.mask = Variable(mask, requires_grad=False)
+            input_grad_input = torch.mul(input_grad_input, ctx.mask)
+
 
         # Why are the gradients for F.linear like this???
         return input_grad_input, weight_grad_input.T, bias_grad_input.sum(axis=0), None, None, \
