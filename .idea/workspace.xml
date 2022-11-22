@@ -2,25 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="26f08218-7e83-4616-a8cb-9c8aaa958cf9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/MNIST/processed/test.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/MNIST/processed/training.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/MNIST/raw/t10k-images-idx3-ubyte" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/MNIST/raw/t10k-images-idx3-ubyte.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/MNIST/raw/t10k-labels-idx1-ubyte" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/MNIST/raw/t10k-labels-idx1-ubyte.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/MNIST/raw/train-images-idx3-ubyte" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/MNIST/raw/train-images-idx3-ubyte.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/MNIST/raw/train-labels-idx1-ubyte" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/MNIST/raw/train-labels-idx1-ubyte.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/cifar-10-batches-py/batches.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/cifar-10-batches-py/data_batch_1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/cifar-10-batches-py/data_batch_2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/cifar-10-batches-py/data_batch_3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/cifar-10-batches-py/data_batch_4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/cifar-10-batches-py/data_batch_5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/cifar-10-batches-py/readme.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/cifar-10-batches-py/test_batch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/data/cifar-10-python.tar.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/layers.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/layers.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,32 +111,32 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>293</line>
+          <line>312</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>316</line>
+          <line>335</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>148</line>
+          <line>167</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>393</line>
+          <line>412</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>288</line>
+          <line>307</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>450</line>
+          <line>469</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
