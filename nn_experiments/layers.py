@@ -487,14 +487,12 @@ class RandMatMul(torch.autograd.Function):
         ctx.mask = mask
 
         # If we don't need to project, just fast-track.
-        if ctx.keep_frac == 1.0:
+        if ctx.keep_frac == 1.0 or supersub:
             ctx.save_for_backward(input, weight, bias)
             linear_out = F.linear(input, weight, bias=bias)
             return linear_out
 
-        if supersub:
-            dim_reduced_input = input
-        elif sparse:
+        if sparse:
             dim_reduced_input, _ = input2sparse(input, ctx.kept_activations, random_seed=random_seed, full_random=full_random)
         else:
             dim_reduced_input, _ = input2rp(input, ctx.kept_activations, random_seed=random_seed, full_random=full_random)

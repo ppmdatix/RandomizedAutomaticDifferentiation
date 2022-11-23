@@ -119,18 +119,21 @@ def plot_everything(workers):
 
 
 list_of_colors = list(mcolors.BASE_COLORS.keys())
+print(list_of_colors)
+list_of_colors.remove("w")
 list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
 
 pre_workers = [
 
+    "supersub-1",
+    # "supersub-10",
     "supersub-nobatch-10",
-    # "supersub-nobatch-62",
-    # "supersub-nobatch-124",
-    # "supersub1",
-    "supersub20",
-    "supersub100",
-    "baseline"
-    "",
+    "supersub-nobatch-50",
+    "supersub-nobatch-100",
+    "baseline",
+    "smallbatch",
+    "samesample",
+    "diffsample"
 ]
 
 workers = []
@@ -138,7 +141,8 @@ workers = []
 for j in range(len(pre_workers)):
     pre_worker = pre_workers[j]
     for i in range(4):
-        workers.append(('000%i-%s' % (i, pre_worker),  pre_worker,  list_of_colors[j],  list_of_markers[j]))
+        c = j % len(list_of_colors)
+        workers.append(('000%i-%s' % (i, pre_worker),  pre_worker,  list_of_colors[c],  list_of_markers[j]))
 
 
 # workers = [
