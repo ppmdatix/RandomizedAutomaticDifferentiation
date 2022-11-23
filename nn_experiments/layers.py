@@ -56,7 +56,7 @@ class RandLinear(torch.nn.Linear):
         sparse: Sampling if true, random projections if false.
     """
 
-    def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False, kSupersub=None, batch_size=150, **kwargs):
+    def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False, kSupersub=10, batch_size=150, **kwargs):
         super(RandLinear, self).__init__(*args, **kwargs)
         self.keep_frac = keep_frac
         self.full_random = full_random
@@ -66,7 +66,7 @@ class RandLinear(torch.nn.Linear):
         self.kSupersub = kSupersub
         self.k = 0
         self.batch_size = batch_size
-        self.mask = Variable(torch.zeros(batch_size, self.in_features), requires_grad=True)
+        self.mask = Variable(torch.zeros(self.in_features, int(self.in_features * self.keep_frac + 0.999)), requires_grad=True)
         self.reloadMask = True
 
     def forward(self, input, retain=False, skip_rand=False):
@@ -85,7 +85,7 @@ class RandLinear(torch.nn.Linear):
 
         if self.mask.grad is not None:
             if self.k == 0 or self.k == self.kSupersub:
-                self.mask = Variable(torch.zeros(self.batch_size, self.in_features), requires_grad=True)
+                self.mask = Variable(torch.zeros(self.in_features, int(self.in_features * self.keep_frac + 0.999)), requires_grad=True)
                 self.reloadMask = True
             else:
                 self.mask = Variable(self.mask.grad, requires_grad=True)
@@ -298,7 +298,7 @@ def rp2input(dim_reduced_input, input_shape, rand_matrix=None, random_seed=None,
         with torch.random.fork_rng():
             torch.random.manual_seed(random_seed)
             if output_random_matrix:
-                rand_matrixes = [gen_rad_mat(rand_matrix_shape, kept_feature_size, dim_reduced_input.device) for _ in range(2)]
+                rand_matrixes = [gen_rad_mat(rand_matrix_shape, kept_feature_size, dim_reduced_input.device) for _ in range(10)]
             else:
                 rand_matrix = gen_rad_mat(rand_matrix_shape, kept_feature_size, dim_reduced_input.device)
 
@@ -307,7 +307,7 @@ def rp2input(dim_reduced_input, input_shape, rand_matrix=None, random_seed=None,
             inputs = [torch.matmul(dim_reduced_input, torch.transpose(rm, -2, -1)).view(input_shape) for rm in rand_matrixes]
         else:
             input = torch.matmul(dim_reduced_input, torch.transpose(rand_matrix, -2, -1))
-        # input = input.view(input_shape)
+            input = input.view(input_shape)
     if not output_random_matrix:
         return input
     else:
@@ -544,6 +544,7 @@ class RandMatMul(torch.autograd.Function):
                     agmax = np.argmax(norms)
                     npt = npts[agmax]
                     ctx.mask = Variable(rms[agmax], requires_grad=False)
+
                 else:
                     npt = torch.matmul(dim_reduced_input, torch.transpose(ctx.mask, -2, -1)).view(ctx.input_shape)
         else:
@@ -568,8 +569,6 @@ class RandMatMul(torch.autograd.Function):
                 ctx.mask = Variable(mask, requires_grad=False)
             input_grad_input = torch.mul(input_grad_input, ctx.mask)
 
-
-        # Why are the gradients for F.linear like this???
         return input_grad_input, weight_grad_input.T, bias_grad_input.sum(axis=0), None, None, \
                None, None, None, None, ctx.mask
 

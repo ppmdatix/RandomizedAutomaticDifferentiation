@@ -39,7 +39,7 @@ def plot_everything(workers):
 
     ax2 = plt.subplot(512)
     plt.title('Training Accuracy vs Iterations for SmallFCNet on MNIST')
-    ax2.set_ylim((98, 100))
+    ax2.set_ylim((50, 100))
 
     ax3 = plt.subplot(513)
     plt.title('Test Loss vs Iterations for SmallFCNet on MNIST')
@@ -58,9 +58,6 @@ def plot_everything(workers):
     labeled = []
     for worker, worker_name, color, marker in zip(worker_dirs, worker_names, worker_colors, worker_markers):
         one_pickle_dir = os.path.join(worker, 'pickles')
-        print(worker)
-        print(worker_name)
-        print(color)
         one_pickle = os.path.join(one_pickle_dir, os.listdir(one_pickle_dir)[0])
         with open(one_pickle, 'rb') as f:
             struct = pickle.load(f)
@@ -125,15 +122,15 @@ list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', '
 
 pre_workers = [
 
-    "supersub-1",
+    # "supersub-1",
     # "supersub-10",
     "supersub-nobatch-10",
     "supersub-nobatch-50",
     "supersub-nobatch-100",
-    "baseline",
-    "smallbatch",
-    "samesample",
-    "diffsample"
+    # "baseline",
+    # "smallbatch",
+    # "samesample",
+    # "diffsample"
 ]
 
 workers = []

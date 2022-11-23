@@ -52,3 +52,8 @@ python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-diffsample --
 python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-diffsample --simple=True --lr=0.000934 --weight_decay=1.254031e-06 --keep_frac=0.1 --sparse=True  --full_random=True
 python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-diffsample --simple=True --lr=0.000934 --weight_decay=1.254031e-06 --keep_frac=0.1 --sparse=True  --full_random=True
 
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-supersub-from-rad-K10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False --kSupersub=10
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-supersub-from-rad-K10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False --kSupersub=10
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-supersub-from-rad-K10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False --kSupersub=10
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-supersub-from-rad-K10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False --kSupersub=10
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-supersub-from-rad-K10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False --kSupersub=10
