@@ -1,32 +1,32 @@
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-supersub-nobatch-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=10 --batch_size=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-supersub-nobatch-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=10 --batch_size=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-supersub-nobatch-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=10 --batch_size=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-supersub-nobatch-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=10 --batch_size=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-supersub-nobatch-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=10 --batch_size=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-supersub-nobatch-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=10 --batch_size=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-supersub-nobatch-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=10 --batch_size=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-supersub-nobatch-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=10 --batch_size=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-supersub-nobatch-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=10 --batch_size=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-supersub-nobatch-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=10 --batch_size=1
 
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-supersub-nobatch-50 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=50 --batch_size=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-supersub-nobatch-50 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=50 --batch_size=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-supersub-nobatch-50 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=50 --batch_size=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-supersub-nobatch-50 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=50 --batch_size=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-supersub-nobatch-50 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=50 --batch_size=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-supersub-nobatch-50 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=50 --batch_size=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-supersub-nobatch-50 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=50 --batch_size=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-supersub-nobatch-50 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=50 --batch_size=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-supersub-nobatch-50 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=50 --batch_size=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-supersub-nobatch-50 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=50 --batch_size=1
 
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-supersub-nobatch-100 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=100 --batch_size=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-supersub-nobatch-100 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=100 --batch_size=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-supersub-nobatch-100 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=100 --batch_size=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-supersub-nobatch-100 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=100 --batch_size=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-supersub-nobatch-100 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=100 --batch_size=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-supersub-nobatch-100 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=100 --batch_size=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-supersub-nobatch-100 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=100 --batch_size=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-supersub-nobatch-100 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=100 --batch_size=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-supersub-nobatch-100 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=100 --batch_size=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-supersub-nobatch-100 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=100 --batch_size=1
 
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-supersub-1 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --supersub=True --kSupersub=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-supersub-1 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --supersub=True --kSupersub=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-supersub-1 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --supersub=True --kSupersub=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-supersub-1 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --supersub=True --kSupersub=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-supersub-1 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --supersub=True --kSupersub=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-supersub-1 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --supersub=True --repeat_ssb=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-supersub-1 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --supersub=True --repeat_ssb=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-supersub-1 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --supersub=True --repeat_ssb=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-supersub-1 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --supersub=True --repeat_ssb=1
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-supersub-1 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --supersub=True --repeat_ssb=1
 
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-supersub-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=10
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-supersub-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=10
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-supersub-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=10
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-supersub-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=10
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-supersub-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --kSupersub=10
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-supersub-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=10
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-supersub-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=10
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-supersub-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=10
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-supersub-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=10
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-supersub-10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --supersub=True --repeat_ssb=10
 
 python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-smallbatch --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20
 python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-smallbatch --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20

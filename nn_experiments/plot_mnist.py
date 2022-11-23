@@ -121,12 +121,12 @@ list_of_colors.remove("w")
 list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
 
 pre_workers = [
-
+    "supersub-from-rad-K10-10choice"
     # "supersub-1",
     # "supersub-10",
-    "supersub-nobatch-10",
-    "supersub-nobatch-50",
-    "supersub-nobatch-100",
+    # "supersub-nobatch-10",
+    # "supersub-nobatch-50",
+    # "supersub-nobatch-100",
     # "baseline",
     # "smallbatch",
     # "samesample",
@@ -137,7 +137,7 @@ workers = []
 
 for j in range(len(pre_workers)):
     pre_worker = pre_workers[j]
-    for i in range(4):
+    for i in range(5):
         c = j % len(list_of_colors)
         workers.append(('000%i-%s' % (i, pre_worker),  pre_worker,  list_of_colors[c],  list_of_markers[j]))
 

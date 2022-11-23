@@ -6,7 +6,7 @@ epochs: 20
 lr: 0.000527
 gamma: 0.6
 no_cuda: False
-seed: 19510675
+seed: 63041346
 log_interval: 10
 keep_frac: 0.1
 hidden_size: 300
@@ -37,6 +37,8 @@ simple_model_checkpoint_frequency: 5000
 bootstrap_train: True
 sparse: False
 supersub: False
-kSupersub: 10
+supersub_from_rad: True
+repeat_ssb: 10
+draw_ssb: 1000
 rand_relu: False
-exp_dir: mnistexperiments/0000-supersub-from-rad-K10-10choice
+exp_dir: mnistexperiments\0000-supersub-from-rad-K10-10choice

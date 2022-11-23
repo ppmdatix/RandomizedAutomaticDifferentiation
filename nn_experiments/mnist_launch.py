@@ -130,8 +130,11 @@ args_template = rputils.ParameterMap(
     sparse=False,
 
     supersub=False,
+    supersub_from_rad=False,
 
-    kSupersub=10,
+    repeat_ssb=10,
+
+    draw_ssb=10,
 
     # If true, also uses RAD on ReLU layers.
     rand_relu=False,
@@ -218,8 +221,12 @@ def main(additional_args):
     rp_args['full_random'] = args.full_random
     rp_args['sparse'] = args.sparse
     rp_args['supersub'] = args.supersub
-    rp_args['kSupersub'] = args.kSupersub
+    rp_args['supersub_from_rad'] = args.supersub_from_rad
+    rp_args['repeat_ssb'] = args.repeat_ssb
+    rp_args['draw_ssb'] = args.draw_ssb
     rp_args['batch_size'] = args.batch_size
+
+
 
     models = [
         (rpmodels.MNISTFCNet(hidden_size=args.hidden_size, rp_args=rp_args, rand_relu=args.rand_relu), args.exp_name + "mnistfcnet8", args.exp_name + "mnistfcnet8"),
