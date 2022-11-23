@@ -253,7 +253,7 @@ def input2rp(input, kept_feature_size, full_random=False, random_seed=None):
     return dim_reduced_input, rand_matrix
 
 
-def rp2input(dim_reduced_input, input_shape, rand_matrix=None, random_seed=None, full_random=False):
+def rp2input(dim_reduced_input, input_shape, rand_matrix=None, random_seed=None, full_random=False, output_random_matrix=False):
     """
     Inverse of input2rp. Accepts the outputted reduced tensor from input2rp along with
     the expected size of the input.
@@ -297,13 +297,21 @@ def rp2input(dim_reduced_input, input_shape, rand_matrix=None, random_seed=None,
     if random_seed is not None:
         with torch.random.fork_rng():
             torch.random.manual_seed(random_seed)
-            rand_matrix = gen_rad_mat(rand_matrix_shape, kept_feature_size, dim_reduced_input.device)
+            if output_random_matrix:
+                rand_matrixes = [gen_rad_mat(rand_matrix_shape, kept_feature_size, dim_reduced_input.device) for _ in range(2)]
+            else:
+                rand_matrix = gen_rad_mat(rand_matrix_shape, kept_feature_size, dim_reduced_input.device)
 
     with torch.autograd.grad_mode.no_grad():
-        input = torch.matmul(dim_reduced_input, torch.transpose(rand_matrix, -2, -1))
-        input = input.view(input_shape)
-
-    return input
+        if output_random_matrix:
+            inputs = [torch.matmul(dim_reduced_input, torch.transpose(rm, -2, -1)).view(input_shape) for rm in rand_matrixes]
+        else:
+            input = torch.matmul(dim_reduced_input, torch.transpose(rand_matrix, -2, -1))
+        # input = input.view(input_shape)
+    if not output_random_matrix:
+        return input
+    else:
+        return inputs, rand_matrixes
 
 
 def input2sparse(input, kept_feature_size, full_random=False, random_seed=None):
@@ -505,17 +513,6 @@ class RandMatMul(torch.autograd.Function):
 
     @staticmethod
     def backward(ctx, grad_output):
-        if ctx.keep_frac < 1.0:
-            dim_reduced_input, weight, bias = ctx.saved_tensors
-            if ctx.sparse:
-                npt = sparse2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
-            elif ctx.supersub:
-                npt = dim_reduced_input
-            else:
-                npt = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
-        else:
-            npt, weight, bias = ctx.saved_tensors
-
         def cln(t):
             if t is None:
                 return None
@@ -523,12 +520,42 @@ class RandMatMul(torch.autograd.Function):
             ct.requires_grad_(True)
             return ct
 
+        if ctx.keep_frac < 1.0:
+            dim_reduced_input, weight, bias = ctx.saved_tensors
+            if ctx.sparse:
+                npt = sparse2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
+            elif ctx.supersub:
+                npt = dim_reduced_input
+            else:
+                if ctx.reloadMask:
+                    npts, rms = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random, output_random_matrix=True)
+                    cinputs = [cln(npt) for npt in npts]
+                    cweight = cln(weight)
+                    cbias = cln(bias)
+
+                    with torch.autograd.grad_mode.enable_grad():
+                        outputs = [F.linear(cinput, cweight, bias=cbias) for cinput in cinputs]
+
+                    norms = []
+                    for output in outputs:
+                        _, _, w = output.grad_fn(grad_output)
+                        norms.append(torch.sum(torch.abs(w)))
+
+                    agmax = np.argmax(norms)
+                    npt = npts[agmax]
+                    ctx.mask = Variable(rms[agmax], requires_grad=False)
+                else:
+                    npt = torch.matmul(dim_reduced_input, torch.transpose(ctx.mask, -2, -1)).view(ctx.input_shape)
+        else:
+            npt, weight, bias = ctx.saved_tensors
+
         cinput = cln(npt)
         cweight = cln(weight)
         cbias = cln(bias)
 
         with torch.autograd.grad_mode.enable_grad():
             output = F.linear(cinput, cweight, bias=cbias)
+
         bias_grad_input, input_grad_input, weight_grad_input = output.grad_fn(grad_output)
 
         if ctx.supersub:
@@ -545,6 +572,7 @@ class RandMatMul(torch.autograd.Function):
         # Why are the gradients for F.linear like this???
         return input_grad_input, weight_grad_input.T, bias_grad_input.sum(axis=0), None, None, \
                None, None, None, None, ctx.mask
+
 
 
 class RandConv2d(torch.autograd.Function):
