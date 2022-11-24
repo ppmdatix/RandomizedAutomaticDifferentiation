@@ -1,8 +1,8 @@
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-supersub-from-rad-K1-10choice --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False  --repeat_ssb=1  --draw_ssb=10 --supersub_from_rad=True
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-supersub-from-rad-K1-10choice --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False  --repeat_ssb=1  --draw_ssb=10 --supersub_from_rad=True
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-supersub-from-rad-K1-10choice --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False  --repeat_ssb=1  --draw_ssb=10 --supersub_from_rad=True
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-supersub-from-rad-K1-10choice --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False  --repeat_ssb=1  --draw_ssb=10 --supersub_from_rad=True
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-supersub-from-rad-K1-10choice --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False  --repeat_ssb=1  --draw_ssb=10 --supersub_from_rad=True
+# python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-supersub-from-rad-K1-10choice --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False  --repeat_ssb=1  --draw_ssb=10 --supersub_from_rad=True
+# python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-supersub-from-rad-K1-10choice --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False  --repeat_ssb=1  --draw_ssb=10 --supersub_from_rad=True
+# python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-supersub-from-rad-K1-10choice --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False  --repeat_ssb=1  --draw_ssb=10 --supersub_from_rad=True
+# python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-supersub-from-rad-K1-10choice --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False  --repeat_ssb=1  --draw_ssb=10 --supersub_from_rad=True
+# python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-supersub-from-rad-K1-10choice --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False  --repeat_ssb=1  --draw_ssb=10 --supersub_from_rad=True
 
 python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-baseline   --simple=True --lr=0.001350 --weight_decay=4.066478e-07
 python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-baseline   --simple=True --lr=0.001350 --weight_decay=4.066478e-07

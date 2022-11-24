@@ -39,7 +39,7 @@ def plot_everything(workers):
 
     ax2 = plt.subplot(512)
     plt.title('Training Accuracy vs Iterations for SmallFCNet on MNIST')
-    ax2.set_ylim((50, 100))
+    ax2.set_ylim((80, 100))
 
     ax3 = plt.subplot(513)
     plt.title('Test Loss vs Iterations for SmallFCNet on MNIST')
@@ -47,7 +47,7 @@ def plot_everything(workers):
 
     ax4 = plt.subplot(514)
     plt.title('Test Accuracy vs Iterations for SmallFCNet on MNIST')
-    ax4.set_ylim((50, 100))
+    ax4.set_ylim((80, 100))
     ax4.grid(True)
 
     ax5 = plt.subplot(515)
@@ -121,19 +121,18 @@ list_of_colors.remove("w")
 list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
 
 pre_workers = [
+    "supersub-from-rad-K1-10choice",
     "supersub-from-rad-K10-10choice",
     "supersub-from-rad-K20-10choice",
     "supersub-from-rad-K50-10choice",
-    "supersub-from-rad-K100-10choice"
+    "supersub-from-rad-K100-10choice",
     # "supersub-1",
     # "supersub-10",
     # "supersub-nobatch-10",
     # "supersub-nobatch-50",
     # "supersub-nobatch-100",
-    # "baseline",
-    # "smallbatch",
-    # "samesample",
-    # "diffsample"
+    "baseline",
+    "samesample"
 ]
 
 workers = []
