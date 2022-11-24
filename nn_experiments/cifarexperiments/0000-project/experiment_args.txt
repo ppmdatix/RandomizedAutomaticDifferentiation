@@ -1,12 +1,12 @@
 exp_name: 0000-project
-batch_size: 1
+batch_size: 150
 dataset: cifar10
 test_batch_size: 1000
 epochs: 200
 lr: 0.000435
 gamma: 0.6
 no_cuda: False
-seed: 83982188
+seed: 76418790
 log_interval: 10
 keep_frac: 0.1
 hidden_size: 300
@@ -36,7 +36,9 @@ simple_scheduler_step_frequency: 10000
 simple_model_checkpoint_frequency: 10000
 bootstrap_train: True
 sparse: False
-supersub: True
-kSupersub: 124
+supersub: False
+supersub_from_rad: True
+repeat_ssb: 1
+draw_ssb: 1000
 rand_relu: False
 exp_dir: cifarexperiments\0000-project

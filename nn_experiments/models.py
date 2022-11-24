@@ -49,7 +49,8 @@ class CIFARConvNet(torch.nn.Module):
     def __init__(self, rand_relu=False, rp_args={}):
         super(CIFARConvNet, self).__init__()
         self.rand_relu = rand_relu
-        kept_keys = ['keep_frac', 'full_random', 'sparse']
+        kept_keys = ['keep_frac', 'full_random', 'sparse', 'supersub', 'supersub_from_rad',
+                     'repeat_ssb', 'draw_ssb', 'batch_size']
         kept_dict = {key: rp_args[key] for key in kept_keys}
 
         self.conv1 = rpn.RandConv2dLayer(3, 16, 5, padding=2, **kept_dict)

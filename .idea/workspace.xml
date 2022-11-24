@@ -3,15 +3,17 @@
   <component name="ChangeListManager">
     <list default="true" id="26f08218-7e83-4616-a8cb-9c8aaa958cf9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/commands.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/commands.ps1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/commands.sh" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/commands.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/cifar_launch.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/cifar_launch.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/0000-project/experiment_args.txt" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/cifarexperiments/0000-project/experiment_args.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarffcommands.txt" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/cifarffcommands.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nn_experiments/layers.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/layers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/mnist_all_curves_full.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/mnist_all_curves_full.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/mnist_launch.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/mnist_launch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/mnistexperiments/0000-samesample/experiment_args.txt" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/mnistexperiments/0000-samesample/experiment_args.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/mnistexperiments/0000-supersub-from-rad-K10-10choice/experiment_args.txt" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/mnistexperiments/0000-supersub-from-rad-K10-10choice/experiment_args.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/mnistexperiments/0000-baseline/experiment_args.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/mnistexperiments/0000-samesample/experiment_args.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/mnistexperiments/0000-supersub-1/experiment_args.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/mnistexperiments/0000-supersub-1/intermediate_checkpoints/iteration_000005000.pt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/mnistexperiments/0000-supersub-1/intermediate_checkpoints/iteration_000010000.pt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/mnistexperiments/0000-supersub-1/intermediate_checkpoints/iteration_000015000.pt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/nn_experiments/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/plot_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plot_mnist.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,10 +40,15 @@
     &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/PaulPeseux/RandomizedAutomaticDifferentiation&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/PaulPeseux/RandomizedAutomaticDifferentiation/nn_experiments&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\PaulPeseux\RandomizedAutomaticDifferentiation\nn_experiments" />
+    </key>
+  </component>
   <component name="RunManager" selected="Python.plot_mnist">
     <configuration name="mnist_launch" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="RandomizedAutomaticDifferentiation" />
@@ -119,38 +126,53 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>330</line>
+          <line>351</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>353</line>
+          <line>374</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>182</line>
+          <line>203</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>430</line>
+          <line>451</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>325</line>
+          <line>346</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>487</line>
+          <line>501</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>268</line>
+          <line>289</line>
           <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
+          <line>396</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
+          <line>290</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
+          <line>199</line>
+          <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

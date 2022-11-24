@@ -114,7 +114,7 @@ args_template = rputils.ParameterMap(
     save_inter=0,
 
     # Whether to do simple iteration based training instead of epoch based.
-    simple=False,
+    simple=True,
 
     # Following are only used when simple is True.
     max_iterations=-1,
@@ -125,14 +125,18 @@ args_template = rputils.ParameterMap(
     simple_model_checkpoint_frequency=-1,
 
     # If true, samples training set with replacement.
-    bootstrap_train=False,
+    bootstrap_train=True,
 
     # If false, uses random projections. If true, uses sampling.
     sparse=False,
 
     supersub=False,
+    supersub_from_rad=False,
 
-    kSupersub=10,
+    repeat_ssb=10,
+
+    draw_ssb=10,
+
 
     # If true, also uses RAD on ReLU layers.
     rand_relu=False,
@@ -215,8 +219,11 @@ def main(additional_args):
     rp_args['full_random'] = args.full_random
     rp_args['sparse'] = args.sparse
     rp_args['supersub'] = args.supersub
-    rp_args['kSupersub'] = args.kSupersub
+    rp_args['supersub_from_rad'] = args.supersub_from_rad
+    rp_args['repeat_ssb'] = args.repeat_ssb
+    rp_args['draw_ssb'] = args.draw_ssb
     rp_args['batch_size'] = args.batch_size
+
 
     models = [
         (rpmodels.CIFARConvNet(rp_args=rp_args, rand_relu=args.rand_relu), args.exp_name + "cifarconvnet8", args.exp_name + "cifarconvnet8"),
