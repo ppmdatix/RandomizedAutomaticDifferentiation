@@ -6,7 +6,11 @@ epochs: 20
 lr: 0.000527
 gamma: 0.6
 no_cuda: False
+<<<<<<< 7ecd4b1fe4cf2c6c1de443db02e53a5b532cf987:nn_experiments/mnistexperiments/0002-supersub-from-rad-K10-10choice/experiment_args.txt
 seed: 92819339
+=======
+seed: 59166657
+>>>>>>> les xp de la journÃee:nn_experiments/mnistexperiments/0000-baseline/experiment_args.txt
 log_interval: 10
 keep_frac: 0.1
 hidden_size: 300
@@ -37,6 +41,14 @@ simple_model_checkpoint_frequency: 5000
 bootstrap_train: True
 sparse: False
 supersub: False
+<<<<<<< 7ecd4b1fe4cf2c6c1de443db02e53a5b532cf987:nn_experiments/mnistexperiments/0002-supersub-from-rad-K10-10choice/experiment_args.txt
 kSupersub: 10
 rand_relu: False
 exp_dir: mnistexperiments/0002-supersub-from-rad-K10-10choice
+=======
+supersub_from_rad: False
+repeat_ssb: 10
+draw_ssb: 10
+rand_relu: False
+exp_dir: mnistexperiments/0000-baseline
+>>>>>>> les xp de la journÃee:nn_experiments/mnistexperiments/0000-baseline/experiment_args.txt
