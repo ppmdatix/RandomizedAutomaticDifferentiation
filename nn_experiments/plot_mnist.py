@@ -121,7 +121,10 @@ list_of_colors.remove("w")
 list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
 
 pre_workers = [
-    "supersub-from-rad-K10-10choice"
+    "supersub-from-rad-K10-10choice",
+    "supersub-from-rad-K20-10choice",
+    "supersub-from-rad-K50-10choice",
+    "supersub-from-rad-K100-10choice"
     # "supersub-1",
     # "supersub-10",
     # "supersub-nobatch-10",
