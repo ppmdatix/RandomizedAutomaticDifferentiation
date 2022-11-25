@@ -256,7 +256,7 @@ class RandReLULayer(torch.nn.ReLU):
 ############################ BEGIN: Common Methods for all layers #################################
 ###################################################################################################
 
-def input2rp(input, kept_feature_size, full_random=False, random_seed=None):
+def input2rp(input, kept_feature_size, full_random=False, random_seed=None, rand_matrix=None):
     """
     Converts either a Linear layer or Conv2d layer input into a dimension reduced form
     using random projections.
@@ -291,18 +291,21 @@ def input2rp(input, kept_feature_size, full_random=False, random_seed=None):
         matmul_view = input.view(*batch_size, feature_len)
 
     # Create random matrix
-
+    if rand_matrix is not None:
+        print("already loaded")
 
     if random_seed:
         with torch.random.fork_rng():
             torch.random.manual_seed(random_seed)
-            rand_matrix = gen_rad_mat(rand_matrix_size, kept_feature_size, input.device)
-    else:
+            if rand_matrix is None:
+                rand_matrix = gen_rad_mat(rand_matrix_size, kept_feature_size, input.device)
+    elif rand_matrix is None:
         rand_matrix = gen_rad_mat(rand_matrix_size, kept_feature_size, input.device)
 
     with torch.autograd.grad_mode.no_grad():
         dim_reduced_input = \
                 torch.matmul(matmul_view, rand_matrix)
+
     return dim_reduced_input, rand_matrix
 
 
@@ -549,7 +552,11 @@ class RandMatMul(torch.autograd.Function):
         if sparse:
             dim_reduced_input, _ = input2sparse(input, ctx.kept_activations, random_seed=random_seed, full_random=full_random)
         else:
-            dim_reduced_input, _ = input2rp(input, ctx.kept_activations, random_seed=random_seed, full_random=full_random)
+            rm = None
+            if not ctx.reloadMask and ctx.supersub_from_rad:
+                rm = ctx.mask
+            dim_reduced_input, _ = input2rp(input, ctx.kept_activations, random_seed=random_seed,
+                                            full_random=full_random, rand_matrix=rm)
 
         # Saved Tensors should be low rank
         ctx.save_for_backward(dim_reduced_input, weight, bias)

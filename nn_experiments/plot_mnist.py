@@ -1,11 +1,8 @@
 import os
-import shutil
 import pickle
-import numpy as np
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
-from IPython.display import display, HTML
+from IPython.display import display
 import matplotlib.colors as mcolors
 
 
@@ -47,7 +44,7 @@ def plot_everything(workers):
 
     ax4 = plt.subplot(514)
     plt.title('Test Accuracy vs Iterations for SmallFCNet on MNIST')
-    ax4.set_ylim((80, 100))
+    ax4.set_ylim((90, 100))
     ax4.grid(True)
 
     ax5 = plt.subplot(515)
@@ -116,11 +113,14 @@ def plot_everything(workers):
 
 
 list_of_colors = list(mcolors.BASE_COLORS.keys())
+for clr in mcolors.TABLEAU_COLORS.keys():
+    list_of_colors.append(clr)
 print(list_of_colors)
 list_of_colors.remove("w")
 list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
 
 pre_workers = [
+    "supersub-from-me-K1-10choice",
     "supersub-from-rad-K1-10choice",
     "supersub-from-rad-K10-10choice",
     "supersub-from-rad-K20-10choice",
@@ -139,7 +139,7 @@ workers = []
 
 for j in range(len(pre_workers)):
     pre_worker = pre_workers[j]
-    for i in range(5):
+    for i in range(1):
         c = j % len(list_of_colors)
         workers.append(('000%i-%s' % (i, pre_worker),  pre_worker,  list_of_colors[c],  list_of_markers[j]))
 
