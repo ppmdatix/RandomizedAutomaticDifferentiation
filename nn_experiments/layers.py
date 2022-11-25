@@ -16,6 +16,23 @@ def gen_rad_mat(rm_size, feat_size, device):
     return (2.0 * bern - 1) / feat_size**0.5
 
 
+def gen_supersub_mak_correct(gradient,  keep_frac):
+
+    gradient_shape = shp(gradient)
+
+    print("gradient_shape")
+    print(gradient_shape)
+    kept_paths = int(gradient_shape[1] * keep_frac + 0.999)
+    top_k = torch.topk(torch.abs(gradient_shape), kept_paths)
+    seuil = torch.min(top_k.values, 1)
+    seuil = float(seuil)
+    zeros = torch.zeros(gradient_shape)
+    ones = torch.ones(gradient_shape)
+    mask = torch.where(torch.abs(gradient) >= seuil, ones, zeros)
+
+    return mask
+
+
 def gen_supersub_mask(npt, random_matrix_size, device, use_supersub,
                       kept_activations, use_one=False, check_size=False):
     if not use_supersub:
@@ -546,7 +563,27 @@ class RandMatMul(torch.autograd.Function):
             if ctx.sparse:
                 npt = sparse2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
             elif ctx.supersub:
-                npt = dim_reduced_input
+                if ctx.reloadMask:
+
+                    npt = dim_reduced_input
+
+                    cinput = cln(npt)
+                    cweight = cln(weight)
+                    cbias = cln(bias)
+                    with torch.autograd.grad_mode.enable_grad():
+                        output = F.linear(cinput, cweight, bias=cbias)
+                    _, _, w = output.grad_fn(grad_output)
+
+                    use_one = True
+                    if use_one:
+                        gradient = w[0]
+                    else:
+                        12
+
+                    print(shp(w))
+                    mask = gen_supersub_mak_correct(gradient, ctx.keep_frac)
+                    ctx.mask = Variable(mask, requires_grad=False)
+
             elif ctx.supersub_from_rad:
                 if ctx.reloadMask:
                     npts, rms = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed,
@@ -584,16 +621,6 @@ class RandMatMul(torch.autograd.Function):
             output = F.linear(cinput, cweight, bias=cbias)
 
         bias_grad_input, input_grad_input, weight_grad_input = output.grad_fn(grad_output)
-
-        if ctx.supersub:
-            if ctx.reloadMask:
-                mask = gen_supersub_mask(input_grad_input,
-                                         random_matrix_size=ctx.input_shape,
-                                         device=input_grad_input.device,
-                                         use_supersub=ctx.supersub,
-                                         kept_activations=ctx.kept_activations)
-                ctx.mask = Variable(mask, requires_grad=False)
-            input_grad_input = torch.mul(input_grad_input, ctx.mask)
 
         return input_grad_input, weight_grad_input.T, bias_grad_input.sum(axis=0), None, None, None, \
                None, None, None, None, None, ctx.mask
