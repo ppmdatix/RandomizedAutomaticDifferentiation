@@ -623,9 +623,6 @@ class RandMatMul(torch.autograd.Function):
         bias_grad_input, input_grad_input, weight_grad_input = output.grad_fn(grad_output)
 
         if ctx.supersub:
-
-            print(shp(weight_grad_input))
-            print(shp(ctx.mask))
             weight_grad_input = torch.mul(weight_grad_input, ctx.mask)
         return input_grad_input, weight_grad_input.T, bias_grad_input.sum(axis=0), None, None, None, \
                None, None, None, None, None, ctx.mask
