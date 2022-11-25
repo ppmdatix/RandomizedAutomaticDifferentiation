@@ -20,14 +20,16 @@ def gen_supersub_mak_correct(gradient,  keep_frac):
 
     gradient_shape = shp(gradient)
 
-    print("gradient_shape")
-    print(gradient_shape)
-    kept_paths = int(gradient_shape[1] * keep_frac + 0.999)
-    top_k = torch.topk(torch.abs(gradient_shape), kept_paths)
-    seuil = torch.min(top_k.values, 1)
-    seuil = float(seuil)
-    zeros = torch.zeros(gradient_shape)
     ones = torch.ones(gradient_shape)
+    if len(gradient_shape) == 1:
+        return ones
+
+    zeros = torch.zeros(gradient_shape)
+    kept_paths = int(gradient_shape[1] * keep_frac + 0.999)
+    top_k = torch.topk(torch.abs(gradient), kept_paths)
+
+    seuil = torch.min(top_k.values, 1)
+    seuil = seuil.values.reshape([gradient_shape[0], 1]).repeat([1, gradient_shape[1]])
     mask = torch.where(torch.abs(gradient) >= seuil, ones, zeros)
 
     return mask
@@ -100,7 +102,7 @@ class RandLinear(torch.nn.Linear):
         self.batch_size = batch_size
         self.mask = None
         if self.supersub:
-            self.mask = Variable(torch.zeros(self.batch_size, self.in_features), requires_grad=True)
+            self.mask = Variable(torch.zeros(self.in_features, self.out_features), requires_grad=True)
         elif self.supersub_from_rad:
             self.mask = Variable(torch.zeros(self.in_features, int(self.in_features * self.keep_frac + 0.999)), requires_grad=True)
         self.reloadMask = True
@@ -124,7 +126,7 @@ class RandLinear(torch.nn.Linear):
                     if self.supersub_from_rad:
                         self.mask = Variable(torch.zeros(self.in_features, int(self.in_features * self.keep_frac + 0.999)), requires_grad=True)
                     elif self.supersub:
-                        self.mask = Variable(torch.zeros(self.batch_size, self.in_features), requires_grad=True)
+                        self.mask = Variable(torch.zeros(self.in_features, self.out_features), requires_grad=True)
                     self.reloadMask = True
                 else:
                     self.mask = Variable(self.mask.grad, requires_grad=True)
@@ -576,11 +578,9 @@ class RandMatMul(torch.autograd.Function):
 
                     use_one = True
                     if use_one:
-                        gradient = w[0]
+                        gradient = w
                     else:
                         12
-
-                    print(shp(w))
                     mask = gen_supersub_mak_correct(gradient, ctx.keep_frac)
                     ctx.mask = Variable(mask, requires_grad=False)
 
@@ -622,6 +622,11 @@ class RandMatMul(torch.autograd.Function):
 
         bias_grad_input, input_grad_input, weight_grad_input = output.grad_fn(grad_output)
 
+        if ctx.supersub:
+
+            print(shp(weight_grad_input))
+            print(shp(ctx.mask))
+            weight_grad_input = torch.mul(weight_grad_input, ctx.mask)
         return input_grad_input, weight_grad_input.T, bias_grad_input.sum(axis=0), None, None, None, \
                None, None, None, None, None, ctx.mask
 
