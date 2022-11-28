@@ -11,6 +11,14 @@ def shp(t):
     return tuple(t.size())
 
 
+def selection(gradients, true_gradient=None):
+    norms = [torch.sum(torch.abs(g)) for g in gradients]
+
+    if true_gradient is not None:
+        errors = [torch.sum(torch.abs(g - true_gradient)) for g in gradients]
+        return np.argmin(errors)
+    return np.argmax(norms)
+
 def gen_rad_mat(rm_size, feat_size, device):
     bern = torch.randint(2, size=rm_size, device=device, requires_grad=False)
     return (2.0 * bern - 1) / feat_size**0.5
@@ -291,9 +299,6 @@ def input2rp(input, kept_feature_size, full_random=False, random_seed=None, rand
         matmul_view = input.view(*batch_size, feature_len)
 
     # Create random matrix
-    if rand_matrix is not None:
-        print("already loaded")
-
     if random_seed:
         with torch.random.fork_rng():
             torch.random.manual_seed(random_seed)
@@ -558,8 +563,11 @@ class RandMatMul(torch.autograd.Function):
             dim_reduced_input, _ = input2rp(input, ctx.kept_activations, random_seed=random_seed,
                                             full_random=full_random, rand_matrix=rm)
 
-        # Saved Tensors should be low rank
-        ctx.save_for_backward(dim_reduced_input, weight, bias)
+        if ctx.reloadMask:
+            ctx.save_for_backward(dim_reduced_input, weight, bias, input)
+        else:
+            # Saved Tensors should be low rank
+            ctx.save_for_backward(dim_reduced_input, weight, bias)
 
         with torch.autograd.grad_mode.no_grad():
             return F.linear(input, weight, bias=bias)
@@ -568,7 +576,10 @@ class RandMatMul(torch.autograd.Function):
     def backward(ctx, grad_output):
 
         if ctx.keep_frac < 1.0:
-            dim_reduced_input, weight, bias = ctx.saved_tensors
+            if ctx.reloadMask:
+                dim_reduced_input, weight, bias, true_input = ctx.saved_tensors
+            else:
+                dim_reduced_input, weight, bias = ctx.saved_tensors
             if ctx.sparse:
                 npt = sparse2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
             elif ctx.supersub:
@@ -601,15 +612,18 @@ class RandMatMul(torch.autograd.Function):
 
                     with torch.autograd.grad_mode.enable_grad():
                         outputs = [F.linear(cinput, cweight, bias=cbias) for cinput in cinputs]
+                        true_output = F.linear(true_input, cweight, bias=cbias)
 
-                    norms = []
+                    _, _, true_gradient = true_output.grad_fn(grad_output)
+
+                    gradients = []
                     for output in outputs:
                         _, _, w = output.grad_fn(grad_output)
-                        norms.append(torch.sum(torch.abs(w)))
+                        gradients.append(w)
 
-                    agmax = np.argmax(norms)
-                    npt = npts[agmax]
-                    ctx.mask = Variable(rms[agmax], requires_grad=False)
+                    arg = selection(gradients, true_gradient=true_gradient)
+                    npt = npts[arg]
+                    ctx.mask = Variable(rms[arg], requires_grad=False)
 
                 else:
                     npt = torch.matmul(dim_reduced_input, torch.transpose(ctx.mask, -2, -1)).view(ctx.input_shape)
