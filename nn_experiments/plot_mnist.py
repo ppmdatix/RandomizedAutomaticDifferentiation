@@ -44,7 +44,7 @@ def plot_everything(workers):
 
     ax4 = plt.subplot(514)
     plt.title('Test Accuracy vs Iterations for SmallFCNet on MNIST')
-    ax4.set_ylim((94, 100))
+    ax4.set_ylim((92.5, 98.5))
     ax4.grid(True)
 
     ax5 = plt.subplot(515)
@@ -119,87 +119,33 @@ print(list_of_colors)
 list_of_colors.remove("w")
 list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
 
-pre_workers = [
-    "supersub-from-me-K1-10choice",
-    # "supersub-1",
-    # "supersub-10",
-    # "supersub-nobatch-10",
-    # "supersub-nobatch-50",
-    # "supersub-nobatch-100",
-    "baseline",
-    # "samesample",
-    "supersub-from-rad-samemaskforwardbackward-K1-10choice",
-    "supersub-from-rad-samemaskforwardbackward-K10-10choice",
-    # "supersub-from-rad-samemaskforwardbackward-K20-10choice",
-    # "supersub-from-rad-samemaskforwardbackward-K50-10choice",
-    "supersub-from-rad-samemaskforwardbackward-K100-10choice"
+
+pre_workers = os.listdir(EXP_ROOT)
+pre_workers = list(set([d[5:] for d in pre_workers]))
+pre_workers.sort()
+
+removed_workers = [
+    "supersub-nobatch-100",
+    "supersub-from-rad-samemaskforwardbackward-K50-10choice",
+    "supersub-from-rad-samemaskforwardbackward-K20-10choice",
+    "supersub-nobatch-10",
+    "supersub-nobatch-50",
+    "",
 ]
+for rw in removed_workers:
+    if rw in pre_workers:
+        pre_workers.remove(rw)
 
 workers = []
 
 for j in range(len(pre_workers)):
     pre_worker = pre_workers[j]
-    for i in range(2):
+    for i in range(5):
         c = j % len(list_of_colors)
-        workers.append(('000%i-%s' % (i, pre_worker),  pre_worker,  list_of_colors[c],  list_of_markers[j]))
-
-
-# workers = [
-#     ('0000-supersub-nobatch-62', 'SuperSubnobatch-62', 'b', 'h'),
-#     ('0001-supersub-nobatch-62', 'SuperSubnobatch-62', 'b', 'h'),
-#     ('0002-supersub-nobatch-62', 'SuperSubnobatch-62', 'b', 'h'),
-#     ('0003-supersub-nobatch-62', 'SuperSubnobatch-62', 'b', 'h'),
-#     ('0004-supersub-nobatch-62', 'SuperSubnobatch-62', 'b', 'h'),
-#     ('0000-supersub-nobatch-10', 'SuperSubnobatch-10', 'c', 'h'),
-#     ('0001-supersub-nobatch-10', 'SuperSubnobatch-10', 'c', 'h'),
-#     ('0002-supersub-nobatch-10', 'SuperSubnobatch-10', 'c', 'h'),
-#     ('0003-supersub-nobatch-10', 'SuperSubnobatch-10', 'c', 'h'),
-#     ('0004-supersub-nobatch-10', 'SuperSubnobatch-10', 'c', 'h'),
-#     # ('0000-supersub1', 'SuperSubK1', 'm', 'h'),
-#     # ('0001-supersub1', 'SuperSubK1', 'm', 'h'),
-#     # ('0002-supersub1', 'SuperSubK1', 'm', 'h'),
-#     # ('0003-supersub1', 'SuperSubK1', 'm', 'h'),
-#     # ('0004-supersub1', 'SuperSubK1', 'm', 'h'),
-#     # ('0000-supersub5', 'SuperSubK5', 'c', 'h'),
-#     # ('0001-supersub5', 'SuperSubK5', 'c', 'h'),
-#     # ('0002-supersub5', 'SuperSubK5', 'c', 'h'),
-#     # ('0003-supersub5', 'SuperSubK5', 'c', 'h'),
-#     # ('0004-supersub5', 'SuperSubK5', 'c', 'h'),
-#     # ('0000-supersub10', 'SuperSubK10', 'y', 'h'),
-#     # ('0001-supersub10', 'SuperSubK10', 'y', 'h'),
-#     # ('0002-supersub10', 'SuperSubK10', 'y', 'h'),
-#     # ('0003-supersub10', 'SuperSubK10', 'y', 'h'),
-#     # ('0004-supersub10', 'SuperSubK10', 'y', 'h'),
-#     # ('0000-supersub20', 'SuperSubK20', 'y', '+'),
-#     # ('0001-supersub20', 'SuperSubK20', 'y', '+'),
-#     # ('0002-supersub20', 'SuperSubK20', 'y', '+'),
-#     # ('0003-supersub20', 'SuperSubK20', 'y', '+'),
-#     # ('0004-supersub20', 'SuperSubK20', 'y', '+'),
-#     # ('0000-supersub100', 'SuperSubK100', 'c', '+'),
-#     # ('0001-supersub100', 'SuperSubK100', 'c', '+'),
-#     # ('0002-supersub100', 'SuperSubK100', 'c', '+'),
-#     # ('0003-supersub100', 'SuperSubK100', 'c', '+'),
-#     # ('0004-supersub100', 'SuperSubK100', 'c', '+'),
-#     # ('0005-smallbatch', 'Reduced batch', 'r', '^'),
-#     # ('0006-smallbatch', 'Reduced batch', 'r', '^'),
-#     # ('0007-smallbatch', 'Reduced batch', 'r', '^'),
-#     # ('0008-smallbatch', 'Reduced batch', 'r', '^'),
-#     # ('0009-smallbatch', 'Reduced batch', 'r', '^'),
-#     ('0010-baseline', 'Baseline', 'pink', 'o'),
-#     ('0011-baseline', 'Baseline', 'pink', 'o'),
-#     ('0012-baseline', 'Baseline', 'pink', 'o'),
-#     ('0013-baseline', 'Baseline', 'pink', 'o'),
-#     ('0014-baseline', 'Baseline', 'pink', 'o'),
-#     # ('0015-samesample', 'Same Sample', 'g', 'x'),
-#     # ('0016-samesample', 'Same Sample', 'g', 'x'),
-#     # ('0017-samesample', 'Same Sample', 'g', 'x'),
-#     # ('0018-samesample', 'Same Sample', 'g', 'x'),
-#     # ('0019-samesample', 'Same Sample', 'g', 'x'),
-#     # ('0020-diffsample', 'Different Sample', 'black', '*'),
-#     # ('0021-diffsample', 'Different Sample', 'black', '*'),
-#     # ('0022-diffsample', 'Different Sample', 'black', '*'),
-#     # ('0023-diffsample', 'Different Sample', 'black', '*'),
-#     # ('0024-diffsample', 'Different Sample', 'black', '*'),
-# ]
+        try:
+            if len(os.listdir(EXP_ROOT + '/000%i-%s' % (i, pre_worker) + "/pickles")) > 0:
+                workers.append(('000%i-%s' % (i, pre_worker),  pre_worker,  list_of_colors[c],  list_of_markers[j]))
+        except:
+            pass
 
 plot_everything(workers)

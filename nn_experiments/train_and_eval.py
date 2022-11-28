@@ -16,6 +16,24 @@ import torch.optim.lr_scheduler as lrs
 import torch.nn.functional as F
 
 
+def memory_usage():
+    """Memory usage of the current process in kilobytes."""
+    status = None
+    result = {'peak': 0, 'rss': 0}
+    try:
+        # This will only work on systems with a /proc file system
+        # (like Linux).
+        status = open('/proc/self/status')
+        for line in status:
+            parts = line.split()
+            key = parts[0][2:-1].lower()
+            if key in result:
+                result[key] = int(parts[1])
+    finally:
+        if status is not None:
+            status.close()
+    return result
+
 def simple_train(args, model, device, train_loader, optimizer, scheduler, test_loader, train_test_loader):
     all_checkpoints = []
     before_epoch = time.time()
@@ -38,7 +56,7 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
 
             loss = F.nll_loss(output, target)
             loss.backward()
-
+            mem = memory_usage()
             optimizer.step()
 
             if iteration % args.simple_log_frequency == 0:
@@ -55,14 +73,16 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
                 train_ckpt['loss'] = loss.item()
                 train_ckpt['time'] = after_epoch - before_epoch
                 train_ckpt['iteration'] = iteration
+                train_ckpt['memory'] = mem
 
                 test_ckpt = test(args, model, device, test_loader)
                 if (iteration // args.simple_test_eval_frequency) % args.simple_test_eval_per_train_test == 0:
                     # Every few epochs calculate total train loss and accuracy.
                     train_test_ckpt = test(args, model, device, train_test_loader, split='Train')
-                    all_checkpoints.append((iteration, {'train': train_ckpt, 'test': test_ckpt, 'train_test': train_test_ckpt}))
+                    all_checkpoints.append((iteration, {'train': train_ckpt, 'test': test_ckpt,
+                                                        'train_test': train_test_ckpt, 'memory': mem}))
                 else:
-                    all_checkpoints.append((iteration, {'train': train_ckpt, 'test': test_ckpt}))
+                    all_checkpoints.append((iteration, {'train': train_ckpt, 'test': test_ckpt, 'memory': mem}))
                 before_epoch = time.time()
 
             if iteration % args.simple_scheduler_step_frequency == 0:
