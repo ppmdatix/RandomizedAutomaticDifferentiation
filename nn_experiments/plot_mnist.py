@@ -36,7 +36,7 @@ def plot_everything(workers):
 
     ax2 = plt.subplot(512)
     plt.title('Training Accuracy vs Iterations for SmallFCNet on MNIST')
-    ax2.set_ylim((80, 100))
+    ax2.set_ylim((98, 100))
 
     ax3 = plt.subplot(513)
     plt.title('Test Loss vs Iterations for SmallFCNet on MNIST')
@@ -120,11 +120,11 @@ list_of_colors.remove("w")
 list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
 
 pre_workers = [
-    "supersub-from-me-K1-10choice",
+    # "supersub-from-me-K1-10choice",
     "supersub-from-rad-K1-10choice",
-    "supersub-from-rad-K10-10choice",
-    "supersub-from-rad-K20-10choice",
-    "supersub-from-rad-K50-10choice",
+    # "supersub-from-rad-K10-10choice",
+    # "supersub-from-rad-K20-10choice",
+    # "supersub-from-rad-K50-10choice",
     "supersub-from-rad-K100-10choice",
     # "supersub-1",
     # "supersub-10",
@@ -132,14 +132,20 @@ pre_workers = [
     # "supersub-nobatch-50",
     # "supersub-nobatch-100",
     "baseline",
-    "samesample"
+    # "samesample",
+    
+    "supersub-from-rad-samemaskforwardbackward-K1-10choice",
+    "supersub-from-rad-samemaskforwardbackward-K10-10choice",
+    # "supersub-from-rad-samemaskforwardbackward-K20-10choice",
+    # "supersub-from-rad-samemaskforwardbackward-K50-10choice",
+    "supersub-from-rad-samemaskforwardbackward-K100-10choice"
 ]
 
 workers = []
 
 for j in range(len(pre_workers)):
     pre_worker = pre_workers[j]
-    for i in range(1):
+    for i in range(5):
         c = j % len(list_of_colors)
         workers.append(('000%i-%s' % (i, pre_worker),  pre_worker,  list_of_colors[c],  list_of_markers[j]))
 
