@@ -1,3 +1,7 @@
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-trackmemory --simple=True --lr=0.01 --weight_decay=4.0e-07
+
+
+
 #python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-supersub-from-me-K1-10choice --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False  --repeat_ssb=1  --draw_ssb=10 --supersub=True
 #python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-supersub-from-me-K1-10choice --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False  --repeat_ssb=1  --draw_ssb=10 --supersub=True
 #python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-supersub-from-me-K1-10choice --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --sparse=False  --repeat_ssb=1  --draw_ssb=10 --supersub=True

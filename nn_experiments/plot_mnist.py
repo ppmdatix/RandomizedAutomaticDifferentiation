@@ -93,7 +93,6 @@ def plot_everything(workers):
 
         ax5.plot(train_iterations, train_time, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
 
-
         final_results.append({
             'name': worker_name,
             'train_loss': train_test_loss[-1],
