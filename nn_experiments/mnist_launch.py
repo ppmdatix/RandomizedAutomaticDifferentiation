@@ -86,7 +86,7 @@ args_template = rputils.ParameterMap(
     data_root='./data',
 
     # Experiment Root
-    exp_root='',
+    exp_root='mnistexperiments',
 
     # If true, randomly splits the training set into train/val (validation 5000). Ignores test set.
     validation=False,
@@ -131,6 +131,7 @@ args_template = rputils.ParameterMap(
 
     supersub=False,
     supersub_from_rad=False,
+    argmean=False,
 
     repeat_ssb=10,
 
@@ -222,6 +223,7 @@ def main(additional_args):
     rp_args['sparse'] = args.sparse
     rp_args['supersub'] = args.supersub
     rp_args['supersub_from_rad'] = args.supersub_from_rad
+    rp_args['argmean'] = args.argmean
     rp_args['repeat_ssb'] = args.repeat_ssb
     rp_args['draw_ssb'] = args.draw_ssb
     rp_args['batch_size'] = args.batch_size

@@ -96,7 +96,7 @@ class RandLinear(torch.nn.Linear):
     """
 
     def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False,
-                 supersub_from_rad=False, repeat_ssb=10, draw_ssb=10, batch_size=150, **kwargs):
+                 supersub_from_rad=False, repeat_ssb=10, draw_ssb=10, batch_size=150, argmean=False, **kwargs):
         super(RandLinear, self).__init__(*args, **kwargs)
         self.keep_frac = keep_frac
         self.full_random = full_random
@@ -107,6 +107,7 @@ class RandLinear(torch.nn.Linear):
         self.repeat_ssb = repeat_ssb
         self.draw_ssb = draw_ssb
         self.k = 0
+        self.argmean = argmean
         self.batch_size = batch_size
         self.mask = None
         if self.supersub:
@@ -145,7 +146,7 @@ class RandLinear(torch.nn.Linear):
                     self.k = 0
 
         return RandMatMul.apply(input, self.weight, self.bias, keep_frac, self.full_random, self.random_seed,
-                                self.sparse, self.supersub, self.supersub_from_rad, self.draw_ssb,
+                                self.sparse, self.supersub, self.supersub_from_rad, self.argmean,self.draw_ssb,
                                 self.reloadMask, self.mask)
 
 
@@ -162,7 +163,7 @@ class RandConv2dLayer(torch.nn.Conv2d):
     """
 
     def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False,
-                 supersub_from_rad=False, repeat_ssb=10, draw_ssb=10, batch_size=150, **kwargs):
+                 supersub_from_rad=False, argmean=False, repeat_ssb=10, draw_ssb=10, batch_size=150, **kwargs):
         super(RandConv2dLayer, self).__init__(*args, **kwargs)
         self.conv_params = {
             'stride': self.stride,
@@ -237,7 +238,7 @@ class RandReLULayer(torch.nn.ReLU):
         sparse: Sampling if true, random projections if false.
     """
 
-    def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False, supersub_from_rad=False,
+    def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False, supersub_from_rad=False, argmean,
                  repeat_ssb=10, draw_ssb, batch_size=150, **kwargs):
         super(RandReLULayer, self).__init__(*args, **kwargs)
         self.keep_frac = keep_frac
@@ -530,7 +531,7 @@ class RandReLU(torch.autograd.Function):
 class RandMatMul(torch.autograd.Function):
     @staticmethod
     def forward(ctx, input, weight, bias, keep_frac, full_random, random_seed, sparse, supersub,
-                supersub_from_rad, draw_ssb, reloadMask, mask):
+                supersub_from_rad, argmean, draw_ssb, reloadMask, mask):
 
         # Calculate dimensions according to input and keep_frac
         ctx.input_shape = shp(input)
@@ -544,6 +545,7 @@ class RandMatMul(torch.autograd.Function):
         ctx.kept_activations = int(ctx.num_activations * keep_frac + 0.999)
         ctx.supersub = supersub
         ctx.supersub_from_rad = supersub_from_rad
+        ctx.argmean = argmean
         ctx.draw_ssb = draw_ssb
         ctx.reloadMask = reloadMask
         ctx.mask = mask
@@ -616,9 +618,12 @@ class RandMatMul(torch.autograd.Function):
 
                     with torch.autograd.grad_mode.enable_grad():
                         outputs = [F.linear(cinput, cweight, bias=cbias) for cinput in cinputs]
-                        true_output = F.linear(true_input, cweight, bias=cbias)
-
-                    _, _, true_gradient = true_output.grad_fn(grad_output)
+                        if ctx.argmean:
+                            true_output = F.linear(true_input, cweight, bias=cbias)
+                    if ctx.argmean:
+                        _, _, true_gradient = true_output.grad_fn(grad_output)
+                    else:
+                        true_gradient = None
 
                     gradients = []
                     for output in outputs:
@@ -650,7 +655,7 @@ class RandMatMul(torch.autograd.Function):
         if ctx.supersub:
             weight_grad_input = torch.mul(weight_grad_input, ctx.mask)
         return input_grad_input, weight_grad_input.T, bias_grad_input.sum(axis=0), None, None, None, \
-               None, None, None, None, None, ctx.mask
+               None, None, None, None, None, None, ctx.mask
 
 
 

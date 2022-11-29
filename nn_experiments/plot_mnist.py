@@ -11,7 +11,7 @@ EXP_ROOT = './mnistexperiments'
 params = {
   'axes.labelsize': 12,
   'font.size': 12,
-  'legend.fontsize': 12,
+  'legend.fontsize': 8,
   'xtick.labelsize': 12,
   'ytick.labelsize': 12,
   'text.usetex': False,
@@ -47,8 +47,12 @@ def plot_everything(workers):
     ax4.set_ylim((92.5, 98.5))
     ax4.grid(True)
 
-    ax5 = plt.subplot(515)
-    plt.title('Training time vs Iterations for SmallFCNet on MNIST')
+    # ax5 = plt.subplot(515)
+    # plt.title('Training time vs Iterations for SmallFCNet on MNIST')
+
+    ax6 = plt.subplot(515)
+
+    plt.title('Memory time vs Iterations for SmallFCNet on MNIST')
 
     final_results = []
 
@@ -62,18 +66,28 @@ def plot_everything(workers):
         train_curve = []
         test_curve = []
         train_test_curve = []
+
         for (iteration, s) in struct:
+
             if 'train' in s:
                 train_curve.append((iteration, s['train']))
             if 'train_test' in s:
                 train_test_curve.append((iteration, s['train_test']))
             if 'test' in s:
                 test_curve.append((iteration, s['test']))
+            if 'train' in s:
+                if 'memory' in s['train']:
+                    print(s['train']['memory'])
         train_test_iterations = [t[0] for t in train_test_curve if t[0] != 'final']
         train_iterations = [t[0] for t in train_curve if t[0] != 'final']
         train_test_loss = [t[1]['loss'] for t in train_test_curve if t[0] != 'final']
         train_test_accuracy = [t[1]['accuracy'] for t in train_test_curve if t[0] != 'final']
-        train_time = [t[1]['time'] for t in train_curve if t[0] != 'final']
+        # train_time = [t[1]['time'] for t in train_curve if t[0] != 'final']
+        train_memory = [t[1]['memory']['rss'] for t in train_curve if t[0] != 'final' and 'memory' in t[1]]
+
+        print("aaaaaaaaaaaaaaaa")
+        print(train_memory)
+
         if worker_name in labeled:
             worker_name = None
         else:
@@ -91,7 +105,9 @@ def plot_everything(workers):
 
         ax4.plot(test_iterations, test_accuracy, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
 
-        ax5.plot(train_iterations, train_time, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
+        # ax5.plot(train_iterations, train_time, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
+        if len(train_memory) > 0:
+            ax6.plot(train_iterations, train_memory, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
 
         final_results.append({
             'name': worker_name,
@@ -106,7 +122,7 @@ def plot_everything(workers):
     ax2.legend()
     ax3.legend()
     ax4.legend()
-    ax5.legend()
+    ax6.legend()
 
     fig.savefig('mnist_all_curves_full.pdf')
 
@@ -127,6 +143,8 @@ removed_workers = [
     "supersub-nobatch-100",
     "supersub-from-rad-samemaskforwardbackward-K50-10choice",
     "supersub-from-rad-samemaskforwardbackward-K20-10choice",
+    "supersub-from-rad-argmean-K20-10choice",
+    "supersub-from-rad-argmean-K50-10choice",
     "supersub-nobatch-10",
     "supersub-nobatch-50",
     "",
@@ -141,10 +159,12 @@ for j in range(len(pre_workers)):
     pre_worker = pre_workers[j]
     for i in range(5):
         c = j % len(list_of_colors)
-        try:
-            if len(os.listdir(EXP_ROOT + '/000%i-%s' % (i, pre_worker) + "/pickles")) > 0:
-                workers.append(('000%i-%s' % (i, pre_worker),  pre_worker,  list_of_colors[c],  list_of_markers[j]))
-        except:
-            pass
+        m = j % len(list_of_markers)
+        if '000%i-%s' % (i, pre_worker) in os.listdir(EXP_ROOT):
+            pth = os.listdir(EXP_ROOT + '/000%i-%s' % (i, pre_worker))
+            print(pth)
+            if 'pickles' in pth:
+                if len(os.listdir(EXP_ROOT + '/000%i-%s' % (i, pre_worker) + "/pickles")) > 0:
+                    workers.append(('000%i-%s' % (i, pre_worker),  pre_worker,  list_of_colors[c],  list_of_markers[m]))
 
 plot_everything(workers)
