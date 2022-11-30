@@ -5,11 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nn_experiments/commands.sh" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/commands.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nn_experiments/layers.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/layers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/mnist_all_curves_full.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/mnist_all_curves_full.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/mnist_launch.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/mnist_launch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/mnistexperiments/0000-trackmemory/experiment_args.txt" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/mnistexperiments/0000-trackmemory/experiment_args.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/plot_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plot_mnist.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

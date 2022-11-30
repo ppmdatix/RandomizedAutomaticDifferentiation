@@ -533,6 +533,11 @@ class RandMatMul(torch.autograd.Function):
     def forward(ctx, input, weight, bias, keep_frac, full_random, random_seed, sparse, supersub,
                 supersub_from_rad, argmean, draw_ssb, reloadMask, mask):
 
+
+        print("device is")
+        print(input.device)
+
+
         # Calculate dimensions according to input and keep_frac
         ctx.input_shape = shp(input)
         ctx.batch_size = ctx.input_shape[:-1]
