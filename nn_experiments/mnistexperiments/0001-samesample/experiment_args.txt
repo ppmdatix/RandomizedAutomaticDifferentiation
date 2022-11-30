@@ -6,7 +6,7 @@ epochs: 20
 lr: 0.000452
 gamma: 0.6
 no_cuda: False
-seed: 70817788
+seed: 98732972
 log_interval: 10
 keep_frac: 0.1
 hidden_size: 300
@@ -38,6 +38,7 @@ bootstrap_train: True
 sparse: True
 supersub: False
 supersub_from_rad: False
+argmean: False
 repeat_ssb: 10
 draw_ssb: 10
 rand_relu: False
