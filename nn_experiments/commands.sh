@@ -1,4 +1,4 @@
-python mnist_launch.py --exp_name=0000-argmax-no-random-K10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=10   --draw_ssb=1 --supersub_from_rad=True
+python mnist_launch.py --exp_name=0000-argmax-no-random-K10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=10   --draw_ssb=1 --supersub_from_rad=True  
 python mnist_launch.py --exp_name=0001-argmax-no-random-K10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=10   --draw_ssb=1 --supersub_from_rad=True
 python mnist_launch.py --exp_name=0002-argmax-no-random-K10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=10   --draw_ssb=1 --supersub_from_rad=True
 python mnist_launch.py --exp_name=0003-argmax-no-random-K10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=10   --draw_ssb=1 --supersub_from_rad=True
