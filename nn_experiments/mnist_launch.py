@@ -47,7 +47,7 @@ args_template = rputils.ParameterMap(
     gamma=0.2,
 
     # disables CUDA training
-    no_cuda=False,
+    no_cuda=True,
 
     # random seed. do not set seed if 0.
     seed=0,
