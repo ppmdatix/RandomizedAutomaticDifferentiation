@@ -634,7 +634,6 @@ class RandMatMul(torch.autograd.Function):
                             rm.append(vec)
                         rm = torch.tensor(rm)
                         rm = torch.transpose(rm, -2, -1)
-                        print(shp(rm))
                         ctx.mask = Variable(rm, requires_grad=False)
                         npt = rp2input(dim_reduced_input, ctx.input_shape, random_seed=None,
                                              full_random=ctx.full_random, rand_matrix=rm)
