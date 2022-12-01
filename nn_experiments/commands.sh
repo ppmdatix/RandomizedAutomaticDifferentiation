@@ -1,4 +1,20 @@
-python mnist_launch.py --exp_name=device --simple=True --lr=0.01 --weight_decay=1e-07
+python mnist_launch.py --exp_name=0000-argmax-no-random-K10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=10   --draw_ssb=1 --supersub_from_rad=True
+python mnist_launch.py --exp_name=0001-argmax-no-random-K10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=10   --draw_ssb=1 --supersub_from_rad=True
+python mnist_launch.py --exp_name=0002-argmax-no-random-K10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=10   --draw_ssb=1 --supersub_from_rad=True
+python mnist_launch.py --exp_name=0003-argmax-no-random-K10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=10   --draw_ssb=1 --supersub_from_rad=True
+python mnist_launch.py --exp_name=0004-argmax-no-random-K10 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=10   --draw_ssb=1 --supersub_from_rad=True
+
+python mnist_launch.py --exp_name=0000-argmax-no-random-K100 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=100 --draw_ssb=1 --supersub_from_rad=True
+python mnist_launch.py --exp_name=0001-argmax-no-random-K100 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=100 --draw_ssb=1 --supersub_from_rad=True
+python mnist_launch.py --exp_name=0002-argmax-no-random-K100 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=100 --draw_ssb=1 --supersub_from_rad=True
+python mnist_launch.py --exp_name=0003-argmax-no-random-K100 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=100 --draw_ssb=1 --supersub_from_rad=True
+python mnist_launch.py --exp_name=0004-argmax-no-random-K100 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=100 --draw_ssb=1 --supersub_from_rad=True
+
+python mnist_launch.py --exp_name=0000-argmax-no-random-K1000 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=1000 --draw_ssb=1 --supersub_from_rad=True
+python mnist_launch.py --exp_name=0001-argmax-no-random-K1000 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=1000 --draw_ssb=1 --supersub_from_rad=True
+python mnist_launch.py --exp_name=0002-argmax-no-random-K1000 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=1000 --draw_ssb=1 --supersub_from_rad=True
+python mnist_launch.py --exp_name=0003-argmax-no-random-K1000 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=1000 --draw_ssb=1 --supersub_from_rad=True
+python mnist_launch.py --exp_name=0004-argmax-no-random-K1000 --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1  --repeat_ssb=1000 --draw_ssb=1 --supersub_from_rad=True
 
 # python mnist_launch.py --exp_name=0000-baseline   --simple=True --lr=0.001350 --weight_decay=4.066478e-07
 # python mnist_launch.py --exp_name=0001-baseline   --simple=True --lr=0.001350 --weight_decay=4.066478e-07

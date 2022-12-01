@@ -534,8 +534,8 @@ class RandMatMul(torch.autograd.Function):
                 supersub_from_rad, argmean, draw_ssb, reloadMask, mask):
 
 
-        print("device is")
-        print(input.device)
+        # print("device is")
+        # print(input.device)
 
 
         # Calculate dimensions according to input and keep_frac
@@ -615,29 +615,53 @@ class RandMatMul(torch.autograd.Function):
 
             elif ctx.supersub_from_rad:
                 if ctx.reloadMask:
-                    npts, rms = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed,
-                                         full_random=ctx.full_random, output_random_matrix=True, draw_ssb=ctx.draw_ssb)
-                    cinputs = [cln(npt) for npt in npts]
-                    cweight = cln(weight)
-                    cbias = cln(bias)
+                    if ctx.draw_ssb == 1:
+                        input_shape = shp(true_input)
+                        if len(input_shape) == 4:
+                            batch_size = (input_shape[0], input_shape[1])
+                            feature_len = input_shape[2] * input_shape[3]
+                        elif len(input_shape) == 2:
+                            batch_size = (input_shape[0],)
+                            feature_len = input_shape[1]
 
-                    with torch.autograd.grad_mode.enable_grad():
-                        outputs = [F.linear(cinput, cweight, bias=cbias) for cinput in cinputs]
-                        if ctx.argmean:
-                            true_output = F.linear(true_input, cweight, bias=cbias)
-                    if ctx.argmean:
-                        _, _, true_gradient = true_output.grad_fn(grad_output)
+                        kept_feature_size = shp(dim_reduced_input)[-1]
+                        rand_matrix_shape = (feature_len, kept_feature_size)
+                        avg_npts = torch.mean(torch.abs(true_input), 0)
+                        indices = torch.topk(avg_npts, kept_feature_size).indices
+                        rm = []
+                        for i in indices:
+                            vec = [float(int(i) == j) for j in range(feature_len)]
+                            rm.append(vec)
+                        rm = torch.tensor(rm)
+                        rm = torch.transpose(rm, -2, -1)
+                        print(shp(rm))
+                        ctx.mask = Variable(rm, requires_grad=False)
+                        npt = rp2input(dim_reduced_input, ctx.input_shape, random_seed=None,
+                                             full_random=ctx.full_random, rand_matrix=rm)
                     else:
-                        true_gradient = None
+                        npts, rms = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed,
+                                             full_random=ctx.full_random, output_random_matrix=True, draw_ssb=ctx.draw_ssb)
+                        cinputs = [cln(npt) for npt in npts]
+                        cweight = cln(weight)
+                        cbias = cln(bias)
 
-                    gradients = []
-                    for output in outputs:
-                        _, _, w = output.grad_fn(grad_output)
-                        gradients.append(w)
+                        with torch.autograd.grad_mode.enable_grad():
+                            outputs = [F.linear(cinput, cweight, bias=cbias) for cinput in cinputs]
+                            if ctx.argmean:
+                                true_output = F.linear(true_input, cweight, bias=cbias)
+                        if ctx.argmean:
+                            _, _, true_gradient = true_output.grad_fn(grad_output)
+                        else:
+                            true_gradient = None
 
-                    arg = selection(gradients, true_gradient=true_gradient)
-                    npt = npts[arg]
-                    ctx.mask = Variable(rms[arg], requires_grad=False)
+                        gradients = []
+                        for output in outputs:
+                            _, _, w = output.grad_fn(grad_output)
+                            gradients.append(w)
+
+                        arg = selection(gradients, true_gradient=true_gradient)
+                        npt = npts[arg]
+                        ctx.mask = Variable(rms[arg], requires_grad=False)
 
                 else:
                     npt = torch.matmul(dim_reduced_input, torch.transpose(ctx.mask, -2, -1)).view(ctx.input_shape)
