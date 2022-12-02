@@ -12,12 +12,12 @@ def shp(t):
 
 
 def selection(gradients, true_gradient=None):
-    norms = [torch.sum(torch.abs(g)) for g in gradients]
-
-    if true_gradient is not None:
+    if true_gradient is None:
+        norms = [torch.sum(torch.abs(g)) for g in gradients]
+        return np.argmax(norms)
+    else:
         errors = [torch.sum(torch.abs(g - true_gradient)) for g in gradients]
         return np.argmin(errors)
-    return np.argmax(norms)
 
 def gen_rad_mat(rm_size, feat_size, device):
     bern = torch.randint(2, size=rm_size, device=device, requires_grad=False)
@@ -532,11 +532,6 @@ class RandMatMul(torch.autograd.Function):
     @staticmethod
     def forward(ctx, input, weight, bias, keep_frac, full_random, random_seed, sparse, supersub,
                 supersub_from_rad, argmean, draw_ssb, reloadMask, mask):
-
-
-        # print("device is")
-        # print(input.device)
-
 
         # Calculate dimensions according to input and keep_frac
         ctx.input_shape = shp(input)

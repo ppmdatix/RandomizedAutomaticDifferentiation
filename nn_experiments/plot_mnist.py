@@ -159,7 +159,7 @@ print(pre_workers)
 workers = []
 
 
-nb_curves = 2
+nb_curves = 5
 for j in range(len(pre_workers)):
     pre_worker = pre_workers[j]
     for i in range(nb_curves):
