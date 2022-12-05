@@ -1,6 +1,7 @@
 import os
 import pickle
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from IPython.display import display
 import matplotlib.colors as mcolors
@@ -19,6 +20,13 @@ params = {
   'text.latex.preamble': r'\usepackage{amsmath} \usepackage{amssymb}',
    }
 plt.rcParams.update(params)
+
+list_of_colors = list(mcolors.BASE_COLORS.keys())
+for clr in mcolors.TABLEAU_COLORS.keys():
+    list_of_colors.append(clr)
+print(list_of_colors)
+list_of_colors.remove("w")
+list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
 
 def plot_everything(workers):
     worker_dirs = [os.path.join(EXP_ROOT, f[0]) for f in workers]
@@ -55,6 +63,8 @@ def plot_everything(workers):
     plt.title('Memory time vs Iterations for SmallFCNet on MNIST')
 
     final_results = []
+    stats_results = {w: {'acc': [], 'mem': []} for w in worker_names}
+
 
     labeled = []
     for worker, worker_name, color, marker in zip(worker_dirs, worker_names, worker_colors, worker_markers):
@@ -81,6 +91,14 @@ def plot_everything(workers):
         train_test_accuracy = [t[1]['accuracy'] for t in train_test_curve if t[0] != 'final']
         # train_time = [t[1]['time'] for t in train_curve if t[0] != 'final']
         train_memory = [t[1]['memory']['rss'] for t in train_curve if t[0] != 'final' and 'memory' in t[1]]
+
+        acc = [t[1]['accuracy'] for t in test_curve if t[0] == 'final'][0]
+        train_memory = [t[1]['memory']['rss'] for t in train_curve if 'memory' in t[1]]
+        mem = max(train_memory)
+
+        stats_results[worker_name]["acc"].append(acc)
+        stats_results[worker_name]["mem"].append(mem)
+
 
         if worker_name in labeled:
             worker_name = None
@@ -119,14 +137,31 @@ def plot_everything(workers):
     ax6.legend()
 
     fig.savefig('mnist_all_curves_full.pdf')
+    plt.close()
+    plt.figure(figsize=(40, 10))
+    c = -1
+    for worker in stats_results:
+        c += 1
+        acc_data = stats_results[worker]["acc"]
+        acc_avg = np.mean(acc_data)
+        acc_std = np.std(acc_data)
+
+        mem_data = stats_results[worker]["mem"]
+        mem_avg = np.mean(mem_data) / 350000.0
+        mem_std = np.std(mem_data) / 350000.0
+
+        if acc_avg > 50:
+            plt.hlines(y=mem_avg, xmin=acc_avg - acc_std, xmax=acc_avg + acc_std, linewidth=2, color=list_of_colors[c],
+                       label=worker)
+            plt.vlines(x=acc_avg, ymin=mem_avg - mem_std, ymax=mem_avg + mem_std, linewidth=2, color=list_of_colors[c])
+    plt.xlabel("Accuracy")
+    plt.ylabel("Memory")
+    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    plt.savefig('stats_results.png')
+    plt.close()
 
 
-list_of_colors = list(mcolors.BASE_COLORS.keys())
-for clr in mcolors.TABLEAU_COLORS.keys():
-    list_of_colors.append(clr)
-print(list_of_colors)
-list_of_colors.remove("w")
-list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
+
 
 
 pre_workers = os.listdir(EXP_ROOT)
@@ -141,7 +176,7 @@ removed_workers = [
     "supersub-nobatch-50",
     "",
 ]
-removed_words = ["argmean"]
+removed_words = ["argmean", "samemask", "argmax", "from-me", "K1-100ch"]
 for rw in removed_workers:
     if rw in pre_workers:
         pre_workers.remove(rw)
