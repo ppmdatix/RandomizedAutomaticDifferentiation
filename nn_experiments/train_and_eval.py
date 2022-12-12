@@ -20,6 +20,7 @@ def memory_usage():
     """Memory usage of the current process in kilobytes."""
     status = None
     result = {'peak': 0, 'rss': 0}
+    return result
     try:
         # This will only work on systems with a /proc file system
         # (like Linux).
@@ -154,9 +155,9 @@ def run_model(model, args, device, writer, pickle_string, model_string):
                                weight_decay=args.weight_decay)
     else:
         optimizer = optim.SGD(
-                model.parameters(), 
-                momentum=0.9, lr=args.lr,
-                weight_decay=args.weight_decay)
+            model.parameters(),
+            momentum=0.9, lr=args.lr,
+            weight_decay=args.weight_decay)
 
     if 'training_schedule' not in args or args.training_schedule == 'cifar':
         print('Using CIFAR schedule.')

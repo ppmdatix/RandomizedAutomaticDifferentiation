@@ -52,7 +52,7 @@ def plot_everything(workers):
 
     ax4 = plt.subplot(514)
     plt.title('Test Accuracy vs Iterations for SmallFCNet on MNIST')
-    ax4.set_ylim((92.5, 98.5))
+    ax4.set_ylim((2.5, 98.5))
     ax4.grid(True)
 
     # ax5 = plt.subplot(515)
@@ -138,24 +138,36 @@ def plot_everything(workers):
 
     fig.savefig('mnist_all_curves_full.pdf')
     plt.close()
-    plt.figure(figsize=(40, 10))
+    plt.figure(figsize=(20, 10))
+    n = 2
+    a = np.reshape(np.linspace(0, 1, n ** 2), (n, n))
+    cmap = mcolors.LinearSegmentedColormap.from_list('redToGreen', ["r", "g"], N=256)
+    plotlim = (0, 1.2, 0, 1.2)
+    plt.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.4)
     c = -1
+    linewidth = 4
     for worker in stats_results:
         c += 1
         acc_data = stats_results[worker]["acc"]
-        acc_avg = np.mean(acc_data)
-        acc_std = np.std(acc_data)
+        acc_avg = np.mean(acc_data) / 100.0
+        acc_std = np.std(acc_data) / 100.0
 
         mem_data = stats_results[worker]["mem"]
-        mem_avg = np.mean(mem_data) / 350000.0
-        mem_std = np.std(mem_data) / 350000.0
+        mem_avg = np.mean(mem_data) / 400000.0
+        mem_std = np.std(mem_data) / 400000.0
 
-        if acc_avg > 50:
-            plt.hlines(y=mem_avg, xmin=acc_avg - acc_std, xmax=acc_avg + acc_std, linewidth=2, color=list_of_colors[c],
+        if acc_avg > 0.1:
+            plt.hlines(y=mem_avg, xmin=acc_avg - acc_std,
+                       xmax=acc_avg + acc_std, linewidth=linewidth, color=list_of_colors[c],
                        label=worker)
-            plt.vlines(x=acc_avg, ymin=mem_avg - mem_std, ymax=mem_avg + mem_std, linewidth=2, color=list_of_colors[c])
+            plt.vlines(x=acc_avg, ymin=mem_avg - mem_std, ymax=mem_avg + mem_std,
+                       linewidth=linewidth, color=list_of_colors[c])
+
     plt.xlabel("Accuracy")
     plt.ylabel("Memory")
+    plt.grid()
+    plt.xlim(0, 1)
+    plt.ylim(0.7, 1.05)
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     plt.savefig('stats_results.png')
     plt.close()
@@ -176,7 +188,7 @@ removed_workers = [
     "supersub-nobatch-50",
     "",
 ]
-removed_words = ["argmean", "samemask", "argmax", "from-me", "K1-100ch"]
+removed_words = ["argmean", "samemask", "argmax", "K1-100ch", "from-me", "choice"]
 for rw in removed_workers:
     if rw in pre_workers:
         pre_workers.remove(rw)
@@ -187,14 +199,15 @@ for w in removed_words:
         if w in pw:
             byebye.append(pw)
 for b in byebye:
-    pre_workers.remove(b)
+    if b in pre_workers:
+        pre_workers.remove(b)
 
 print(pre_workers)
 
 workers = []
 
 
-nb_curves = 5
+nb_curves = 1
 for j in range(len(pre_workers)):
     pre_worker = pre_workers[j]
     for i in range(nb_curves):
