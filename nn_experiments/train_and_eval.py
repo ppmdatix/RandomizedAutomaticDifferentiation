@@ -20,7 +20,6 @@ def memory_usage():
     """Memory usage of the current process in kilobytes."""
     status = None
     result = {'peak': 0, 'rss': 0}
-    return result
     try:
         # This will only work on systems with a /proc file system
         # (like Linux).
@@ -34,6 +33,7 @@ def memory_usage():
         if status is not None:
             status.close()
     return result
+
 
 def simple_train(args, model, device, train_loader, optimizer, scheduler, test_loader, train_test_loader):
     all_checkpoints = []
@@ -60,16 +60,16 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
             mem = memory_usage()
             optimizer.step()
 
-            if iteration % args.simple_log_frequency == 0:
-                # Logging every 10 iterations.
-                print('Train Iteration: [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                    iteration, args.max_iterations,
-                    100. * iteration / args.max_iterations, loss.item()))
+            # if iteration % args.simple_log_frequency == 0:
+            #     # Logging every 10 iterations.
+            #     print('Train Iteration: [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+            #         iteration, args.max_iterations,
+            #         100. * iteration / args.max_iterations, loss.item()))
 
             if iteration % args.simple_test_eval_frequency == 0:
                 # Evaluate every 300 iterations.
                 after_epoch = time.time()
-                print('{} Iteration time: {}'.format(args.simple_test_eval_frequency, after_epoch - before_epoch))
+                # print('{} Iteration time: {}'.format(args.simple_test_eval_frequency, after_epoch - before_epoch))
                 train_ckpt = {}
                 train_ckpt['loss'] = loss.item()
                 train_ckpt['time'] = after_epoch - before_epoch
@@ -88,7 +88,7 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
 
             if iteration % args.simple_scheduler_step_frequency == 0:
                 scheduler.step()
-                print('Learning rate is now decreased by {}'.format(args.gamma))
+                # print('Learning rate is now decreased by {}'.format(args.gamma))
 
             if iteration % args.simple_model_checkpoint_frequency == 0:
                 if 'inter_dir' not in args:
@@ -124,9 +124,9 @@ def test(args, model, device, test_loader, writer=None, split='Test'):
     test_loss /= len(test_loader.dataset)
     after_test = time.time()
 
-    print('\n{} set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-        split, test_loss, correct, len(test_loader.dataset),
-        100. * correct / len(test_loader.dataset)))
+    # print('\n{} set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
+    #     split, test_loss, correct, len(test_loader.dataset),
+    #     100. * correct / len(test_loader.dataset)))
     checkpoint = {}
     checkpoint['loss'] = test_loss
     checkpoint['accuracy'] = 100. * correct / len(test_loader.dataset)

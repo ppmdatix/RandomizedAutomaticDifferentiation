@@ -561,9 +561,7 @@ class RandMatMul(torch.autograd.Function):
         else:
             rm = None
             if ctx.supersub_from_rad:
-                if ctx.reloadMask:
-                    rm = torch.ones(ctx.mask.size())
-                else:
+                if not ctx.reloadMask:
                     rm = ctx.mask
 
             dim_reduced_input, _ = input2rp(input, ctx.kept_activations, random_seed=random_seed,
@@ -610,7 +608,7 @@ class RandMatMul(torch.autograd.Function):
 
             elif ctx.supersub_from_rad:
                 if ctx.reloadMask:
-                    if ctx.draw_ssb == 1:
+                    if False:# ctx.draw_ssb == 1:
                         input_shape = shp(true_input)
                         if len(input_shape) == 4:
                             batch_size = (input_shape[0], input_shape[1])
