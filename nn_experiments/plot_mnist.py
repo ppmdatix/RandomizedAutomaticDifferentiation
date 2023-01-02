@@ -42,9 +42,9 @@ def plot_everything(workers):
     plt.title('Training Loss vs Iterations for SmallFCNet on MNIST')
     ax.set_yscale('log')
 
-    ax2 = plt.subplot(512)
-    plt.title('Training Accuracy vs Iterations for SmallFCNet on MNIST')
-    ax2.set_ylim((98, 100))
+    #ax2 = plt.subplot(512)
+    #plt.title('Training Accuracy vs Iterations for SmallFCNet on MNIST')
+    #ax2.set_ylim((98, 100))
 
     ax3 = plt.subplot(513)
     plt.title('Test Loss vs Iterations for SmallFCNet on MNIST')
@@ -52,11 +52,11 @@ def plot_everything(workers):
 
     ax4 = plt.subplot(514)
     plt.title('Test Accuracy vs Iterations for SmallFCNet on MNIST')
-    ax4.set_ylim((2.5, 98.5))
+    ax4.set_ylim((96, 98.5))
     ax4.grid(True)
 
-    # ax5 = plt.subplot(515)
-    # plt.title('Training time vs Iterations for SmallFCNet on MNIST')
+    ax5 = plt.subplot(512)
+    plt.title('Training time vs Iterations for SmallFCNet on MNIST')
 
     ax6 = plt.subplot(515)
 
@@ -89,7 +89,7 @@ def plot_everything(workers):
         train_iterations = [t[0] for t in train_curve if t[0] != 'final']
         train_test_loss = [t[1]['loss'] for t in train_test_curve if t[0] != 'final']
         train_test_accuracy = [t[1]['accuracy'] for t in train_test_curve if t[0] != 'final']
-        # train_time = [t[1]['time'] for t in train_curve if t[0] != 'final']
+        train_time = [t[1]['time'] for t in train_curve if t[0] != 'final']
         train_memory = [t[1]['memory']['rss'] for t in train_curve if t[0] != 'final' and 'memory' in t[1]]
 
         acc = [t[1]['accuracy'] for t in test_curve if t[0] == 'final'][0]
@@ -108,8 +108,9 @@ def plot_everything(workers):
         marker_size = 10
 
         ax.plot(train_test_iterations, train_test_loss, marker=marker, label=worker_name, c=color, ms=marker_size)
-        ax2.plot(train_test_iterations, train_test_accuracy, marker=marker, label=worker_name, c=color, ms=marker_size)
-        
+        #ax2.plot(train_test_iterations, train_test_accuracy, marker=marker, label=worker_name, c=color, ms=marker_size)
+        ax5.plot(train_iterations, train_time, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
+
         test_iterations = [t[0] for t in test_curve if t[0] != 'final']
         test_loss = [t[1]['loss'] for t in test_curve if t[0] != 'final']
         test_accuracy = [t[1]['accuracy'] for t in test_curve if t[0] != 'final']
@@ -117,7 +118,6 @@ def plot_everything(workers):
 
         ax4.plot(test_iterations, test_accuracy, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
 
-        # ax5.plot(train_iterations, train_time, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
         if len(train_memory) > 0:
             ax6.plot(train_iterations, train_memory, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
 
@@ -131,7 +131,7 @@ def plot_everything(workers):
 
     display(pd.DataFrame(final_results))
     ax.legend()
-    ax2.legend()
+    ax5.legend()
     ax3.legend()
     ax4.legend()
     ax6.legend()
@@ -140,9 +140,9 @@ def plot_everything(workers):
     plt.close()
     plt.figure(figsize=(20, 10))
     n = 2
-    a = np.reshape(np.linspace(0, 1, n ** 2), (n, n))
+    a = np.reshape(np.linspace(0.9, 1, n ** 2), (n, n))
     cmap = mcolors.LinearSegmentedColormap.from_list('redToGreen', ["r", "g"], N=256)
-    plotlim = (0, 1.2, 0, 1.2)
+    plotlim = (0.9, 1.2, 0, 1.2)
     plt.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.4)
     c = -1
     linewidth = 4
@@ -157,16 +157,24 @@ def plot_everything(workers):
         mem_std = np.std(mem_data) / 400000.0
 
         if acc_avg > 0.1:
+            linestyles = "solid"
+            if "-100ch" in worker:
+                linestyles = "dashed"
+            elif "-10ch" in worker:
+                linestyles = "dotted"
+
             plt.hlines(y=mem_avg, xmin=acc_avg - acc_std,
-                       xmax=acc_avg + acc_std, linewidth=linewidth, color=list_of_colors[c],
-                       label=worker)
+                       xmax=acc_avg + acc_std, linewidth=linewidth, color=list_of_colors[c % len(list_of_colors)],
+                       label=worker,
+                       linestyles=linestyles)
             plt.vlines(x=acc_avg, ymin=mem_avg - mem_std, ymax=mem_avg + mem_std,
-                       linewidth=linewidth, color=list_of_colors[c])
+                       linewidth=linewidth, color=list_of_colors[c % len(list_of_colors)],
+                       linestyles=linestyles)
 
     plt.xlabel("Accuracy")
     plt.ylabel("Memory")
     plt.grid()
-    plt.xlim(0, 1)
+    plt.xlim(0.9, 1)
     plt.ylim(0.7, 1.05)
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     plt.savefig('stats_results.png')
@@ -188,7 +196,7 @@ removed_workers = [
     "supersub-nobatch-50",
     "",
 ]
-removed_words = ["argmean", "samemask", "argmax", "K1-100ch", "from-me", "choice"]
+removed_words = ["argmean", "samemask", "argmax", "K1-100ch", "from-me", "0o5", "0o2", "0o02", "0o01", "diffsample"]
 for rw in removed_workers:
     if rw in pre_workers:
         pre_workers.remove(rw)
@@ -207,7 +215,7 @@ print(pre_workers)
 workers = []
 
 
-nb_curves = 1
+nb_curves = 5
 for j in range(len(pre_workers)):
     pre_worker = pre_workers[j]
     for i in range(nb_curves):
