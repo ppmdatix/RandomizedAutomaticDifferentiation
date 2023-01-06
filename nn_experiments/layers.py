@@ -634,8 +634,9 @@ class RandMatMul(torch.autograd.Function):
                         rm = None
                         gg = None
                         for i in range(ctx.draw_ssb):
-                            _npt, _rm = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed,
+                            _npts, _rm = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed,
                                              full_random=ctx.full_random, output_random_matrix=True, draw_ssb=1)
+                            _npt = _npts[0]
                             cinput = cln(_npt)
                             cweight = cln(weight)
                             cbias = cln(bias)
