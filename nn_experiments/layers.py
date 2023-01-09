@@ -633,6 +633,7 @@ class RandMatMul(torch.autograd.Function):
                     else:
                         rm = None
                         gg = None
+                        npt = None
                         for i in range(ctx.draw_ssb):
                             _npts, _rm = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed,
                                              full_random=ctx.full_random, output_random_matrix=True, draw_ssb=1)
@@ -644,15 +645,18 @@ class RandMatMul(torch.autograd.Function):
                             with torch.autograd.grad_mode.enable_grad():
                                 output = F.linear(cinput, cweight, bias=cbias)
 
-                            w = output.grad_fn(grad_output)
+                            _,_,w = output.grad_fn(grad_output)
+                            ww = float(torch.sum(torch.abs(w)))
                             if gg is None:
-                                gg = w
+                                gg = ww
                                 rm = _rm
-                            elif torch.sum(torch.abs(w)) > gg:
-                                gg = w
+                                npt = _npt
+                            elif ww > gg:
+                                gg = ww
                                 rm = _rm
+                                npt = _npt
 
-                        ctx.mask = Variable(rm, requires_grad=False)
+                        ctx.mask = Variable(rm[0], requires_grad=False)
 
                 else:
                     npt = torch.matmul(dim_reduced_input, torch.transpose(ctx.mask, -2, -1)).view(ctx.input_shape)
