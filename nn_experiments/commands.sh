@@ -35,131 +35,15 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-python mnist_launch.py --exp_name=0000-ssb-from-rad-memOpt-K1-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0001-ssb-from-rad-memOpt-K1-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0002-ssb-from-rad-memOpt-K1-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0003-ssb-from-rad-memOpt-K1-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0004-ssb-from-rad-memOpt-K1-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0000-ssb-from-rad-memOpt-K1-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0001-ssb-from-rad-memOpt-K1-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0002-ssb-from-rad-memOpt-K1-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0003-ssb-from-rad-memOpt-K1-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0004-ssb-from-rad-memOpt-K1-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0000-ssb-from-rad-memOpt-K10-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=10   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0001-ssb-from-rad-memOpt-K10-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=10   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0002-ssb-from-rad-memOpt-K10-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=10   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0003-ssb-from-rad-memOpt-K10-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=10   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0004-ssb-from-rad-memOpt-K10-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=10   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0000-ssb-from-rad-memOpt-K10-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=10   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0001-ssb-from-rad-memOpt-K10-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=10   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0002-ssb-from-rad-memOpt-K10-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=10   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0003-ssb-from-rad-memOpt-K10-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=10   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0004-ssb-from-rad-memOpt-K10-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=10   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0000-ssb-from-rad-memOpt-K100-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=100   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0001-ssb-from-rad-memOpt-K100-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=100   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0002-ssb-from-rad-memOpt-K100-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=100   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0003-ssb-from-rad-memOpt-K100-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=100   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0004-ssb-from-rad-memOpt-K100-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=100   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0000-ssb-from-rad-memOpt-K100-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=100   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0001-ssb-from-rad-memOpt-K100-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=100   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0002-ssb-from-rad-memOpt-K100-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=100   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0003-ssb-from-rad-memOpt-K100-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=100   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0004-ssb-from-rad-memOpt-K100-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=100   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0000-ssb-from-rad-memOpt-K1000-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1000   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0001-ssb-from-rad-memOpt-K1000-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1000   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0002-ssb-from-rad-memOpt-K1000-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1000   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0003-ssb-from-rad-memOpt-K1000-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1000   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0004-ssb-from-rad-memOpt-K1000-10choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1000   --draw_ssb=10 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0000-ssb-from-rad-memOpt-K1000-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1000   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0001-ssb-from-rad-memOpt-K1000-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1000   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0002-ssb-from-rad-memOpt-K1000-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1000   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0003-ssb-from-rad-memOpt-K1000-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1000   --draw_ssb=100 --supersub_from_rad=True
-
-
-python mnist_launch.py --exp_name=0004-ssb-from-rad-memOpt-K1000-100choice-0o1kf --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1   --repeat_ssb=1000   --draw_ssb=100 --supersub_from_rad=True
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-baselineMemOpt --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=1.0 --bootstrap_train=True
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-baselineMemOpt --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=1.0 --bootstrap_train=True
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-baselineMemOpt --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=1.0 --bootstrap_train=True
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-baselineMemOpt --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=1.0 --bootstrap_train=True
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-baselineMemOpt --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=1.0 --bootstrap_train=True
+
+
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-smallbatch --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20 --bootstrap_train=True --keep_frac=1.0
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-smallbatch --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20 --bootstrap_train=True --keep_frac=1.0
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-smallbatch --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20 --bootstrap_train=True --keep_frac=1.0
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-smallbatch --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20 --bootstrap_train=True --keep_frac=1.0
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-smallbatch --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20 --bootstrap_train=True --keep_frac=1.0

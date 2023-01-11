@@ -174,8 +174,8 @@ def plot_everything(workers):
     plt.xlabel("Accuracy")
     plt.ylabel("Memory")
     plt.grid()
-    plt.xlim(0.9, 1)
-    plt.ylim(0.7, 1.05)
+    plt.xlim(0.97, 0.99)
+    plt.ylim(0.73, 0.781)
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     plt.savefig('stats_results.png')
     plt.close()
@@ -196,7 +196,7 @@ removed_workers = [
     "supersub-nobatch-50",
     "",
 ]
-removed_words = ["argmean", "samemask", "argmax", "K1-100ch", "from-me", "0o5", "0o2", "0o02", "0o01", "diffsample"]
+removed_words = ["argmean", "samemask", "argmax", "K1-100ch", "from-me", "0o5", "0o2", "0o02", "0o01", "diffsample", "rad-K"]
 for rw in removed_workers:
     if rw in pre_workers:
         pre_workers.remove(rw)
