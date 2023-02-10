@@ -205,7 +205,7 @@ def main(additional_args):
         print('Creating pickle directory in experiment directory.')
         os.mkdir(args.pickle_dir)
 
-    use_cuda = not args.no_cuda and torch.cuda.is_available()
+    use_cuda = True # not args.no_cuda and torch.cuda.is_available()
     print('Seed is {}'.format(args.seed))
     torch.manual_seed(args.seed)
     torch.backends.cudnn.deterministic = True
