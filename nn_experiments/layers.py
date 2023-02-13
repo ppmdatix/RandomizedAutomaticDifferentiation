@@ -786,7 +786,7 @@ class RandConv2d(torch.autograd.Function):
             output = F.conv2d(cinput, cweight, bias=cbias, **ctx.conv_params)
 
         input_grad_output = grad_output
-        input_grad_input, weight_grad_input, bias_grad_input = output.grad_fn(input_grad_output)
+        input_grad_input, weight_grad_input = output.grad_fn(input_grad_output)
 
-        return input_grad_input, weight_grad_input, bias_grad_input, None, None, None, \
+        return input_grad_input, weight_grad_input, None, None, None, None, \
                None, None, None, None, None, None, ctx.mask
