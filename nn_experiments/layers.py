@@ -759,11 +759,11 @@ class RandConv2d(torch.autograd.Function):
                     outputs = [F.conv2d(cinput, cweight, bias=cbias, **ctx.conv_params) for cinput in cinputs]
                     true_output = F.conv2d(true_input, cweight, bias=cbias, **ctx.conv_params)
 
-                _, _, true_gradient = true_output.grad_fn(grad_output)
+                _, true_gradient = true_output.grad_fn(grad_output)
 
                 gradients = []
                 for output in outputs:
-                    _, _, w = output.grad_fn(grad_output)
+                    _, w = output.grad_fn(grad_output)
                     gradients.append(w)
 
                 arg = selection(gradients, true_gradient=true_gradient)
