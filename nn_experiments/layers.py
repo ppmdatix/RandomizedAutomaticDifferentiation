@@ -113,9 +113,9 @@ class RandLinear(torch.nn.Linear):
         self.mask = None
         use_cuda = torch.cuda.is_available()
         if self.supersub:
-            self.mask = Variable(torch.zeros(self.in_features, self.out_features), requires_grad=True)
+            self.mask = Variable(torch.zeros(self.in_features, self.out_features, device="cuda:0"), requires_grad=True)
         elif self.supersub_from_rad:
-            self.mask = Variable(torch.zeros(self.in_features, int(self.in_features * self.keep_frac + 0.999)), requires_grad=True)
+            self.mask = Variable(torch.zeros(self.in_features, int(self.in_features * self.keep_frac + 0.999), device="cuda:0"), requires_grad=True)
         if use_cuda:
             self.mask.cuda()
 
