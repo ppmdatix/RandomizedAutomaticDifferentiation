@@ -113,9 +113,9 @@ class RandLinear(torch.nn.Linear):
         self.mask = None
         use_cuda = torch.cuda.is_available()
         if self.supersub:
-            self.mask = Variable(torch.zeros(self.in_features, self.out_features, device="cuda:0"), requires_grad=True)
+            self.mask = Variable(torch.zeros(self.in_features, self.out_features), requires_grad=True)
         elif self.supersub_from_rad:
-            self.mask = Variable(torch.zeros(self.in_features, int(self.in_features * self.keep_frac + 0.999), device="cuda:0"), requires_grad=True)
+            self.mask = Variable(torch.zeros(self.in_features, int(self.in_features * self.keep_frac + 0.999)), requires_grad=True)
         if use_cuda:
             self.mask.cuda()
 
@@ -759,6 +759,9 @@ class RandConv2d(torch.autograd.Function):
                     outputs = [F.conv2d(cinput, cweight, bias=cbias, **ctx.conv_params) for cinput in cinputs]
                     true_output = F.conv2d(true_input, cweight, bias=cbias, **ctx.conv_params)
 
+                tog = true_output.grad_fn(grad_output)
+                print(tog)
+                print(len(tog))
                 _, true_gradient = true_output.grad_fn(grad_output)
 
                 gradients = []

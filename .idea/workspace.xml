@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="26f08218-7e83-4616-a8cb-9c8aaa958cf9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/plot_cifar.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plot_cifar.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/cifar_launch.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/cifar_launch.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/gpuTESTvm/experiment_args.txt" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/cifarexperiments/gpuTESTvm/experiment_args.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
