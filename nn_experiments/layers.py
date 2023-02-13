@@ -761,7 +761,8 @@ class RandConv2d(torch.autograd.Function):
 
                 tog = true_output.grad_fn(grad_output)
                 print(tog)
-                print(len(tog))
+                print(shp(tog))
+                print(shp(grad_output))
                 _, true_gradient = true_output.grad_fn(grad_output)
 
                 gradients = []
