@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="26f08218-7e83-4616-a8cb-9c8aaa958cf9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/nn_experiments/layers.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/layers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/plot_cifar.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plot_cifar.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/plots/cifar_all_curves_full.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plots/cifar_all_curves_full.pdf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -263,6 +265,21 @@
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
           <line>162</line>
           <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
+          <line>157</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
+          <line>689</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/nn_experiments/plot_cifar.py</url>
+          <line>30</line>
+          <option name="timeStamp" value="23" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

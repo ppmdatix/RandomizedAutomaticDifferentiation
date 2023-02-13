@@ -778,8 +778,6 @@ class RandConv2d(torch.autograd.Function):
         else:
             npt = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
 
-
-
         cinput = cln(npt)
         cweight = cln(weight)
         # cbias = cln(bias)
