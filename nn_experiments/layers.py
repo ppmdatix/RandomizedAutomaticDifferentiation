@@ -760,9 +760,8 @@ class RandConv2d(torch.autograd.Function):
                     true_output = F.conv2d(true_input, cweight, bias=cbias, **ctx.conv_params)
 
                 tog = true_output.grad_fn(grad_output)
-                print(tog)
-                print(shp(grad_output))
-                print(len(tog))
+                # print(tog)
+                # print(shp(grad_output))
                 _, true_gradient = true_output.grad_fn(grad_output)
 
                 gradients = []
@@ -779,15 +778,21 @@ class RandConv2d(torch.autograd.Function):
         else:
             npt = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
 
+
+
         cinput = cln(npt)
         cweight = cln(weight)
-        cbias = cln(bias)
+        # cbias = cln(bias)
 
-        with torch.autograd.grad_mode.enable_grad():
-            output = F.conv2d(cinput, cweight, bias=cbias, **ctx.conv_params)
+                                # with torch.autograd.grad_mode.enable_grad():
+                                        #     output = F.conv2d(cinput, cweight, bias=cbias, **ctx.conv_params)
 
-        input_grad_output = grad_output
-        input_grad_input, weight_grad_input = output.grad_fn(input_grad_output)
+        stride = ctx.conv_params["stride"]
+        padding = ctx.conv_params["padding"]
+        dilation = ctx.conv_params["dilation"]
+        groups = ctx.conv_params["groups"]
+        grad_input = torch.nn.grad.conv2d_input(cinput.shape, cweight, grad_output, stride, padding, dilation, groups)
+        grad_weight = torch.nn.grad.conv2d_weight(cinput, cweight.shape, grad_output, stride, padding, dilation,groups)
+        grad_bias = grad_output.sum((0, 2, 3)).squeeze(0)
 
-        return input_grad_input, weight_grad_input, None, None, None, None, \
-               None, None, None, None, None, None, ctx.mask
+        return grad_input, grad_weight, grad_bias, None, None, None, None, None, None, None, None, None, ctx.mask
