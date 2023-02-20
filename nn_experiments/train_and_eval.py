@@ -56,7 +56,6 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
                 output = model(data)
 
             loss = F.nll_loss(output, target)
-            print("Loss: %s" % str(loss.item()))
             loss.backward()
             mem = memory_usage()
             optimizer.step()
@@ -144,12 +143,6 @@ def run_model(model, args, device, writer, pickle_string, model_string):
                            bootstrap_train=args.bootstrap_train)
 
     data, _ = next(iter(train_loader))
-
-
-    print(data.shape)
-
-
-
     if writer:
         grid = torchvision.utils.make_grid(data)
         writer.add_image('images', grid, 0)

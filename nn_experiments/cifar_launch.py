@@ -32,7 +32,7 @@ args_template = rputils.ParameterMap(
     test_batch_size=1000,
 
     # number of epochs to train (default: 14)
-    epochs=5,
+    epochs=200,
 
     # learning rate (default: 1.0)
     lr=0.1,
@@ -89,7 +89,7 @@ args_template = rputils.ParameterMap(
     with_replace=False,
 
     # Whether to use augmentation in training dataset.
-    augment=False,
+    augment=True,
 
     # Additive noise to add.
     rand_noise=0.0,
