@@ -1,6 +1,8 @@
 
-nn_experiments\data*
-nn_experiments/data*
+/nn_experiments\data\
+/nn_experiments/data/
+nn_experiments/data/
+
 *.pyc
 
 *.xml
