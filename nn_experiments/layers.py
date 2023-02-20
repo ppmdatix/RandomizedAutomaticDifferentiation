@@ -189,6 +189,7 @@ class RandConv2dLayer(torch.nn.Conv2d):
         self.batch_size = batch_size
         self.k = 0
         self.reloadMask = reloadMask
+        self.none = mask
 
     def forward(self, input, retain=False, skip_rand=False):
         """
