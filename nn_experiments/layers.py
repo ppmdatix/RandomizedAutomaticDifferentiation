@@ -718,9 +718,7 @@ class RandConv2d(torch.autograd.Function):
         else:
             rm = None
             if ctx.supersub_from_rad:
-                if ctx.reloadMask:
-                    rm = torch.ones(ctx.mask.size(), device=input.device)
-                else:
+                if not ctx.reloadMask:
                     rm = ctx.mask
             dim_reduced_input, _ = input2rp(input, kept_image_size, full_random=full_random,
                                             random_seed=random_seed, rand_matrix=rm)
