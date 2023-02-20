@@ -193,7 +193,7 @@ removed_workers = [
     "supersub-nobatch-50",
     "",
 ]
-removed_words = ["argmean", "samemask", "argmax", "K1-100ch", "from-me", "0o5", "0o2", "0o02", "0o01", "diffsample", "rad-K"]
+removed_words = ["argmean", "samemask", "argmax", "from-me", "0o5", "0o2", "0o02", "0o01", "diffsample", "rad-K"]
 for rw in removed_workers:
     if rw in pre_workers:
         pre_workers.remove(rw)
@@ -212,7 +212,7 @@ print(pre_workers)
 workers = []
 
 
-nb_curves = 5
+nb_curves = 2
 for j in range(len(pre_workers)):
     pre_worker = pre_workers[j]
     for i in range(nb_curves):

@@ -143,6 +143,12 @@ def run_model(model, args, device, writer, pickle_string, model_string):
                            bootstrap_train=args.bootstrap_train)
 
     data, _ = next(iter(train_loader))
+
+
+    print(data.shape)
+
+
+
     if writer:
         grid = torchvision.utils.make_grid(data)
         writer.add_image('images', grid, 0)
