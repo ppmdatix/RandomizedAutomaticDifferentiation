@@ -56,6 +56,7 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
                 output = model(data)
 
             loss = F.nll_loss(output, target)
+            print("Loss: %s" % str(loss.item()))
             loss.backward()
             mem = memory_usage()
             optimizer.step()
