@@ -170,7 +170,7 @@ class RandConv2dLayer(torch.nn.Conv2d):
     """
 
     def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False, supersub=False,
-                 supersub_from_rad=False, repeat_ssb=10, draw_ssb=10, batch_size=150, **kwargs):
+                 supersub_from_rad=False, repeat_ssb=10, draw_ssb=10, batch_size=150, reloadMask=reloadMask, mask=None, **kwargs):
         super(RandConv2dLayer, self).__init__(*args, **kwargs)
         self.conv_params = {
             'stride': self.stride,
@@ -188,7 +188,7 @@ class RandConv2dLayer(torch.nn.Conv2d):
         self.draw_ssb = draw_ssb
         self.batch_size = batch_size
         self.k = 0
-        self.reloadMask = None
+        self.reloadMask = reloadMask
 
     def forward(self, input, retain=False, skip_rand=False):
         """
