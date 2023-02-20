@@ -199,35 +199,35 @@ class RandConv2dLayer(torch.nn.Conv2d):
         if not retain:
             self.random_seed = torch.randint(low=10000000000, high=99999999999, size=(1,))
 
-
-
         if skip_rand:
             keep_frac = 1.0
         else:
             keep_frac = self.keep_frac
 
-        if (self.reloadMask is None) or (self.mask.grad is not None):
-            if self.k == 0 or self.k == self.repeat_ssb:
-                if self.supersub:
-                    self.mask = Variable(torch.zeros(self.batch_size, self.in_channels), requires_grad=True, device=input.device)
-                elif self.supersub_from_rad:
-                    input_shape = shp(input)
-                    if len(input_shape) == 4:
-                        feature_len = shp(input)[2] * shp(input)[3]
-                    elif len(input_shape) == 2:
-                        feature_len = shp(input)[1]
-                    kept_image_size = int(keep_frac * input_shape[2] * input_shape[3] + 0.999)
-                    self.mask = Variable(torch.zeros(feature_len, kept_image_size, device=input.device),
-                                         requires_grad=True)
-                self.reloadMask = True
-            else:
-                self.mask = Variable(self.mask.grad, requires_grad=True)
-                self.reloadMask = False
+        if keep_frac == 1.0:
+            self.mask = None
+        else:
+            if (self.reloadMask is None) or (self.mask.grad is not None):
+                if self.k == 0 or self.k == self.repeat_ssb:
+                    if self.supersub:
+                        self.mask = Variable(torch.zeros(self.batch_size, self.in_channels), requires_grad=True, device=input.device)
+                    elif self.supersub_from_rad:
+                        input_shape = shp(input)
+                        if len(input_shape) == 4:
+                            feature_len = shp(input)[2] * shp(input)[3]
+                        elif len(input_shape) == 2:
+                            feature_len = shp(input)[1]
+                        kept_image_size = int(keep_frac * input_shape[2] * input_shape[3] + 0.999)
+                        self.mask = Variable(torch.zeros(feature_len, kept_image_size, device=input.device),
+                                             requires_grad=True)
+                    self.reloadMask = True
+                else:
+                    self.mask = Variable(self.mask.grad, requires_grad=True)
+                    self.reloadMask = False
 
-            self.k = self.k + 1
-            if self.k >= self.repeat_ssb:
-                self.k = 0
-
+                self.k = self.k + 1
+                if self.k >= self.repeat_ssb:
+                    self.k = 0
 
         return RandConv2d.apply(input, self.weight, self.bias,
                                 self.conv_params, keep_frac, self.full_random, self.random_seed,
