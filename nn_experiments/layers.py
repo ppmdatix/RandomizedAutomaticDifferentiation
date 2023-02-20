@@ -200,7 +200,7 @@ class RandConv2dLayer(torch.nn.Conv2d):
         if not retain:
             self.random_seed = torch.randint(low=10000000000, high=99999999999, size=(1,))
 
-        if skip_rand:
+        if skip_rand or not self.supersub_from_rad:
             keep_frac = 1.0
         else:
             keep_frac = self.keep_frac
