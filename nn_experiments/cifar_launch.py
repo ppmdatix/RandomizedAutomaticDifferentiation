@@ -224,6 +224,10 @@ def main(additional_args):
 
     # Check if correct dataset is used for each model.
     for model, _, _ in models:
+        total_params = sum(
+            param.numel() for param in model.parameters()
+        )
+        print("\no\no\no\no\nnb params : " + str(total_params))
         if model.kCompatibleDataset != args.dataset:
             raise NotImplementedError(
                 'Unsupported dataset {} with model {}'.format(args.dataset, model.__class__.__name__)

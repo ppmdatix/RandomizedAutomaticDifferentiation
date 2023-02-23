@@ -147,6 +147,7 @@ def plot_everything(workers):
     c = -1
     linewidth = 4
     for worker in stats_results:
+        print("\nworker\nworker\nworker")
         c += 1
         acc_data = stats_results[worker]["acc"]
         acc_avg = np.mean(acc_data) / 100.0
@@ -182,21 +183,12 @@ def plot_everything(workers):
 
 
 pre_workers = os.listdir(EXP_ROOT)
-pre_workers = list(set([d[5:] for d in pre_workers]))
+pre_workers = list(set([d[3:] for d in pre_workers]))
 pre_workers.sort()
 
-removed_workers = [
-    "supersub-nobatch-100",
-    "supersub-from-rad-samemaskforwardbackward-K50-10choice",
-    "supersub-from-rad-samemaskforwardbackward-K20-10choice",
-    "supersub-nobatch-10",
-    "supersub-nobatch-50",
-    "",
-]
-removed_words = ["argmean", "samemask", "argmax", "from-me", "0o5", "0o2", "0o02", "0o01", "diffsample", "rad-K"]
-for rw in removed_workers:
-    if rw in pre_workers:
-        pre_workers.remove(rw)
+
+removed_words = []# "argmean", "samemask", "argmax", "from-me", "0o5", "0o2", "0o02", "0o01", "diffsample", "rad-K"]
+
 
 byebye = []
 for w in removed_words:
@@ -212,16 +204,16 @@ print(pre_workers)
 workers = []
 
 
-nb_curves = 2
+nb_curves = 1
 for j in range(len(pre_workers)):
     pre_worker = pre_workers[j]
     for i in range(nb_curves):
         c = j % len(list_of_colors)
         m = j % len(list_of_markers)
-        if '000%i-%s' % (i, pre_worker) in os.listdir(EXP_ROOT):
-            pth = os.listdir(EXP_ROOT + '/000%i-%s' % (i, pre_worker))
+        if '0%i-%s' % (i, pre_worker) in os.listdir(EXP_ROOT):
+            pth = os.listdir(EXP_ROOT + '/0%i-%s' % (i, pre_worker))
             if 'pickles' in pth:
-                if len(os.listdir(EXP_ROOT + '/000%i-%s' % (i, pre_worker) + "/pickles")) > 0:
-                    workers.append(('000%i-%s' % (i, pre_worker),  pre_worker,  list_of_colors[c],  list_of_markers[m]))
+                if len(os.listdir(EXP_ROOT + '/0%i-%s' % (i, pre_worker) + "/pickles")) > 0:
+                    workers.append(('0%i-%s' % (i, pre_worker),  pre_worker,  list_of_colors[c],  list_of_markers[m]))
 
 plot_everything(workers)
