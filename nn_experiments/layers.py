@@ -713,6 +713,10 @@ class RandConv2d(torch.autograd.Function):
             dim_reduced_input, _ = input2rp(input, kept_image_size, full_random=full_random,
                                             random_seed=random_seed, rand_matrix=rm)
 
+
+        with torch.autograd.grad_mode.no_grad():
+            conv_out = F.conv2d(input, weight, bias=bias, **ctx.conv_params)
+
         if ctx.reloadMask:
             ctx.save_for_backward(dim_reduced_input, weight, bias, input)
         else:
@@ -721,7 +725,6 @@ class RandConv2d(torch.autograd.Function):
 
         # Save appropriate for backward pass.
         with torch.autograd.grad_mode.no_grad():
-            conv_out = F.conv2d(input, weight, bias=bias, **ctx.conv_params)
             return conv_out
 
     @staticmethod
