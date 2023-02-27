@@ -111,7 +111,7 @@ class RandLinear(torch.nn.Linear):
         self.argmean = argmean
         self.batch_size = batch_size
         self.mask = None
-        use_cuda = torch.cuda.is_available()
+        use_cuda = False #torch.cuda.is_available()
         device = "cuda:0"
         if not use_cuda:
             device = "cpu"
