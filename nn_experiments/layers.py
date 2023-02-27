@@ -228,7 +228,7 @@ class RandConv2dLayer(torch.nn.Conv2d):
 
         return RandConv2d.apply(input, self.weight, self.bias,
                                 self.conv_params, keep_frac, self.full_random, self.random_seed,
-                                self.sparse, self.supersub, self.supersub_from_rad, self.draw_ssb,
+                                self.sparse, self.supersub_from_rad, self.draw_ssb,
                                 self.reloadMask, self.mask)
 
 
