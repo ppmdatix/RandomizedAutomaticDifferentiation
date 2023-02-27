@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26f08218-7e83-4616-a8cb-9c8aaa958cf9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/plot_cifar.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plot_cifar.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/plots/CIFARstats_results.png" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plots/CIFARstats_results.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/plots/cifar_all_curves_full.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plots/cifar_all_curves_full.pdf" afterDir="false" />
-    </list>
+    <list default="true" id="26f08218-7e83-4616-a8cb-9c8aaa958cf9" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -70,7 +65,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;last_opened_file_path&quot;: &quot;/home/guest/Bureau/RandomizedAutomaticDifferentiation&quot;
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/PaulPeseux/RandomizedAutomaticDifferentiation/nn_experiments&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -194,57 +189,57 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>372</line>
+          <line>368</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>395</line>
+          <line>391</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>220</line>
+          <line>216</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>472</line>
+          <line>468</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>367</line>
+          <line>363</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>522</line>
+          <line>518</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>308</line>
+          <line>304</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>417</line>
+          <line>413</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>309</line>
+          <line>305</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>216</line>
+          <line>212</line>
           <option name="timeStamp" value="12" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>336</line>
+          <line>332</line>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -254,12 +249,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>283</line>
+          <line>279</line>
           <option name="timeStamp" value="15" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>243</line>
+          <line>239</line>
           <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -274,7 +269,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/nn_experiments/layers.py</url>
-          <line>689</line>
+          <line>685</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
