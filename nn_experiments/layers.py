@@ -688,7 +688,7 @@ class RandMatMul(torch.autograd.Function):
 
 class RandConv2d(torch.autograd.Function):
     @staticmethod
-    def forward(ctx, input, weight, bias, conv_params, keep_frac, full_random, random_seed, sparse, supersub,
+    def forward(ctx, input, weight, bias, conv_params, keep_frac, full_random, random_seed, sparse,
                 supersub_from_rad, draw_ssb, reloadMask, mask):
         ctx.input_shape = shp(input)
         ctx.batch_size = ctx.input_shape[:-1]
