@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26f08218-7e83-4616-a8cb-9c8aaa958cf9" name="Changes" comment="" />
+    <list default="true" id="26f08218-7e83-4616-a8cb-9c8aaa958cf9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/nn_experiments/train_and_eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/train_and_eval.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
