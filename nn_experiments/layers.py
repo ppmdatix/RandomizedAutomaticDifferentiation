@@ -751,7 +751,9 @@ class RandConv2d(torch.autograd.Function):
                         with torch.autograd.grad_mode.enable_grad():
                             output = F.conv2d(cinput, cweight, bias=cbias, **ctx.conv_params)
 
-                        _, true_gradient = output.grad_fn(grad_output)
+                        _, true_gradient, _ = output.grad_fn(grad_output)
+
+                        # _, true_gradient = output.grad_fn(grad_output)
                         ww = float(torch.sum(torch.abs(true_gradient)))
                         if gg is None:
                             gg = ww

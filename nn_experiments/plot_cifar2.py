@@ -72,17 +72,19 @@ def plot_everything(workers):
         test_curve = []
         train_test_curve = []
         for (iteration, s) in struct:
+            print(iteration)
+            print(s)
             if 'train' in s:
                 train_curve.append((iteration, s['train']))
             if 'train_test' in s:
                 train_test_curve.append((iteration, s['train_test']))
             if 'test' in s:
                 test_curve.append((iteration, s['test']))
-        train_test_iterations = [t[0] for t in train_test_curve if t[0] != 'final']
-        train_iterations = [t[0] for t in train_curve if t[0] != 'final']
-        train_test_loss = [t[1]['loss'] for t in train_test_curve if t[0] != 'final']
-        train_test_accuracy = [t[1]['accuracy'] for t in train_test_curve if t[0] != 'final']
-        train_time = [t[1]['time'] for t in train_curve if t[0] != 'final']
+        train_test_iterations = [t[0] for t in train_test_curve             ]# if t[0] != 'final']
+        train_iterations = [t[0] for t in train_curve                       ]# if t[0] != 'final']
+        train_test_loss = [t[1]['loss'] for t in train_test_curve           ]# if t[0] != 'final']
+        train_test_accuracy = [t[1]['accuracy'] for t in train_test_curve   ]# if t[0] != 'final']
+        train_time = [t[1]['time'] for t in train_curve                     ]# if t[0] != 'final']
         if worker_name in labeled:
             worker_name = None
         else:
@@ -103,12 +105,18 @@ def plot_everything(workers):
 
         ax5.plot(train_iterations, train_time, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
 
+
+
+
+        print(train_test_loss)
+        print(train_test_accuracy)
+        print(test_accuracy)
         final_results.append({
             'name': worker_name,
             'train_loss': train_test_loss[-1],
             'train_accuracy': train_test_accuracy[-1],
-            'test_loss': test_loss[-1],
-            'test_accuracy': test_accuracy[-1],
+            # 'test_loss': test_loss[-1],
+            # 'test_accuracy': test_accuracy[-1],
         })
 
     display(pd.DataFrame(final_results))
