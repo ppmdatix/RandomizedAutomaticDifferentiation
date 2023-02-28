@@ -72,8 +72,6 @@ def plot_everything(workers):
         test_curve = []
         train_test_curve = []
         for (iteration, s) in struct:
-            print(iteration)
-            print(s)
             if 'train' in s:
                 train_curve.append((iteration, s['train']))
             if 'train_test' in s:
@@ -106,11 +104,6 @@ def plot_everything(workers):
         ax5.plot(train_iterations, train_time, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
 
 
-
-
-        print(train_test_loss)
-        print(train_test_accuracy)
-        print(test_accuracy)
         final_results.append({
             'name': worker_name,
             'train_loss': train_test_loss[-1],

@@ -24,7 +24,6 @@ def gen_rad_mat(rm_size, feat_size, device):
     bern = torch.randint(2, size=rm_size, device=device, requires_grad=False)
     return (2.0 * bern - 1) / feat_size**0.5
 
-
 def gen_supersub_mak_correct(gradient,  keep_frac):
 
     gradient_shape = shp(gradient)
@@ -153,7 +152,7 @@ class RandLinear(torch.nn.Linear):
                     self.k = 0
 
         return RandMatMul.apply(input, self.weight, self.bias, keep_frac, self.full_random, self.random_seed,
-                                self.sparse, self.supersub, self.supersub_from_rad, self.argmean,self.draw_ssb,
+                                self.sparse, self.supersub, self.supersub_from_rad, self.argmean, self.draw_ssb,
                                 self.reloadMask, self.mask)
 
 
@@ -200,23 +199,19 @@ class RandConv2dLayer(torch.nn.Conv2d):
 
         if skip_rand or not self.supersub_from_rad:
             keep_frac = 1.0
-        else:
-            keep_frac = self.keep_frac
-
-        if keep_frac == 1.0:
             self.mask = None
         else:
+            keep_frac = self.keep_frac
             if (self.reloadMask is None) or (self.mask.grad is not None):
-                if self.k == 0 or self.k == self.repeat_ssb:
-                    if self.supersub_from_rad:
-                        input_shape = shp(input)
-                        if len(input_shape) == 4:
-                            feature_len = shp(input)[2] * shp(input)[3]
-                        elif len(input_shape) == 2:
-                            feature_len = shp(input)[1]
-                        kept_image_size = int(keep_frac * input_shape[2] * input_shape[3] + 0.999)
-                        self.mask = Variable(torch.zeros(feature_len, kept_image_size, device=input.device),
-                                             requires_grad=True)
+                if self.k in [0, self.repeat_ssb]:
+                    input_shape = shp(input)
+                    if len(input_shape) == 4:
+                        feature_len = input_shape[2] * input_shape[3]
+                    elif len(input_shape) == 2:
+                        feature_len = input_shape[1]
+                    kept_image_size = int(keep_frac * input_shape[2] * input_shape[3] + 0.999)
+                    self.mask = Variable(torch.zeros(feature_len, kept_image_size, device=input.device),
+                                         requires_grad=True)
                     self.reloadMask = True
                 else:
                     self.mask = Variable(self.mask.grad, requires_grad=True)
@@ -272,7 +267,7 @@ class RandReLULayer(torch.nn.ReLU):
 ############################ BEGIN: Common Methods for all layers #################################
 ###################################################################################################
 
-def input2rp(input, kept_feature_size, full_random=False, random_seed=None, rand_matrix=None):
+def input2rp(input, kept_feature_size, full_random=False, random_seed=None, rand_matrix=None, justOnes=False):
     """
     Converts either a Linear layer or Conv2d layer input into a dimension reduced form
     using random projections.
@@ -307,7 +302,9 @@ def input2rp(input, kept_feature_size, full_random=False, random_seed=None, rand
         matmul_view = input.view(*batch_size, feature_len)
 
     # Create random matrix
-    if random_seed:
+    if justOnes:
+        rand_matrix = torch.eye(n=rand_matrix_size[0], m=rand_matrix_size[0], device=input.device, requires_grad=False)
+    elif random_seed:
         with torch.random.fork_rng():
             torch.random.manual_seed(random_seed)
             if rand_matrix is None:
@@ -319,12 +316,11 @@ def input2rp(input, kept_feature_size, full_random=False, random_seed=None, rand
 
         dim_reduced_input = \
                 torch.matmul(matmul_view, rand_matrix)
-
     return dim_reduced_input, rand_matrix
 
 
 def rp2input(dim_reduced_input, input_shape, rand_matrix=None, random_seed=None, full_random=False,
-             output_random_matrix=False, draw_ssb=10):
+             output_random_matrix=False, draw_ssb=10, justones=False):
     """
     Inverse of input2rp. Accepts the outputted reduced tensor from input2rp along with
     the expected size of the input.
@@ -359,7 +355,6 @@ def rp2input(dim_reduced_input, input_shape, rand_matrix=None, random_seed=None,
         rand_matrix_shape = (*batch_size, feature_len, kept_feature_size)
     else:
         rand_matrix_shape = (feature_len, kept_feature_size)
-
     # Create random matrix
     if random_seed is not None:
         with torch.random.fork_rng():
@@ -367,14 +362,21 @@ def rp2input(dim_reduced_input, input_shape, rand_matrix=None, random_seed=None,
             if output_random_matrix:
                 rand_matrixes = [gen_rad_mat(rand_matrix_shape, kept_feature_size, dim_reduced_input.device) for _ in range(draw_ssb)]
             else:
-                rand_matrix = gen_rad_mat(rand_matrix_shape, kept_feature_size, dim_reduced_input.device)
+                if justones:
+                    rand_matrix = None # torch.eye(n=rand_matrix_shape[0], device=dim_reduced_input.device, requires_grad=False)
+                    # rand_matrix = torch.ones(size=rand_matrix_shape, device=dim_reduced_input.device, requires_grad=False)
+                else:
+                    rand_matrix = gen_rad_mat(rand_matrix_shape, kept_feature_size, dim_reduced_input.device)
 
     with torch.autograd.grad_mode.no_grad():
         if output_random_matrix:
             inputs = [torch.matmul(dim_reduced_input, torch.transpose(rm, -2, -1)).view(input_shape) for rm in rand_matrixes]
         else:
-            input = torch.matmul(dim_reduced_input, torch.transpose(rand_matrix, -2, -1))
-            input = input.view(input_shape)
+            if rand_matrix is None:
+                input = dim_reduced_input.view(input_shape)
+            else:
+                input = torch.matmul(dim_reduced_input, torch.transpose(rand_matrix, -2, -1))
+                input = input.view(input_shape)
     if not output_random_matrix:
         return input
     else:
@@ -492,7 +494,7 @@ class RandReLU(torch.autograd.Function):
         batch_size = input.size()[:-1]
         num_activations = input.size()[-1]
 
-        ctx.input_shape = tuple(input.size())
+        ctx.input_shape = shp(input)
         ctx.num_activations = num_activations
         ctx.keep_frac = keep_frac
         ctx.full_random = full_random
@@ -500,15 +502,7 @@ class RandReLU(torch.autograd.Function):
         ctx.sparse = sparse
         kept_activations = int(num_activations * keep_frac + 0.999)
 
-        # If we don't need to project, just fast-track.
-        # if ctx.keep_frac == 1.0:
-        #    ctx.save_for_backward(input)
-        #    return F.relu(input)
-
-        if sparse:
-            dim_reduced_input, _ = input2sparse(input, kept_activations, random_seed=random_seed, full_random=full_random)
-        else:
-            dim_reduced_input, _ = input2rp(input, kept_activations, random_seed=random_seed, full_random=full_random)
+        dim_reduced_input, _ = input2rp(input, kept_activations, random_seed=random_seed, full_random=full_random, justOnes=ctx.keep_frac==1.0)
 
         # Saved Tensors should be low rank
         ctx.save_for_backward(dim_reduced_input)
@@ -518,11 +512,11 @@ class RandReLU(torch.autograd.Function):
 
     @staticmethod
     def backward(ctx, grad_output):
-        (dim_reduced_input,) = ctx.saved_tensors
+        dim_reduced_input = ctx.saved_tensors[0]
         if ctx.sparse:
             input = sparse2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
         else:
-            input = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
+            input = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random, justones=ctx.keep_frac==1.0)
 
         cinput = cln(input)
 
@@ -556,7 +550,7 @@ class RandMatMul(torch.autograd.Function):
         ctx.mask = mask
 
         # If we don't need to project, just fast-track.
-        if  supersub:
+        if supersub:
             ctx.save_for_backward(input, weight, bias)
             linear_out = F.linear(input, weight, bias=bias)
             return linear_out
@@ -568,9 +562,8 @@ class RandMatMul(torch.autograd.Function):
             if ctx.supersub_from_rad:
                 if not ctx.reloadMask:
                     rm = ctx.mask
-
             dim_reduced_input, _ = input2rp(input, ctx.kept_activations, random_seed=random_seed,
-                                            full_random=full_random, rand_matrix=rm)
+                                            full_random=full_random, rand_matrix=rm, justOnes=keep_frac == 1.0)
 
         if ctx.reloadMask:
             ctx.save_for_backward(dim_reduced_input, weight, bias, input)
@@ -578,8 +571,12 @@ class RandMatMul(torch.autograd.Function):
             # Saved Tensors should be low rank
             ctx.save_for_backward(dim_reduced_input, weight, bias)
 
-        with torch.autograd.grad_mode.no_grad():
+        if ctx.keep_frac == 1.0:
             return F.linear(input, weight, bias=bias)
+        else:
+
+            with torch.autograd.grad_mode.no_grad():
+                return F.linear(input, weight, bias=bias)
 
     @staticmethod
     def backward(ctx, grad_output):
@@ -667,7 +664,7 @@ class RandMatMul(torch.autograd.Function):
 
         else:
             npt = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed,
-                           full_random=ctx.full_random, output_random_matrix=False)
+                           full_random=ctx.full_random, output_random_matrix=False, justones=ctx.keep_frac==1.0)
 
         cinput = cln(npt)
         cweight = cln(weight)
@@ -703,108 +700,53 @@ class RandConv2d(torch.autograd.Function):
         ctx.mask = mask
 
         kept_image_size = int(keep_frac * ctx.input_shape[2] * ctx.input_shape[3] + 0.999)
-        if ctx.sparse:
-            dim_reduced_input, _ = input2sparse(input, kept_image_size, full_random=full_random, random_seed=random_seed)
+
+        if ctx.supersub_from_rad and not ctx.reloadMask:
+            rm = ctx.mask
         else:
             rm = None
-            if ctx.supersub_from_rad:
-                if not ctx.reloadMask:
-                    rm = ctx.mask
-            dim_reduced_input, _ = input2rp(input, kept_image_size, full_random=full_random,
-                                            random_seed=random_seed, rand_matrix=rm)
+        justOnes= keep_frac == 1.0
+        dim_reduced_input, _ = input2rp(input, kept_image_size, full_random=full_random,
+                                        random_seed=random_seed, rand_matrix=rm, justOnes=justOnes)
 
-
-        with torch.autograd.grad_mode.no_grad():
-            conv_out = F.conv2d(input, weight, bias=bias, **ctx.conv_params)
-
-        if ctx.reloadMask:
-            ctx.save_for_backward(dim_reduced_input, weight, bias, input)
-        else:
-            # Saved Tensors should be low rank
-            ctx.save_for_backward(dim_reduced_input, weight, bias)
+        ctx.save_for_backward(dim_reduced_input, weight, bias)
 
         # Save appropriate for backward pass.
         with torch.autograd.grad_mode.no_grad():
+            conv_out = F.conv2d(input, weight, bias=bias, **ctx.conv_params)
             return conv_out
 
     @staticmethod
     def backward(ctx, grad_output):
-        if ctx.reloadMask:
-            dim_reduced_input, weight, bias, true_input = ctx.saved_tensors
-        else:
-            dim_reduced_input, weight, bias = ctx.saved_tensors
+        dim_reduced_input, weight, bias = ctx.saved_tensors
         if ctx.supersub_from_rad:
             if ctx.reloadMask:
-                opt = True
-                if opt:
-                    rm = None
-                    gg = None
-                    npt = None
-                    for _ in range(ctx.draw_ssb):
-                        _npts, _rm = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed,
-                                         full_random=ctx.full_random, output_random_matrix=True, draw_ssb=1)
-                        _npt = _npts[0]
-                        cinput = cln(_npt)
-                        cweight = cln(weight)
-                        cbias = cln(bias)
-
-                        with torch.autograd.grad_mode.enable_grad():
-                            output = F.conv2d(cinput, cweight, bias=cbias, **ctx.conv_params)
-
-                        _, true_gradient, _ = output.grad_fn(grad_output)
-
-                        # _, true_gradient = output.grad_fn(grad_output)
-                        ww = float(torch.sum(torch.abs(true_gradient)))
-                        if gg is None:
-                            gg = ww
-                            rm = _rm
-                            npt = _npt
-                        elif ww > gg:
-                            gg = ww
-                            rm = _rm
-                            npt = _npt
-
-                    ctx.mask = Variable(rm[0], requires_grad=False)
-
-                else:
-                    npts, rms = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed,
-                                         full_random=ctx.full_random, output_random_matrix=True, draw_ssb=ctx.draw_ssb)
-                    cinputs = [cln(npt) for npt in npts]
+                rm, gg, npt = None, None, None
+                for _ in range(ctx.draw_ssb):
+                    _npts, _rm = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed,
+                                     full_random=ctx.full_random, output_random_matrix=True, draw_ssb=1)
+                    _npt = _npts[0]
+                    cinput = cln(_npt)
                     cweight = cln(weight)
                     cbias = cln(bias)
 
                     with torch.autograd.grad_mode.enable_grad():
-                        outputs = [F.conv2d(cinput, cweight, bias=cbias, **ctx.conv_params) for cinput in cinputs]
-                        true_output = F.conv2d(true_input, cweight, bias=cbias, **ctx.conv_params)
+                        output = F.conv2d(cinput, cweight, bias=cbias, **ctx.conv_params)
 
-                    tog = true_output.grad_fn(grad_output)
-                    # print(tog)
-                    # print(shp(grad_output))
-                    _, true_gradient = true_output.grad_fn(grad_output)
+                    _, true_gradient, _ = output.grad_fn(grad_output)
 
-                    gradients = []
-                    for output in outputs:
-                        _, w = output.grad_fn(grad_output)
-                        gradients.append(w)
+                    ww = float(torch.sum(torch.abs(true_gradient)))
+                    if gg is None or ww > gg:
+                        gg = ww
+                        rm = _rm[0]
+                        npt = _npt
 
-                    arg = selection(gradients, true_gradient=true_gradient)
-                    npt = npts[arg]
-                    ctx.mask = Variable(rms[arg], requires_grad=False)
+                ctx.mask = Variable(rm, requires_grad=False)
 
             else:
                 npt = torch.matmul(dim_reduced_input, torch.transpose(ctx.mask, -2, -1)).view(ctx.input_shape)
         else:
-            npt = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random)
-
-        # cinput = cln(npt)
-        # cweight = cln(weight)
-        # stride = ctx.conv_params["stride"]
-        # padding = ctx.conv_params["padding"]
-        # dilation = ctx.conv_params["dilation"]
-        # groups = ctx.conv_params["groups"]
-        # grad_input = torch.nn.grad.conv2d_input(cinput.shape, cweight, grad_output, stride, padding, dilation, groups)
-        # grad_weight = torch.nn.grad.conv2d_weight(cinput, cweight.shape, grad_output, stride, padding, dilation, groups)
-        # grad_bias = grad_output.sum((0, 2, 3)).squeeze(0)
+            npt = rp2input(dim_reduced_input, ctx.input_shape, random_seed=ctx.random_seed, full_random=ctx.full_random, justones=True)
 
         cinput = cln(npt)
         cweight = cln(weight)
@@ -813,8 +755,6 @@ class RandConv2d(torch.autograd.Function):
         with torch.autograd.grad_mode.enable_grad():
             output = F.conv2d(cinput, cweight, bias=cbias, **ctx.conv_params)
 
-        input_grad_output = grad_output
-        input_grad_input, weight_grad_input, bias_grad_input = output.grad_fn(input_grad_output)
+        input_grad, weight_grad, bias_grad = output.grad_fn(grad_output)
 
-        return input_grad_input, weight_grad_input, bias_grad_input, None, None, None, None, \
-               None, None, None, None, ctx.mask
+        return input_grad, weight_grad, bias_grad, None, None, None, None, None, None, None, None, ctx.mask
