@@ -144,7 +144,7 @@ def main(additional_args):
     # Note that we override again at the end, so specified
     # arguments take precedence over defaults.
     if args.simple:
-        args.max_iterations = 10000#0
+        args.max_iterations = 100000
         args.simple_log_frequency = 10
         args.simple_test_eval_frequency = 400
         args.simple_test_eval_per_train_test = 10
