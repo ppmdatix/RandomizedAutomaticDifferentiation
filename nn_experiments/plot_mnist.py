@@ -26,6 +26,10 @@ for clr in mcolors.TABLEAU_COLORS.keys():
     list_of_colors.append(clr)
 print(list_of_colors)
 list_of_colors.remove("w")
+list_of_colors.remove("r")
+list_of_colors.remove("tab:red")
+list_of_colors.remove("b")
+list_of_colors.remove("tab:blue")
 list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
 
 
@@ -33,8 +37,10 @@ list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', '
 
 def mylabelization(worker_name):
     mylabel = worker_name.replace("MemOpt", "")
+    if mylabel.startswith("."):
+        mylabel = mylabel[24:]
     if "ssb-from-rad" in mylabel:
-        mylabel = mylabel.replace("ssb-from-rad", "strongest")
+        mylabel = mylabel.replace("ssb-from-rad", "supersub")
         mylabel = mylabel.replace("K", "Kmax")
 
         mylabel = mylabel.replace("-1choice", "-M1")
@@ -42,6 +48,8 @@ def mylabelization(worker_name):
         mylabel = mylabel.replace("-100choice", "-M100")
         mylabel = mylabel.replace("-memOpt", "-")
         mylabel = mylabel.replace("-0o1kf", "")
+        if mylabel.endswith("supersub--Kmax1-M1"):
+            mylabel = "RAD"
 
     return mylabel
 
@@ -126,9 +134,13 @@ def plot_everything(workers):
 
         marker_size = 10
 
-        mylabel = "12"
-        if worker is not None:
+        mylabel = None
+        if worker_name is not None:
             mylabel = mylabelization(worker)
+        if "RAD" in mylabelization(worker):
+            color = "tab:red"
+        elif "baseline" in mylabelization(worker):
+            color = "tab:blue"
 
         ax.plot(train_test_iterations, train_test_loss, marker=marker, label=mylabel, c=color, ms=marker_size)
         #ax2.plot(train_test_iterations, train_test_accuracy, marker=marker, label=worker_name, c=color, ms=marker_size)
@@ -164,8 +176,8 @@ def plot_everything(workers):
 
     fig, ax = plt.subplots()
     ratio = 0.7
-    x_left, x_right = 0.97, 0.98
-    y_low, y_high = 0.73, 0.81
+    x_left, x_right = 0.97, 0.985
+    y_low, y_high = -0.1, 0.81
 
     plt.xlim(x_left, x_right)
     plt.ylim(y_low, y_high)
@@ -176,6 +188,7 @@ def plot_everything(workers):
     cmap = mcolors.LinearSegmentedColormap.from_list('redToGreen', ["r", "g"], N=256)
     plotlim = (x_left, x_right, y_low, y_high)
     plt.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.4)
+    plt.grid()
     c = -1
     linewidth = 4
     for worker in stats_results:
@@ -198,22 +211,28 @@ def plot_everything(workers):
             label = "12"
             if worker is not None:
                 label = mylabelization(worker)
-            plt.hlines(y=mem_avg, xmin=acc_avg - acc_std,
-                       xmax=acc_avg + acc_std, linewidth=linewidth, color=list_of_colors[c % len(list_of_colors)],
-                       label=label,
-                       linestyles=linestyles)
-            plt.vlines(x=acc_avg, ymin=mem_avg - mem_std, ymax=mem_avg + mem_std,
-                       linewidth=linewidth, color=list_of_colors[c % len(list_of_colors)],
-                       linestyles=linestyles)
+            # plt.hlines(y=mem_avg, xmin=acc_avg - acc_std,
+            #            xmax=acc_avg + acc_std, linewidth=linewidth, color=list_of_colors[c % len(list_of_colors)],
+            #            label=label,
+            #            linestyles=linestyles)
+            # plt.vlines(x=acc_avg, ymin=mem_avg - mem_std, ymax=mem_avg + mem_std,
+            #            linewidth=linewidth, color=list_of_colors[c % len(list_of_colors)],
+            #            linestyles=linestyles)
+            color = list_of_colors[c % len(list_of_colors)]
+            if "RAD" in mylabelization(worker):
+                color = "tab:red"
+            elif "baseline" in mylabelization(worker):
+                color = "tab:blue"
+            size = 100
+            plt.scatter([d / 100.0 for d in acc_data], [mem / 400000 for mem in mem_data], label=label, color=color, s=size)
 
-    plt.xlabel("Accuracy")
-    plt.ylabel("Memory")
-    plt.grid()
+    plt.xlabel("Test accuracy")
+    plt.ylabel("Scaled memory")
 
 
     ax.set_aspect(abs((x_right - x_left) / (y_low - y_high)) * ratio)
 
-    plt.legend(loc='center left', bbox_to_anchor=(0, 0.3))
+    plt.legend(loc='center left', bbox_to_anchor=(-0.01 , 0.3), prop={'size': 7})
     plt.savefig('plots/stats_resultsMNIST.png')
     plt.close()
 

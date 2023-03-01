@@ -1,24 +1,25 @@
 import os
+import shutil
 import pickle
-import pandas as pd
 import numpy as np
+import pandas as pd
+import seaborn as sns
 import matplotlib.pyplot as plt
-from IPython.display import display
+from IPython.display import display, HTML
 import matplotlib.colors as mcolors
-
 
 EXP_ROOT = './cifarexperiments'
 
 params = {
-  'axes.labelsize': 12,
-  'font.size': 12,
-  'legend.fontsize': 8,
-  'xtick.labelsize': 12,
-  'ytick.labelsize': 12,
-  'text.usetex': False,
-  'figure.figsize': [6, 4],
-  'text.latex.preamble': r'\usepackage{amsmath} \usepackage{amssymb}',
-   }
+    'axes.labelsize': 12,
+    'font.size': 12,
+    'legend.fontsize': 12,
+    'xtick.labelsize': 12,
+    'ytick.labelsize': 12,
+    'text.usetex': True,
+    'figure.figsize': [6, 4],
+    'text.latex.preamble': r'\usepackage{amsmath} \usepackage{amssymb}',
+}
 plt.rcParams.update(params)
 
 list_of_colors = list(mcolors.BASE_COLORS.keys())
@@ -26,7 +27,23 @@ for clr in mcolors.TABLEAU_COLORS.keys():
     list_of_colors.append(clr)
 print(list_of_colors)
 list_of_colors.remove("w")
+list_of_colors.remove("r")
+list_of_colors.remove("tab:red")
+list_of_colors.remove("b")
+list_of_colors.remove("tab:blue")
 list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
+
+
+def mylabelization(worker_name):
+
+    worker_name = worker_name.replace("ssb-Kmax1-M1-", "RAD-")
+    worker_name = worker_name.replace("ssb-", "supersub-")
+    if "-0o1kf" in worker_name:
+        worker_name = worker_name.replace("-0o1kf", "")
+
+    return worker_name
+
+
 
 def plot_everything(workers):
     worker_dirs = [os.path.join(EXP_ROOT, f[0]) for f in workers]
@@ -34,37 +51,32 @@ def plot_everything(workers):
     worker_colors = [f[2] for f in workers]
     worker_markers = [f[3] for f in workers]
 
-    fig = plt.figure(figsize=(10,40))
-    plt.axes(frameon=0) # turn off frames
+    fig = plt.figure(figsize=(10, 40))
+    plt.axes(frameon=0)  # turn off frames
     plt.grid(axis='y', color='0.9', linestyle='-', linewidth=1)
 
     ax = plt.subplot(511)
-    plt.title('Training Loss vs Iterations for Conv2D on CIFAR')
+    plt.title('Training Loss vs Iterations for SmallConvNet on CIFAR-10')
     ax.set_yscale('log')
 
-    #ax2 = plt.subplot(512)
-    #plt.title('Training Accuracy vs Iterations for SmallFCNet on MNIST')
-    #ax2.set_ylim((98, 100))
+    ax2 = plt.subplot(512)
+    plt.title('Training Accuracy vs Iterations for SmallConvNet on CIFAR-10')
+    ax2.set_ylim((70, 101))
 
     ax3 = plt.subplot(513)
-    plt.title('Test Loss vs Iterations for Conv2D on CIFAR')
+    plt.title('Test Loss vs Iterations for SmallConvNet on CIFAR-10')
     ax3.set_yscale('log')
 
     ax4 = plt.subplot(514)
-    plt.title('Test Accuracy vs Iterations for Conv2D on CIFAR')
-    ax4.set_ylim((0, 100))
+    plt.title('Test Accuracy vs Iterations for SmallConvNet on CIFAR-10')
+    ax4.set_ylim((65, 72))
     ax4.grid(True)
 
-    ax5 = plt.subplot(512)
-    plt.title('Training time vs Iterations for Conv2D on CIFAR')
-
-    ax6 = plt.subplot(515)
-
-    plt.title('Memory time vs Iterations for Conv2D on CIFAR')
+    ax5 = plt.subplot(515)
+    plt.title('Train Memory peak vs Iterations for SmallConvNet on CIFAR-10')
 
     final_results = []
-    stats_results = {w: {'acc': [], 'mem': []} for w in worker_names}
-
+    stats_results = {mylabelization(w): {'acc': [], 'mem': []} for w in worker_names}
 
     labeled = []
     for worker, worker_name, color, marker in zip(worker_dirs, worker_names, worker_colors, worker_markers):
@@ -76,26 +88,23 @@ def plot_everything(workers):
         train_curve = []
         test_curve = []
         train_test_curve = []
-
         for (iteration, s) in struct:
-
             if 'train' in s:
                 train_curve.append((iteration, s['train']))
             if 'train_test' in s:
                 train_test_curve.append((iteration, s['train_test']))
             if 'test' in s:
                 test_curve.append((iteration, s['test']))
-        train_test_iterations = [t[0] for t in train_test_curve if t[0] != 'final']
-        train_iterations = [t[0] for t in train_curve if t[0] != 'final']
-        train_test_loss = [t[1]['loss'] for t in train_test_curve if t[0] != 'final']
-        train_test_accuracy = [t[1]['accuracy'] for t in train_test_curve if t[0] != 'final']
-        train_time = [t[1]['time'] for t in train_curve if t[0] != 'final']
-        train_memory = [t[1]['memory']['rss'] for t in train_curve if t[0] != 'final' and 'memory' in t[1]]
+        train_test_iterations = [t[0] for t in train_test_curve             ]# if t[0] != 'final']
+        train_iterations = [t[0] for t in train_curve                       ]# if t[0] != 'final']
+        train_test_loss = [t[1]['loss'] for t in train_test_curve           ]# if t[0] != 'final']
+        train_test_accuracy = [t[1]['accuracy'] for t in train_test_curve   ]# if t[0] != 'final']
+        train_time = [t[1]['time'] for t in train_curve                     ]# if t[0] != 'final']
 
         acc = [t[1]['accuracy'] for t in test_curve if t[0] == 'final'][0]
         train_memory = [t[1]['memory']['rss'] for t in train_curve if 'memory' in t[1]]
         mem = max(train_memory)
-
+        worker_name = mylabelization(worker_name)
         stats_results[worker_name]["acc"].append(acc)
         stats_results[worker_name]["mem"].append(mem)
 
@@ -107,79 +116,96 @@ def plot_everything(workers):
 
         marker_size = 10
 
+        worker_name = mylabelization(worker_name)
+        if "RAD" in worker_name:
+            color = "tab:red"
+        elif "baseline" in worker_name:
+            color = "tab:blue"
         ax.plot(train_test_iterations, train_test_loss, marker=marker, label=worker_name, c=color, ms=marker_size)
-        #ax2.plot(train_test_iterations, train_test_accuracy, marker=marker, label=worker_name, c=color, ms=marker_size)
-        ax5.plot(train_iterations, train_time, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
+        ax2.plot(train_test_iterations, train_test_accuracy, marker=marker, label=worker_name, c=color, ms=marker_size)
 
         test_iterations = [t[0] for t in test_curve if t[0] != 'final']
         test_loss = [t[1]['loss'] for t in test_curve if t[0] != 'final']
         test_accuracy = [t[1]['accuracy'] for t in test_curve if t[0] != 'final']
         ax3.plot(test_iterations, test_loss, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
 
-        ax4.plot(test_iterations, test_accuracy, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
+        ax4.plot(test_iterations, test_accuracy, marker=marker, label=worker_name, c=color, ms=marker_size,
+                 markevery=10)
 
-        if len(train_memory) > 0:
-            ax6.plot(train_iterations, train_memory, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
+        ax5.plot(train_iterations, train_memory, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
+
 
         final_results.append({
             'name': worker_name,
             'train_loss': train_test_loss[-1],
             'train_accuracy': train_test_accuracy[-1],
-            'test_loss': test_loss[-1],
+            # 'test_loss': test_loss[-1],
             'test_accuracy': test_accuracy[-1],
         })
 
     display(pd.DataFrame(final_results))
     ax.legend()
-    ax5.legend()
+    ax2.legend()
     ax3.legend()
     ax4.legend()
-    ax6.legend()
+    ax5.legend()
 
     fig.savefig('plots/cifar_all_curves_full.pdf')
     plt.close()
-    plt.figure(figsize=(20, 10))
+
+
+    fig, ax = plt.subplots()
+    ratio = 0.7
+    x_left, x_right = 0.67, 0.715
+    y_low, y_high = 0.7, 1.0
+
+    plt.xlim(x_left, x_right)
+    plt.ylim(y_low, y_high)
+
     n = 2
-    a = np.reshape(np.linspace(0.9, 1, n ** 2), (n, n))
+    a = np.reshape(np.linspace(x_left, x_right, n ** 2), (n, n))
     cmap = mcolors.LinearSegmentedColormap.from_list('redToGreen', ["r", "g"], N=256)
-    plotlim = (0.9, 1.2, 0, 1.2)
+    plotlim = (x_left, x_right, y_low, y_high)
     plt.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.4)
     c = -1
     linewidth = 4
     for worker in stats_results:
-        print("\nworker\nworker\nworker")
+        if worker is not None:
+            label = mylabelization(worker)
         c += 1
-        acc_data = stats_results[worker]["acc"]
+
+        acc_data = stats_results[label]["acc"]
         acc_avg = np.mean(acc_data) / 100.0
         acc_std = np.std(acc_data) / 100.0
 
         mem_data = stats_results[worker]["mem"]
-        mem_avg = np.mean(mem_data) / 400000.0
-        mem_std = np.std(mem_data) / 400000.0
+        mem_avg = np.mean(mem_data) / 800000.0
+        mem_std = np.std(mem_data) / 800000.0
 
-        if acc_avg > 0.01:
+        if acc_avg > 0.1:
             linestyles = "solid"
             if "-100ch" in worker:
                 linestyles = "dashed"
             elif "-10ch" in worker:
                 linestyles = "dotted"
+            color = list_of_colors[c % len(list_of_colors)]
+            if "RAD" in mylabelization(worker):
+                color = "tab:red"
+            elif "baseline" in mylabelization(worker):
+                color = "tab:blue"
+            size = 100
+            plt.scatter([acc_avg], [mem_avg], label=label, color=color, s = size)
 
-            plt.hlines(y=mem_avg, xmin=acc_avg - acc_std,
-                       xmax=acc_avg + acc_std, linewidth=linewidth, color=list_of_colors[c % len(list_of_colors)],
-                       label=worker,
-                       linestyles=linestyles)
-            plt.vlines(x=acc_avg, ymin=mem_avg - mem_std, ymax=mem_avg + mem_std,
-                       linewidth=linewidth, color=list_of_colors[c % len(list_of_colors)],
-                       linestyles=linestyles)
-
-    plt.xlabel("Accuracy")
-    plt.ylabel("Memory")
+    plt.xlabel("Test accuracy")
+    plt.ylabel("Scaled memory")
     plt.grid()
-    plt.xlim(0.0, 0.99)
-    plt.ylim(0.0, 1)
-    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-    plt.savefig('plots/CIFARstats_results.png')
+    ax.set_aspect(abs((x_right - x_left) / (y_low - y_high)) * ratio)
+
+    plt.legend(loc='center right', bbox_to_anchor=(1.0, 0.7), prop={'size': 8})
+    plt.savefig('plots/stats_resultsCIFAR.png')
     plt.close()
+
+
 
 
 pre_workers = os.listdir(EXP_ROOT)
