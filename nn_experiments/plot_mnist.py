@@ -28,6 +28,25 @@ print(list_of_colors)
 list_of_colors.remove("w")
 list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
 
+
+
+
+def mylabelization(worker_name):
+    mylabel = worker_name.replace("MemOpt", "")
+    if "ssb-from-rad" in mylabel:
+        mylabel = mylabel.replace("ssb-from-rad", "strongest")
+        mylabel = mylabel.replace("K", "Kmax")
+
+        mylabel = mylabel.replace("-1choice", "-M1")
+        mylabel = mylabel.replace("-10choice", "-M10")
+        mylabel = mylabel.replace("-100choice", "-M100")
+        mylabel = mylabel.replace("-memOpt", "-")
+        mylabel = mylabel.replace("-0o1kf", "")
+
+    return mylabel
+
+
+
 def plot_everything(workers):
     worker_dirs = [os.path.join(EXP_ROOT, f[0]) for f in workers]
     worker_names = [f[1] for f in workers]
@@ -107,22 +126,26 @@ def plot_everything(workers):
 
         marker_size = 10
 
-        ax.plot(train_test_iterations, train_test_loss, marker=marker, label=worker_name, c=color, ms=marker_size)
+        mylabel = "12"
+        if worker is not None:
+            mylabel = mylabelization(worker)
+
+        ax.plot(train_test_iterations, train_test_loss, marker=marker, label=mylabel, c=color, ms=marker_size)
         #ax2.plot(train_test_iterations, train_test_accuracy, marker=marker, label=worker_name, c=color, ms=marker_size)
-        ax5.plot(train_iterations, train_time, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
+        ax5.plot(train_iterations, train_time, marker=marker, label=mylabel, c=color, ms=marker_size, markevery=10)
 
         test_iterations = [t[0] for t in test_curve if t[0] != 'final']
         test_loss = [t[1]['loss'] for t in test_curve if t[0] != 'final']
         test_accuracy = [t[1]['accuracy'] for t in test_curve if t[0] != 'final']
-        ax3.plot(test_iterations, test_loss, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
+        ax3.plot(test_iterations, test_loss, marker=marker, label=mylabel, c=color, ms=marker_size, markevery=10)
 
-        ax4.plot(test_iterations, test_accuracy, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
+        ax4.plot(test_iterations, test_accuracy, marker=marker, label=mylabel, c=color, ms=marker_size, markevery=10)
 
         if len(train_memory) > 0:
-            ax6.plot(train_iterations, train_memory, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
+            ax6.plot(train_iterations, train_memory, marker=marker, label=mylabel, c=color, ms=marker_size, markevery=10)
 
         final_results.append({
-            'name': worker_name,
+            'name': mylabel,
             'train_loss': train_test_loss[-1],
             'train_accuracy': train_test_accuracy[-1],
             'test_loss': test_loss[-1],
@@ -136,13 +159,22 @@ def plot_everything(workers):
     ax4.legend()
     ax6.legend()
 
-    fig.savefig('mnist_all_curves_full.pdf')
+    fig.savefig('plots/mnist_all_curves_full.pdf')
     plt.close()
-    plt.figure(figsize=(20, 10))
+
+    fig, ax = plt.subplots()
+    ratio = 0.7
+    x_left, x_right = 0.97, 0.98
+    y_low, y_high = 0.73, 0.81
+
+    plt.xlim(x_left, x_right)
+    plt.ylim(y_low, y_high)
+
+    # fig.figure(figsize=(10, 10))
     n = 2
-    a = np.reshape(np.linspace(0.9, 1, n ** 2), (n, n))
+    a = np.reshape(np.linspace(x_left, x_right, n ** 2), (n, n))
     cmap = mcolors.LinearSegmentedColormap.from_list('redToGreen', ["r", "g"], N=256)
-    plotlim = (0.9, 1.2, 0, 1.2)
+    plotlim = (x_left, x_right, y_low, y_high)
     plt.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.4)
     c = -1
     linewidth = 4
@@ -163,9 +195,12 @@ def plot_everything(workers):
             elif "-10ch" in worker:
                 linestyles = "dotted"
 
+            label = "12"
+            if worker is not None:
+                label = mylabelization(worker)
             plt.hlines(y=mem_avg, xmin=acc_avg - acc_std,
                        xmax=acc_avg + acc_std, linewidth=linewidth, color=list_of_colors[c % len(list_of_colors)],
-                       label=worker,
+                       label=label,
                        linestyles=linestyles)
             plt.vlines(x=acc_avg, ymin=mem_avg - mem_std, ymax=mem_avg + mem_std,
                        linewidth=linewidth, color=list_of_colors[c % len(list_of_colors)],
@@ -174,10 +209,12 @@ def plot_everything(workers):
     plt.xlabel("Accuracy")
     plt.ylabel("Memory")
     plt.grid()
-    plt.xlim(0.97, 0.99)
-    plt.ylim(0.73, 0.81)
-    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-    plt.savefig('stats_results.png')
+
+
+    ax.set_aspect(abs((x_right - x_left) / (y_low - y_high)) * ratio)
+
+    plt.legend(loc='center left', bbox_to_anchor=(0, 0.3))
+    plt.savefig('plots/stats_resultsMNIST.png')
     plt.close()
 
 
@@ -221,7 +258,7 @@ for j in range(len(pre_workers)):
     for i in range(nb_curves):
         c = j % len(list_of_colors)
         m = j % len(list_of_markers)
-        if '000%i-%s' % (i, pre_worker) in os.listdir(EXP_ROOT):
+        if '000%i-%s' % (i, pre_worker) in os.listdir(EXP_ROOT) and "memopt" in pre_worker.lower():
             pth = os.listdir(EXP_ROOT + '/000%i-%s' % (i, pre_worker))
             if 'pickles' in pth:
                 if len(os.listdir(EXP_ROOT + '/000%i-%s' % (i, pre_worker) + "/pickles")) > 0:

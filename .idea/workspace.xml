@@ -5,32 +5,43 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="26f08218-7e83-4616-a8cb-9c8aaa958cf9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifar_launch.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/cifar_launch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/00-baseline/00-baselinecifarconvnet8.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/00-baseline/experiment_args.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/00-baseline/intermediate_checkpoints/iteration_000010000.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/00-baseline/intermediate_checkpoints/iteration_000020000.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/00-baseline/intermediate_checkpoints/iteration_000030000.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/00-baseline/intermediate_checkpoints/iteration_000040000.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/00-baseline/intermediate_checkpoints/iteration_000050000.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/00-baseline/intermediate_checkpoints/iteration_000060000.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/00-baseline/intermediate_checkpoints/iteration_000070000.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/00-baseline/intermediate_checkpoints/iteration_000080000.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/00-baseline/intermediate_checkpoints/iteration_000090000.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/00-baseline/intermediate_checkpoints/iteration_000100000.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/00-baseline/pickles/00-baselinecifarconvnet8.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/01-baseline/experiment_args.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/01-baseline/intermediate_checkpoints/iteration_000010000.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifarexperiments/01-baseline/intermediate_checkpoints/iteration_000020000.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/layers.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/layers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/train_and_eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/train_and_eval.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/plot_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plot_mnist.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/plots/cifar_all_curves_full2.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plots/cifar_all_curves_full2.pdf" afterDir="false" />
     </list>
+    <ignored path="$PROJECT_DIR$/venv/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/nn_experiments/plot_mnist.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="185">
+              <caret line="176" column="45" selection-start-line="176" selection-start-column="45" selection-end-line="176" selection-end-column="45" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/nn_experiments/plots/stats_resultsMNIST.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>final</find>
+      <find>final_res</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -38,8 +49,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/nn_experiments/plot_mnist.py" />
         <option value="$PROJECT_DIR$/nn_experiments/commands.sh" />
+        <option value="$PROJECT_DIR$/nn_experiments/plot_mnist.py" />
       </list>
     </option>
   </component>
@@ -56,6 +67,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -72,28 +84,37 @@
               <item name="RandomizedAutomaticDifferentiation" type="b2602c69:ProjectViewProjectNode" />
               <item name="RandomizedAutomaticDifferentiation" type="462c0819:PsiDirectoryNode" />
               <item name="nn_experiments" type="462c0819:PsiDirectoryNode" />
-              <item name="mnistexperiments" type="462c0819:PsiDirectoryNode" />
+              <item name="plots" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/PaulPeseux/draft/RandomizedAutomaticDifferentiation&quot;
-  }
-}</component>
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+  </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\PaulPeseux\RandomizedAutomaticDifferentiation\nn_experiments" />
     </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
   </component>
   <component name="RunManager" selected="Python.plot_mnist">
     <configuration name="mnist_launch" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -145,7 +166,7 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpellCheckerSettings" BundledDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -186,7 +207,14 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -303,16 +331,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/nn_experiments/plot_mnist.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="177" column="23" selection-start-line="177" selection-start-column="23" selection-end-line="177" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nn_experiments/mnist_launch.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="337">
@@ -328,8 +346,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_experiments/commands.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
+        <state relative-caret-position="442">
           <caret line="49" selection-start-line="49" selection-end-line="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nn_experiments/plot_cifar2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="91" lean-forward="true" selection-start-line="91" selection-end-line="91" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nn_experiments/plots/stats_resultsMNIST.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nn_experiments/plot_mnist.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="185">
+          <caret line="176" column="45" selection-start-line="176" selection-start-column="45" selection-end-line="176" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
