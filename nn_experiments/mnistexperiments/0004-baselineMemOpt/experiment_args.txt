@@ -6,7 +6,7 @@ epochs: 20
 lr: 0.000527
 gamma: 0.6
 no_cuda: True
-seed: 17552149
+seed: 53630859
 log_interval: 10
 keep_frac: 1.0
 hidden_size: 300
@@ -42,4 +42,4 @@ argmean: False
 repeat_ssb: 1
 draw_ssb: 1
 rand_relu: False
-exp_dir: mnistexperiments\0004-baselineMemOpt
+exp_dir: mnistexperiments/0004-baselineMemOpt
