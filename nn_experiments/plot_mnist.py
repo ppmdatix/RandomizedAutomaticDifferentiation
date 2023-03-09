@@ -177,7 +177,7 @@ def plot_everything(workers):
     fig, ax = plt.subplots()
     ratio = 0.7
     x_left, x_right = 0.972, 0.982
-    y_low, y_high = 0.73, 0.83
+    y_low, y_high = 0.72, 0.83
 
     plt.xlim(x_left, x_right)
     plt.ylim(y_low, y_high)
@@ -232,7 +232,7 @@ def plot_everything(workers):
 
     ax.set_aspect(abs((x_right - x_left) / (y_low - y_high)) * ratio)
 
-    plt.legend(loc='center left', bbox_to_anchor=(-0.01 , 0.3), prop={'size': 7})
+    plt.legend(loc='upper left', prop={'size': 7}) # bbox_to_anchor=(-0.0 , 0)
     plt.savefig('plots/stats_resultsMNIST.png')
     plt.close()
 
