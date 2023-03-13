@@ -7,6 +7,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from IPython.display import display, HTML
 import matplotlib.colors as mcolors
+from matplotlib.patches import Ellipse
 
 EXP_ROOT = './cifarexperiments'
 
@@ -31,6 +32,7 @@ list_of_colors.remove("r")
 list_of_colors.remove("tab:red")
 list_of_colors.remove("b")
 list_of_colors.remove("tab:blue")
+# list_of_colors.remove("green")
 list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
 
 
@@ -108,7 +110,7 @@ def plot_everything(workers):
         stats_results[worker_name]["acc"].append(acc)
         stats_results[worker_name]["mem"].append(mem)
 
-
+        lbd = mylabelization(worker_name)
         if worker_name in labeled:
             worker_name = None
         else:
@@ -116,10 +118,9 @@ def plot_everything(workers):
 
         marker_size = 10
 
-        worker_name = mylabelization(worker_name)
-        if "RAD" in worker_name:
+        if "RAD" in lbd:
             color = "tab:red"
-        elif "baseline" in worker_name:
+        elif "baseline" in lbd:
             color = "tab:blue"
         ax.plot(train_test_iterations, train_test_loss, marker=marker, label=worker_name, c=color, ms=marker_size)
         ax2.plot(train_test_iterations, train_test_accuracy, marker=marker, label=worker_name, c=color, ms=marker_size)
@@ -136,7 +137,7 @@ def plot_everything(workers):
 
 
         final_results.append({
-            'name': worker_name,
+            'name': lbd,
             'train_loss': train_test_loss[-1],
             'train_accuracy': train_test_accuracy[-1],
             # 'test_loss': test_loss[-1],
@@ -153,20 +154,19 @@ def plot_everything(workers):
     fig.savefig('plots/cifar_all_curves_full.pdf')
     plt.close()
 
-
     fig, ax = plt.subplots()
     ratio = 0.7
-    x_left, x_right = 0.67, 0.715
-    y_low, y_high = 0.7, 1.0
+    x_left, x_right = 0.665, 0.7
+    y_low, y_high = 0.6, 1.0
 
-    plt.xlim(x_left, x_right)
-    plt.ylim(y_low, y_high)
+    ax.set_xlim(x_left, x_right)
+    ax.set_ylim(y_low, y_high)
 
     n = 2
     a = np.reshape(np.linspace(x_left, x_right, n ** 2), (n, n))
     cmap = mcolors.LinearSegmentedColormap.from_list('redToGreen', ["r", "g"], N=256)
     plotlim = (x_left, x_right, y_low, y_high)
-    plt.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.4)
+    ax.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.4)
     c = -1
     linewidth = 4
     for worker in stats_results:
@@ -174,34 +174,43 @@ def plot_everything(workers):
             label = mylabelization(worker)
         c += 1
 
-        acc_data = stats_results[label]["acc"]
-        acc_avg = np.mean(acc_data) / 100.0
-        acc_std = np.std(acc_data) / 100.0
+        acc_data = [ d / 100.0 for d in stats_results[label]["acc"] ]
+        acc_avg = np.mean(acc_data)
+        acc_std = np.std(acc_data)
 
-        mem_data = stats_results[worker]["mem"]
-        mem_avg = np.mean(mem_data) / 800000.0
-        mem_std = np.std(mem_data) / 800000.0
+        mem_data = [ d /1000000.0 for d in  stats_results[worker]["mem"] ]
+        mem_avg = np.mean(mem_data)
+        mem_std = np.std(mem_data)
 
-        if acc_avg > 0.1:
-            linestyles = "solid"
-            if "-100ch" in worker:
-                linestyles = "dashed"
-            elif "-10ch" in worker:
-                linestyles = "dotted"
-            color = list_of_colors[c % len(list_of_colors)]
-            if "RAD" in mylabelization(worker):
-                color = "tab:red"
-            elif "baseline" in mylabelization(worker):
-                color = "tab:blue"
+        linestyles = "solid"
+        if "-100ch" in worker:
+            pass
+        elif "-10ch" in worker:
+            linestyles = "dotted"
+        color = list_of_colors[c % len(list_of_colors)]
+        if "RAD" in mylabelization(worker):
+            color = "tab:red"
+        elif "baseline" in mylabelization(worker):
+            color = "tab:blue"
+
+        if len(acc_data) > 1:
+            ell = Ellipse(xy=(acc_avg, mem_avg), width=2 * acc_std, height=2 * mem_std, label=label)
+            ax.add_artist(ell)
+            ell.set_clip_box(ax.bbox)
+            ell.set_alpha(0.5)
+            ell.set_facecolor(color)
+        else:
             size = 100
-            plt.scatter([acc_avg], [mem_avg], label=label, color=color, s = size)
+            ax.scatter(acc_data, mem_data, label=label, color=color, s = size)
+
+
 
     plt.xlabel("Test accuracy")
     plt.ylabel("Scaled memory")
     plt.grid()
     ax.set_aspect(abs((x_right - x_left) / (y_low - y_high)) * ratio)
 
-    plt.legend(loc='center right', bbox_to_anchor=(1.0, 0.7), prop={'size': 8})
+    plt.legend(loc=1,  prop={'size': 8})
     plt.savefig('plots/stats_resultsCIFAR.png')
     plt.close()
 
@@ -230,7 +239,7 @@ print(pre_workers)
 workers = []
 
 
-nb_curves = 1
+nb_curves = 5
 for j in range(len(pre_workers)):
     pre_worker = pre_workers[j]
     for i in range(nb_curves):

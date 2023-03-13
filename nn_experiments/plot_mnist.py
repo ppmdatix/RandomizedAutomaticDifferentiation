@@ -5,6 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from IPython.display import display
 import matplotlib.colors as mcolors
+from matplotlib.patches import Ellipse
+
 
 
 EXP_ROOT = './mnistexperiments'
@@ -176,18 +178,18 @@ def plot_everything(workers):
 
     fig, ax = plt.subplots()
     ratio = 0.7
-    x_left, x_right = 0.972, 0.982
-    y_low, y_high = 0.72, 0.83
+    x_left, x_right = 0.975, 0.982
+    y_low, y_high = 0.74, 0.83
 
-    plt.xlim(x_left, x_right)
-    plt.ylim(y_low, y_high)
+    ax.set_xlim(x_left, x_right)
+    ax.set_ylim(y_low, y_high)
 
     # fig.figure(figsize=(10, 10))
     n = 2
     a = np.reshape(np.linspace(x_left, x_right, n ** 2), (n, n))
     cmap = mcolors.LinearSegmentedColormap.from_list('redToGreen', ["r", "g"], N=256)
     plotlim = (x_left, x_right, y_low, y_high)
-    plt.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.4)
+    ax.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.4)
     plt.grid()
     c = -1
     linewidth = 4
@@ -224,7 +226,13 @@ def plot_everything(workers):
             elif "baseline" in mylabelization(worker):
                 color = "tab:blue"
             size = 100
-            plt.scatter([d / 100.0 for d in acc_data], [mem / 400000 for mem in mem_data], label=label, color=color, s=size)
+            # plt.scatter([d / 100.0 for d in acc_data], [mem / 400000 for mem in mem_data], label=label, color=color, s=size)
+            ell = Ellipse(xy=(acc_avg, mem_avg), width=2 * acc_std, height=2 * mem_std, label=label)
+
+            ax.add_artist(ell)
+            ell.set_clip_box(ax.bbox)
+            ell.set_alpha(0.5)
+            ell.set_facecolor(color)
 
     plt.xlabel("Test accuracy")
     plt.ylabel("Scaled memory")
@@ -252,7 +260,7 @@ removed_workers = [
     "supersub-nobatch-50",
     "",
 ]
-removed_words = ["argmean", "samemask", "argmax", "K1-100ch", "from-me", "0o5", "0o2", "0o02", "0o01", "diffsample", "rad-K"]
+removed_words = ["argmean", "samemask", "argmax", "K1-100ch", "from-me", "0o5", "0o2", "0o02", "0o01", "diffsample", "rad-K", "smallbatch"]
 for rw in removed_workers:
     if rw in pre_workers:
         pre_workers.remove(rw)
