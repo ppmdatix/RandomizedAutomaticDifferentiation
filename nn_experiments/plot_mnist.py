@@ -7,8 +7,6 @@ from IPython.display import display
 import matplotlib.colors as mcolors
 from matplotlib.patches import Ellipse
 
-
-
 EXP_ROOT = './mnistexperiments'
 
 params = {
@@ -35,8 +33,6 @@ list_of_colors.remove("tab:blue")
 list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
 
 
-
-
 def mylabelization(worker_name):
     mylabel = worker_name.replace("MemOpt", "")
     if mylabel.startswith("."):
@@ -56,7 +52,6 @@ def mylabelization(worker_name):
     return mylabel
 
 
-
 def plot_everything(workers):
     worker_dirs = [os.path.join(EXP_ROOT, f[0]) for f in workers]
     worker_names = [f[1] for f in workers]
@@ -70,10 +65,6 @@ def plot_everything(workers):
     ax = plt.subplot(511)
     plt.title('Training Loss vs Iterations for SmallFCNet on MNIST')
     ax.set_yscale('log')
-
-    #ax2 = plt.subplot(512)
-    #plt.title('Training Accuracy vs Iterations for SmallFCNet on MNIST')
-    #ax2.set_ylim((98, 100))
 
     ax3 = plt.subplot(513)
     plt.title('Test Loss vs Iterations for SmallFCNet on MNIST')
@@ -93,7 +84,6 @@ def plot_everything(workers):
 
     final_results = []
     stats_results = {w: {'acc': [], 'mem': []} for w in worker_names}
-
 
     labeled = []
     for worker, worker_name, color, marker in zip(worker_dirs, worker_names, worker_colors, worker_markers):
@@ -119,7 +109,6 @@ def plot_everything(workers):
         train_test_loss = [t[1]['loss'] for t in train_test_curve if t[0] != 'final']
         train_test_accuracy = [t[1]['accuracy'] for t in train_test_curve if t[0] != 'final']
         train_time = [t[1]['time'] for t in train_curve if t[0] != 'final']
-        train_memory = [t[1]['memory']['rss'] for t in train_curve if t[0] != 'final' and 'memory' in t[1]]
 
         acc = [t[1]['accuracy'] for t in test_curve if t[0] == 'final'][0]
         train_memory = [t[1]['memory']['rss'] for t in train_curve if 'memory' in t[1]]
@@ -127,7 +116,6 @@ def plot_everything(workers):
 
         stats_results[worker_name]["acc"].append(acc)
         stats_results[worker_name]["mem"].append(mem)
-
 
         if worker_name in labeled:
             worker_name = None
@@ -145,7 +133,6 @@ def plot_everything(workers):
             color = "tab:blue"
 
         ax.plot(train_test_iterations, train_test_loss, marker=marker, label=mylabel, c=color, ms=marker_size)
-        #ax2.plot(train_test_iterations, train_test_accuracy, marker=marker, label=worker_name, c=color, ms=marker_size)
         ax5.plot(train_iterations, train_time, marker=marker, label=mylabel, c=color, ms=marker_size, markevery=10)
 
         test_iterations = [t[0] for t in test_curve if t[0] != 'final']
@@ -178,21 +165,19 @@ def plot_everything(workers):
 
     fig, ax = plt.subplots()
     ratio = 0.7
-    x_left, x_right = 0.975, 0.982
-    y_low, y_high = 0.74, 0.83
+    y_low, y_high = 0.975, 0.982
+    x_left, x_right = 0.74, 0.83
 
     ax.set_xlim(x_left, x_right)
     ax.set_ylim(y_low, y_high)
 
-    # fig.figure(figsize=(10, 10))
     n = 2
-    a = np.reshape(np.linspace(x_left, x_right, n ** 2), (n, n))
+    a = np.reshape(np.linspace(x_right, x_left, n ** 2), (n, n))
     cmap = mcolors.LinearSegmentedColormap.from_list('redToGreen', ["r", "g"], N=256)
     plotlim = (x_left, x_right, y_low, y_high)
-    ax.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.4)
+    ax.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.3)
     plt.grid()
     c = -1
-    linewidth = 4
     for worker in stats_results:
         c += 1
         acc_data = stats_results[worker]["acc"]
@@ -204,48 +189,28 @@ def plot_everything(workers):
         mem_std = np.std(mem_data) / 400000.0
 
         if acc_avg > 0.1:
-            linestyles = "solid"
-            if "-100ch" in worker:
-                linestyles = "dashed"
-            elif "-10ch" in worker:
-                linestyles = "dotted"
-
             label = "12"
             if worker is not None:
                 label = mylabelization(worker)
-            # plt.hlines(y=mem_avg, xmin=acc_avg - acc_std,
-            #            xmax=acc_avg + acc_std, linewidth=linewidth, color=list_of_colors[c % len(list_of_colors)],
-            #            label=label,
-            #            linestyles=linestyles)
-            # plt.vlines(x=acc_avg, ymin=mem_avg - mem_std, ymax=mem_avg + mem_std,
-            #            linewidth=linewidth, color=list_of_colors[c % len(list_of_colors)],
-            #            linestyles=linestyles)
             color = list_of_colors[c % len(list_of_colors)]
             if "RAD" in mylabelization(worker):
                 color = "tab:red"
             elif "baseline" in mylabelization(worker):
                 color = "tab:blue"
-            size = 100
-            # plt.scatter([d / 100.0 for d in acc_data], [mem / 400000 for mem in mem_data], label=label, color=color, s=size)
-            ell = Ellipse(xy=(acc_avg, mem_avg), width=2 * acc_std, height=2 * mem_std, label=label)
+            ell = Ellipse(xy=(mem_avg, acc_avg), width=2 * mem_std, height=2 * acc_std, label=label)
 
             ax.add_artist(ell)
             ell.set_clip_box(ax.bbox)
             ell.set_alpha(0.5)
             ell.set_facecolor(color)
 
-    plt.xlabel("Test accuracy")
-    plt.ylabel("Scaled memory")
-
+    plt.xlabel("Scaled memory")
+    plt.ylabel("Test accuracy")
 
     ax.set_aspect(abs((x_right - x_left) / (y_low - y_high)) * ratio)
-
-    plt.legend(loc='upper left', prop={'size': 7}) # bbox_to_anchor=(-0.0 , 0)
-    plt.savefig('plots/stats_resultsMNIST.png')
+    plt.legend(loc='lower right', prop={'size': 7})
+    plt.savefig('plots/stats_resultsMNIST.pdf')
     plt.close()
-
-
-
 
 
 pre_workers = os.listdir(EXP_ROOT)

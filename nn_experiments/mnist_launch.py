@@ -15,6 +15,7 @@ import utils as rputils
 from train_and_eval import run_model
 
 import torch
+
 # import torch.utils.tensorboard as tb
 
 '''
@@ -128,9 +129,7 @@ args_template = rputils.ParameterMap(
 
     # If false, uses random projections. If true, uses sampling.
     sparse=False,
-
     supersub=False,
-    supersub_from_rad=False,
     argmean=False,
 
     repeat_ssb=10,
@@ -222,16 +221,15 @@ def main(additional_args):
     rp_args['full_random'] = args.full_random
     rp_args['sparse'] = args.sparse
     rp_args['supersub'] = args.supersub
-    rp_args['supersub_from_rad'] = args.supersub_from_rad
     rp_args['argmean'] = args.argmean
     rp_args['repeat_ssb'] = args.repeat_ssb
     rp_args['draw_ssb'] = args.draw_ssb
     rp_args['batch_size'] = args.batch_size
-
-
+    rp_args['use_cuda'] = use_cuda
 
     models = [
-        (rpmodels.MNISTFCNet(hidden_size=args.hidden_size, rp_args=rp_args, rand_relu=args.rand_relu), args.exp_name + "mnistfcnet8", args.exp_name + "mnistfcnet8"),
+        (rpmodels.MNISTFCNet(hidden_size=args.hidden_size, rp_args=rp_args, rand_relu=args.rand_relu),
+         args.exp_name + "mnistfcnet8", args.exp_name + "mnistfcnet8"),
     ]
 
     # Check if correct dataset is used for each model.
@@ -247,4 +245,3 @@ def main(additional_args):
 
 if __name__ == '__main__':
     main(sys.argv[1:])
-

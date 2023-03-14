@@ -97,7 +97,7 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
                         'model_state_dict': model.state_dict(),
                         'optimizer_state_dict': optimizer.state_dict(),
                         'loss': loss,
-                        }, os.path.join(args.inter_dir, 'iteration_{0:09}.pt'.format(iteration)))
+                    }, os.path.join(args.inter_dir, 'iteration_{0:09}.pt'.format(iteration)))
 
     test_ckpt = test(args, model, device, test_loader)
     train_test_ckpt = test(args, model, device, train_test_loader, split='Train')
@@ -122,13 +122,8 @@ def test(args, model, device, test_loader, writer=None, split='Test'):
     test_loss /= len(test_loader.dataset)
     after_test = time.time()
 
-    # print('\n{} set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-    #     split, test_loss, correct, len(test_loader.dataset),
-    #     100. * correct / len(test_loader.dataset)))
-    checkpoint = {}
-    checkpoint['loss'] = test_loss
-    checkpoint['accuracy'] = 100. * correct / len(test_loader.dataset)
-    checkpoint['time'] = after_test - before_test
+    checkpoint = {'loss': test_loss, 'accuracy': 100. * correct / len(test_loader.dataset),
+                  'time': after_test - before_test}
 
     return checkpoint
 
@@ -178,9 +173,10 @@ def run_model(model, args, device, writer, pickle_string, model_string):
     else:
         raise NotImplementedError('Invalid training schedule.')
 
-    all_checkpoints = simple_train(args, model, device, train_loader, optimizer, scheduler, test_loader, train_test_loader)
+    all_checkpoints = simple_train(args, model, device, train_loader, optimizer, scheduler, test_loader,
+                                   train_test_loader)
 
-    with open(os.path.join(args.pickle_dir,'{}.pkl'.format(pickle_string)), 'wb') as f:
+    with open(os.path.join(args.pickle_dir, '{}.pkl'.format(pickle_string)), 'wb') as f:
         pickle.dump(all_checkpoints, f)
 
     if args.save_model:

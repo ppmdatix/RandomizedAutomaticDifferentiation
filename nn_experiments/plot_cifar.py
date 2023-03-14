@@ -1,9 +1,7 @@
 import os
-import shutil
 import pickle
 import numpy as np
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
 from IPython.display import display, HTML
 import matplotlib.colors as mcolors
@@ -32,7 +30,6 @@ list_of_colors.remove("r")
 list_of_colors.remove("tab:red")
 list_of_colors.remove("b")
 list_of_colors.remove("tab:blue")
-# list_of_colors.remove("green")
 list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd', 'P', 'X']
 
 
@@ -44,7 +41,6 @@ def mylabelization(worker_name):
         worker_name = worker_name.replace("-0o1kf", "")
 
     return worker_name
-
 
 
 def plot_everything(workers):
@@ -97,11 +93,10 @@ def plot_everything(workers):
                 train_test_curve.append((iteration, s['train_test']))
             if 'test' in s:
                 test_curve.append((iteration, s['test']))
-        train_test_iterations = [t[0] for t in train_test_curve             ]# if t[0] != 'final']
-        train_iterations = [t[0] for t in train_curve                       ]# if t[0] != 'final']
-        train_test_loss = [t[1]['loss'] for t in train_test_curve           ]# if t[0] != 'final']
-        train_test_accuracy = [t[1]['accuracy'] for t in train_test_curve   ]# if t[0] != 'final']
-        train_time = [t[1]['time'] for t in train_curve                     ]# if t[0] != 'final']
+        train_test_iterations = [t[0] for t in train_test_curve             ]
+        train_iterations      = [t[0] for t in train_curve                  ]
+        train_test_loss       = [t[1]['loss'] for t in train_test_curve     ]
+        train_test_accuracy   = [t[1]['accuracy'] for t in train_test_curve ]
 
         acc = [t[1]['accuracy'] for t in test_curve if t[0] == 'final'][0]
         train_memory = [t[1]['memory']['rss'] for t in train_curve if 'memory' in t[1]]
@@ -135,12 +130,10 @@ def plot_everything(workers):
 
         ax5.plot(train_iterations, train_memory, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
 
-
         final_results.append({
             'name': lbd,
             'train_loss': train_test_loss[-1],
             'train_accuracy': train_test_accuracy[-1],
-            # 'test_loss': test_loss[-1],
             'test_accuracy': test_accuracy[-1],
         })
 
@@ -156,19 +149,18 @@ def plot_everything(workers):
 
     fig, ax = plt.subplots()
     ratio = 0.7
-    x_left, x_right = 0.665, 0.7
-    y_low, y_high = 0.6, 1.0
+    y_low, y_high = 0.665, 0.69
+    x_left, x_right = 0.6, 0.95
 
     ax.set_xlim(x_left, x_right)
     ax.set_ylim(y_low, y_high)
 
     n = 2
-    a = np.reshape(np.linspace(x_left, x_right, n ** 2), (n, n))
+    a = np.reshape(np.linspace(x_right, x_left, n ** 2), (n, n))
     cmap = mcolors.LinearSegmentedColormap.from_list('redToGreen', ["r", "g"], N=256)
     plotlim = (x_left, x_right, y_low, y_high)
-    ax.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.4)
+    ax.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.3)
     c = -1
-    linewidth = 4
     for worker in stats_results:
         if worker is not None:
             label = mylabelization(worker)
@@ -178,15 +170,10 @@ def plot_everything(workers):
         acc_avg = np.mean(acc_data)
         acc_std = np.std(acc_data)
 
-        mem_data = [ d /1000000.0 for d in  stats_results[worker]["mem"] ]
+        mem_data = [d /1000000.0 for d in  stats_results[worker]["mem"]]
         mem_avg = np.mean(mem_data)
         mem_std = np.std(mem_data)
 
-        linestyles = "solid"
-        if "-100ch" in worker:
-            pass
-        elif "-10ch" in worker:
-            linestyles = "dotted"
         color = list_of_colors[c % len(list_of_colors)]
         if "RAD" in mylabelization(worker):
             color = "tab:red"
@@ -194,27 +181,23 @@ def plot_everything(workers):
             color = "tab:blue"
 
         if len(acc_data) > 1:
-            ell = Ellipse(xy=(acc_avg, mem_avg), width=2 * acc_std, height=2 * mem_std, label=label)
+            ell = Ellipse(xy=(mem_avg, acc_avg), width=2 * mem_std, height=2 * acc_std, label=label)
             ax.add_artist(ell)
             ell.set_clip_box(ax.bbox)
             ell.set_alpha(0.5)
             ell.set_facecolor(color)
         else:
             size = 100
-            ax.scatter(acc_data, mem_data, label=label, color=color, s = size)
+            ax.scatter(mem_data, acc_data, label=label, color=color, s = size)
 
-
-
-    plt.xlabel("Test accuracy")
-    plt.ylabel("Scaled memory")
+    plt.xlabel("Scaled memory")
+    plt.ylabel("Test accuracy")
     plt.grid()
     ax.set_aspect(abs((x_right - x_left) / (y_low - y_high)) * ratio)
 
-    plt.legend(loc=1,  prop={'size': 8})
-    plt.savefig('plots/stats_resultsCIFAR.png')
+    plt.legend(loc='upper right',  prop={'size': 8})
+    plt.savefig('plots/stats_resultsCIFAR.pdf')
     plt.close()
-
-
 
 
 pre_workers = os.listdir(EXP_ROOT)
@@ -222,8 +205,7 @@ pre_workers = list(set([d[3:] for d in pre_workers]))
 pre_workers.sort()
 
 
-removed_words = []# "argmean", "samemask", "argmax", "from-me", "0o5", "0o2", "0o02", "0o01", "diffsample", "rad-K"]
-
+removed_words = []
 
 byebye = []
 for w in removed_words:
@@ -237,7 +219,6 @@ for b in byebye:
 print(pre_workers)
 
 workers = []
-
 
 nb_curves = 5
 for j in range(len(pre_workers)):

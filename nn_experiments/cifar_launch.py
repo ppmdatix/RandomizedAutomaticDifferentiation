@@ -124,7 +124,6 @@ args_template = rputils.ParameterMap(
     sparse=False,
 
     supersub=False,
-    supersub_from_rad=False,
 
     repeat_ssb=10,
 
@@ -195,7 +194,7 @@ def main(additional_args):
         print('Creating pickle directory in experiment directory.')
         os.mkdir(args.pickle_dir)
 
-    use_cuda = False # True # not args.no_cuda and torch.cuda.is_available()
+    use_cuda = not args.no_cuda and torch.cuda.is_available()
     print('Seed is {}'.format(args.seed))
     torch.manual_seed(args.seed)
     torch.backends.cudnn.deterministic = True
@@ -212,10 +211,10 @@ def main(additional_args):
     rp_args['full_random'] = args.full_random
     rp_args['sparse'] = args.sparse
     rp_args['supersub'] = args.supersub
-    rp_args['supersub_from_rad'] = args.supersub_from_rad
     rp_args['repeat_ssb'] = args.repeat_ssb
     rp_args['draw_ssb'] = args.draw_ssb
     rp_args['batch_size'] = args.batch_size
+    rp_args['use_cuda'] = use_cuda
 
 
     models = [
