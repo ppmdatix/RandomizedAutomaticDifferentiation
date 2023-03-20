@@ -162,7 +162,7 @@ class RandConv2dLayer(torch.nn.Conv2d):
     """
 
     def __init__(self, *args, keep_frac=0.5, full_random=False, sparse=False,
-                 supersub=False, repeat_ssb=10, draw_ssb=10, batch_size=150, reloadMask=None, mask=None, **kwargs):
+                 supersub=False, repeat_ssb=10, draw_ssb=10, batch_size=150, reloadMask=None, mask=None, use_cuda=False,**kwargs):
         super(RandConv2dLayer, self).__init__(*args, **kwargs)
         self.conv_params = {
             'stride': self.stride,
@@ -704,4 +704,4 @@ class RandConv2d(torch.autograd.Function):
 
         input_grad, weight_grad, bias_grad = output.grad_fn(grad_output)
 
-        return input_grad, weight_grad, bias_grad, None, None, None, None, None, None, None, ctx.mask
+        return input_grad, weight_grad, bias_grad, None, None, None, None, None, None, None, ctx.mask, None

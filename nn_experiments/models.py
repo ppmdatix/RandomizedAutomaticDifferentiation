@@ -52,7 +52,7 @@ class CIFARConvNet(torch.nn.Module):
         self.rand_relu = rand_relu
         self.dropout = rp_args['dropout']
         kept_keys = ['keep_frac', 'full_random', 'sparse', 'supersub',
-                     'repeat_ssb', 'draw_ssb', 'batch_size', 'use_cuda', 'dropout']
+                     'repeat_ssb', 'draw_ssb', 'batch_size', 'use_cuda']
         kept_dict = {key: rp_args[key] for key in kept_keys}
         if self.dropout:
             kept_dict['keep_frac'] = 1.0
@@ -69,10 +69,10 @@ class CIFARConvNet(torch.nn.Module):
         self.fc5 = rpn.RandLinear(2048, 10, **kept_dict)
 
         if self.dropout:
-            self.dropout1 = rpn.Dropout(p=rp_args['keep_frac'])
-            self.dropout2 = rpn.Dropout(p=rp_args['keep_frac'])
-            self.dropout3 = rpn.Dropout(p=rp_args['keep_frac'])
-            self.dropout4 = rpn.Dropout(p=rp_args['keep_frac'])
+            self.dropout1 = nn.Dropout(p=rp_args['keep_frac'])
+            self.dropout2 = nn.Dropout(p=rp_args['keep_frac'])
+            self.dropout3 = nn.Dropout(p=rp_args['keep_frac'])
+            self.dropout4 = nn.Dropout(p=rp_args['keep_frac'])
 
     def forward(self, x, retain=False, skip_rand=False):
         if self.rand_relu:

@@ -58,11 +58,11 @@ def simple_train(args, model, device, train_loader, optimizer, scheduler, test_l
             mem = memory_usage()
             optimizer.step()
 
-            # if iteration % args.simple_log_frequency == 0:
-            #     # Logging every 10 iterations.
-            #     print('Train Iteration: [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-            #         iteration, args.max_iterations,
-            #         100. * iteration / args.max_iterations, loss.item()))
+            if iteration % args.simple_log_frequency == 0:
+                # Logging every 10 iterations.
+                print('Train Iteration: [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+                    iteration, args.max_iterations,
+                    100. * iteration / args.max_iterations, loss.item()))
 
             if iteration % args.simple_test_eval_frequency == 0:
                 # Evaluate every 300 iterations.
