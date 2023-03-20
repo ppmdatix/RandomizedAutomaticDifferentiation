@@ -50,9 +50,12 @@ class CIFARConvNet(torch.nn.Module):
     def __init__(self, rand_relu=False, rp_args={}):
         super(CIFARConvNet, self).__init__()
         self.rand_relu = rand_relu
+        self.dropout = rp_args['dropout']
         kept_keys = ['keep_frac', 'full_random', 'sparse', 'supersub',
-                     'repeat_ssb', 'draw_ssb', 'batch_size', 'use_cuda']
+                     'repeat_ssb', 'draw_ssb', 'batch_size', 'use_cuda', 'dropout']
         kept_dict = {key: rp_args[key] for key in kept_keys}
+        if self.dropout:
+            kept_dict['keep_frac'] = 1.0
 
         self.conv1 = rpn.RandConv2dLayer(3, 16, 5, padding=2, **kept_dict)
         self.relu1 = rpn.RandReLULayer(**kept_dict)
@@ -65,6 +68,12 @@ class CIFARConvNet(torch.nn.Module):
 
         self.fc5 = rpn.RandLinear(2048, 10, **kept_dict)
 
+        if self.dropout:
+            self.dropout1 = rpn.Dropout(p=rp_args['keep_frac'])
+            self.dropout2 = rpn.Dropout(p=rp_args['keep_frac'])
+            self.dropout3 = rpn.Dropout(p=rp_args['keep_frac'])
+            self.dropout4 = rpn.Dropout(p=rp_args['keep_frac'])
+
     def forward(self, x, retain=False, skip_rand=False):
         if self.rand_relu:
             skip_relu = False
@@ -73,17 +82,25 @@ class CIFARConvNet(torch.nn.Module):
 
         x = self.conv1(x, retain=retain, skip_rand=skip_rand)
         x = self.relu1(x, skip_rand=skip_relu)
+        if self.dropout:
+            x = self.dropout1(x)
 
         x = self.conv2(x, retain=retain, skip_rand=skip_rand)
         x = self.relu2(x, skip_rand=skip_relu)
+        if self.dropout:
+            x = self.dropout2(x)
 
         x = F.avg_pool2d(x, 2)
 
         x = self.conv3(x, retain=retain, skip_rand=skip_rand)
         x = self.relu3(x, skip_rand=skip_relu)
+        if self.dropout:
+            x = self.dropout3(x)
 
         x = self.conv4(x, retain=retain, skip_rand=skip_rand)
         x = self.relu4(x, skip_rand=skip_relu)
+        if self.dropout:
+            x = self.dropout4(x)
 
         x = F.avg_pool2d(x, 2)
 

@@ -129,6 +129,8 @@ args_template = rputils.ParameterMap(
 
     draw_ssb=10,
 
+    dropout=False,
+
 
     # If true, also uses RAD on ReLU layers.
     rand_relu=False,
@@ -215,6 +217,7 @@ def main(additional_args):
     rp_args['draw_ssb'] = args.draw_ssb
     rp_args['batch_size'] = args.batch_size
     rp_args['use_cuda'] = use_cuda
+    rp_args['dropout'] = args.dropout
 
 
     models = [
