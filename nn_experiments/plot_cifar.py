@@ -67,7 +67,7 @@ def plot_everything(workers):
 
     ax4 = plt.subplot(514)
     plt.title('Test Accuracy vs Iterations for SmallConvNet on CIFAR-10')
-    ax4.set_ylim((65, 72))
+    ax4.set_ylim((66, 71))
     ax4.grid(True)
 
     ax5 = plt.subplot(515)
@@ -93,10 +93,10 @@ def plot_everything(workers):
                 train_test_curve.append((iteration, s['train_test']))
             if 'test' in s:
                 test_curve.append((iteration, s['test']))
-        train_test_iterations = [t[0] for t in train_test_curve             ]
-        train_iterations      = [t[0] for t in train_curve                  ]
-        train_test_loss       = [t[1]['loss'] for t in train_test_curve     ]
-        train_test_accuracy   = [t[1]['accuracy'] for t in train_test_curve ]
+        train_test_iterations = [t[0] for t in train_test_curve             if t[0] != 'final']
+        train_iterations      = [t[0] for t in train_curve                  if t[0] != 'final']
+        train_test_loss       = [t[1]['loss'] for t in train_test_curve     if t[0] != 'final']
+        train_test_accuracy   = [t[1]['accuracy'] for t in train_test_curve if t[0] != 'final']
 
         acc = [t[1]['accuracy'] for t in test_curve if t[0] == 'final'][0]
         train_memory = [t[1]['memory']['rss'] for t in train_curve if 'memory' in t[1]]
