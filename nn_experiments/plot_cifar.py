@@ -149,8 +149,8 @@ def plot_everything(workers):
 
     fig, ax = plt.subplots()
     ratio = 0.7
-    y_low, y_high = 0.665, 0.69
-    x_left, x_right = 0.6, 0.95
+    y_low, y_high = 0.668, 0.692
+    x_left, x_right = 0.6, 0.901
 
     ax.set_xlim(x_left, x_right)
     ax.set_ylim(y_low, y_high)
