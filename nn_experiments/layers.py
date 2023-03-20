@@ -180,6 +180,7 @@ class RandConv2dLayer(torch.nn.Conv2d):
         self.batch_size = batch_size
         self.k = 0
         self.reloadMask = reloadMask
+        self.use_cuda = use_cuda
 
     def forward(self, input, retain=False, skip_rand=False):
         """
@@ -217,7 +218,7 @@ class RandConv2dLayer(torch.nn.Conv2d):
         return RandConv2d.apply(input, self.weight, self.bias,
                                 self.conv_params, keep_frac, self.full_random, self.random_seed,
                                 self.sparse, self.supersub, self.draw_ssb,
-                                self.reloadMask, self.mask)
+                                self.reloadMask, self.mask, self.use_cuda)
 
 
 class RandReLULayer(torch.nn.ReLU):
@@ -632,7 +633,7 @@ class RandMatMul(torch.autograd.Function):
 class RandConv2d(torch.autograd.Function):
     @staticmethod
     def forward(ctx, input, weight, bias, conv_params, keep_frac, full_random, random_seed, sparse,
-                supersub, draw_ssb, reloadMask, mask):
+                supersub, draw_ssb, reloadMask, mask, use_cuda):
         ctx.input_shape = shp(input)
         ctx.batch_size = ctx.input_shape[:-1]
         ctx.keep_frac = keep_frac
@@ -704,4 +705,4 @@ class RandConv2d(torch.autograd.Function):
 
         input_grad, weight_grad, bias_grad = output.grad_fn(grad_output)
 
-        return input_grad, weight_grad, bias_grad, None, None, None, None, None, None, None, ctx.mask, None
+        return input_grad, weight_grad, bias_grad, None, None, None, None, None, None, None, None, ctx.mask, None
