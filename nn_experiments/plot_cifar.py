@@ -149,7 +149,7 @@ def plot_everything(workers):
 
     fig, ax = plt.subplots()
     ratio = 0.7
-    y_low, y_high = 0.668, 0.692
+    y_low, y_high = 0.668, 0.72
     x_left, x_right = 0.6, 0.901
 
     ax.set_xlim(x_left, x_right)
@@ -195,8 +195,48 @@ def plot_everything(workers):
     plt.grid()
     ax.set_aspect(abs((x_right - x_left) / (y_low - y_high)) * ratio)
 
-    plt.legend(loc='upper right',  prop={'size': 8})
+    plt.legend(loc='upper left',  prop={'size': 8})
     plt.savefig('plots/stats_resultsCIFAR.pdf')
+    plt.close()
+
+    #################
+    #################
+
+    fig, ax = plt.subplots()
+
+
+    data = []
+    labels = []
+    clrs = []
+    c = -1
+    for worker in stats_results:
+        if worker is not None:
+            label = mylabelization(worker)
+        c += 1
+
+        acc_data = [d / 100.0 for d in stats_results[label]["acc"]]
+
+        color = list_of_colors[c % len(list_of_colors)]
+        if "RAD" in mylabelization(worker):
+            color = "tab:red"
+        elif "baseline" in mylabelization(worker):
+            color = "tab:blue"
+
+        if len(acc_data) > 1:
+            data.append((acc_data))
+            labels.append(label)
+            clrs.append(color)
+    bplot = ax.boxplot(data, labels=labels, patch_artist=True)
+    for patch, color in zip(bplot['boxes'], clrs):
+        patch.set_facecolor(color)
+    ax.set_xticklabels(labels, fontsize=6)
+    ax.yaxis.grid(True)
+    plt.xlabel("Set ups")
+    plt.ylabel("Test accuracy")
+    fig.autofmt_xdate()
+
+    #plt.legend(loc='upper right',  prop={'size': 8})
+    plt.savefig('plots/box_plot_CIFAR.pdf')
     plt.close()
 
 

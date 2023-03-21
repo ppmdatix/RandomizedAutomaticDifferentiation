@@ -175,7 +175,7 @@ def plot_everything(workers):
     a = np.reshape(np.linspace(x_right, x_left, n ** 2), (n, n))
     cmap = mcolors.LinearSegmentedColormap.from_list('redToGreen', ["r", "g"], N=256)
     plotlim = (x_left, x_right, y_low, y_high)
-    ax.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.3)
+    ax.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.5)
     plt.grid()
     c = -1
     for worker in stats_results:
