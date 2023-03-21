@@ -1,4 +1,4 @@
-exp_name: 02-ssb-Kmax5-M1-0o1kf
+exp_name: 01-ssb-Kmax5-M5-0o1kf
 batch_size: 150
 dataset: cifar10
 test_batch_size: 1000
@@ -6,7 +6,7 @@ epochs: 200
 lr: 0.000435
 gamma: 0.6
 no_cuda: False
-seed: 38870680
+seed: 59825723
 log_interval: 10
 keep_frac: 0.1
 hidden_size: 300
@@ -38,7 +38,7 @@ bootstrap_train: True
 sparse: False
 supersub: True
 repeat_ssb: 5
-draw_ssb: 1
+draw_ssb: 5
 dropout: False
 rand_relu: False
-exp_dir: cifarexperiments/02-ssb-Kmax5-M1-0o1kf
+exp_dir: cifarexperiments/01-ssb-Kmax5-M5-0o1kf
