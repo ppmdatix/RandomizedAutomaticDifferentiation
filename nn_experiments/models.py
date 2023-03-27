@@ -14,9 +14,12 @@ class MNISTFCNet(torch.nn.Module):
     def __init__(self, hidden_size, rand_relu=False, rp_args={}):
         super(MNISTFCNet, self).__init__()
         self.rand_relu = rand_relu
+        self.dropout = rp_args['dropout']
         kept_keys = ['keep_frac', 'full_random', 'sparse', 'supersub',
                      'repeat_ssb', 'draw_ssb', 'batch_size', 'use_cuda']
         kept_dict = {key: rp_args[key] for key in kept_keys}
+        if self.dropout:
+            kept_dict['keep_frac'] = 1.0
 
         self.fc1 = rpn.RandLinear(784, hidden_size, **kept_dict)
         self.relu1 = rpn.RandReLULayer(**kept_dict)
@@ -25,6 +28,11 @@ class MNISTFCNet(torch.nn.Module):
         self.fc3 = rpn.RandLinear(hidden_size, hidden_size, **kept_dict)
         self.relu3 = rpn.RandReLULayer(**kept_dict)
         self.fc4 = rpn.RandLinear(hidden_size, 10, **kept_dict)
+
+        if self.dropout:
+            self.dropout1 = nn.Dropout(p=rp_args['keep_frac'])
+            self.dropout2 = nn.Dropout(p=rp_args['keep_frac'])
+            self.dropout3 = nn.Dropout(p=rp_args['keep_frac'])
 
     def forward(self, x, retain=False, skip_rand=False):
         if self.rand_relu:
@@ -35,10 +43,16 @@ class MNISTFCNet(torch.nn.Module):
         x = nn.Flatten()(x)
         x = self.fc1(x, retain=retain, skip_rand=skip_rand)
         x = self.relu1(x, skip_rand=skip_relu)
+        if self.dropout:
+            x = self.dropout1(x)
         x = self.fc2(x, retain=retain, skip_rand=skip_rand)
         x = self.relu2(x, skip_rand=skip_relu)
+        if self.dropout:
+            x = self.dropout2(x)
         x = self.fc3(x, retain=retain, skip_rand=skip_rand)
         x = self.relu3(x, skip_rand=skip_relu)
+        if self.dropout:
+            x = self.dropout3(x)
         x = self.fc4(x, retain=retain, skip_rand=skip_rand)
         output = F.log_softmax(x, dim=1)
         return output

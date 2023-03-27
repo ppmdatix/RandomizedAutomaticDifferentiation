@@ -67,7 +67,7 @@ def plot_everything(workers):
 
     ax4 = plt.subplot(514)
     plt.title('Test Accuracy vs Iterations for SmallConvNet on CIFAR-10')
-    ax4.set_ylim((66, 71))
+    ax4.set_ylim((60, 73.5))
     ax4.grid(True)
 
     ax5 = plt.subplot(515)
@@ -128,7 +128,9 @@ def plot_everything(workers):
         ax4.plot(test_iterations, test_accuracy, marker=marker, label=worker_name, c=color, ms=marker_size,
                  markevery=10)
 
-        ax5.plot(train_iterations, train_memory, marker=marker, label=worker_name, c=color, ms=marker_size, markevery=10)
+        ti = [train_iterations[i] for i in range(len(train_iterations)) if i % 10 == 0]
+        tm = [train_memory[i] for i in range(len(train_memory)) if i % 10 == 0]
+        ax5.plot(ti, tm, marker=marker, label=worker_name, c=color, ms=marker_size/2)#, markevery=10)
 
         final_results.append({
             'name': lbd,
@@ -149,7 +151,7 @@ def plot_everything(workers):
 
     fig, ax = plt.subplots()
     ratio = 0.7
-    y_low, y_high = 0.668, 0.72
+    y_low, y_high = 0.666, 0.725
     x_left, x_right = 0.6, 0.901
 
     ax.set_xlim(x_left, x_right)
@@ -235,7 +237,6 @@ def plot_everything(workers):
     plt.ylabel("Test accuracy")
     fig.autofmt_xdate()
 
-    #plt.legend(loc='upper right',  prop={'size': 8})
     plt.savefig('plots/box_plot_CIFAR.pdf')
     plt.close()
 
@@ -244,8 +245,7 @@ pre_workers = os.listdir(EXP_ROOT)
 pre_workers = list(set([d[3:] for d in pre_workers]))
 pre_workers.sort()
 
-
-removed_words = []
+removed_words = ["K000max1-M1-"]
 
 byebye = []
 for w in removed_words:

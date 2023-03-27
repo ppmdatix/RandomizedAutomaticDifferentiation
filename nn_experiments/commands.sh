@@ -29,21 +29,26 @@
 # python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-diffsample --simple=True --lr=0.000934 --weight_decay=1.254031e-06 --keep_frac=0.1 --bootstrap_train=True --full_random=True
 
 
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-dropout --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=False --dropout=True
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-dropout --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=False --dropout=True
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-dropout --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=False --dropout=True
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-dropout --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=False --dropout=True
+python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-dropout --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=0.1 --bootstrap_train=True --supersub=False --dropout=True
 
 
 
 
 
 
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-baselineMemOpt --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=1.0 --bootstrap_train=True --repeat_ssb=1 --draw_ssb=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-baselineMemOpt --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=1.0 --bootstrap_train=True --repeat_ssb=1 --draw_ssb=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-baselineMemOpt --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=1.0 --bootstrap_train=True --repeat_ssb=1 --draw_ssb=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-baselineMemOpt --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=1.0 --bootstrap_train=True --repeat_ssb=1 --draw_ssb=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-baselineMemOpt --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=1.0 --bootstrap_train=True --repeat_ssb=1 --draw_ssb=1
+# python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-baselineMemOpt --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=1.0 --bootstrap_train=True --repeat_ssb=1 --draw_ssb=1
+# python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-baselineMemOpt --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=1.0 --bootstrap_train=True --repeat_ssb=1 --draw_ssb=1
+# python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-baselineMemOpt --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=1.0 --bootstrap_train=True --repeat_ssb=1 --draw_ssb=1
+# python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-baselineMemOpt --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=1.0 --bootstrap_train=True --repeat_ssb=1 --draw_ssb=1
+# python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-baselineMemOpt --simple=True --lr=0.000527 --weight_decay=1.009799e-03 --keep_frac=1.0 --bootstrap_train=True --repeat_ssb=1 --draw_ssb=1
 
 
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-smallbatchMemOpt --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20 --bootstrap_train=True --keep_frac=1.0 --repeat_ssb=1 --draw_ssb=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-smallbatchMemOpt --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20 --bootstrap_train=True --keep_frac=1.0 --repeat_ssb=1 --draw_ssb=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-smallbatchMemOpt --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20 --bootstrap_train=True --keep_frac=1.0 --repeat_ssb=1 --draw_ssb=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-smallbatchMemOpt --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20 --bootstrap_train=True --keep_frac=1.0 --repeat_ssb=1 --draw_ssb=1
-python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-smallbatchMemOpt --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20 --bootstrap_train=True --keep_frac=1.0 --repeat_ssb=1 --draw_ssb=1
+# python mnist_launch.py --exp_root=mnistexperiments --exp_name=0000-smallbatchMemOpt --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20 --bootstrap_train=True --keep_frac=1.0 --repeat_ssb=1 --draw_ssb=1
+# python mnist_launch.py --exp_root=mnistexperiments --exp_name=0001-smallbatchMemOpt --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20 --bootstrap_train=True --keep_frac=1.0 --repeat_ssb=1 --draw_ssb=1
+# python mnist_launch.py --exp_root=mnistexperiments --exp_name=0002-smallbatchMemOpt --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20 --bootstrap_train=True --keep_frac=1.0 --repeat_ssb=1 --draw_ssb=1
+# python mnist_launch.py --exp_root=mnistexperiments --exp_name=0003-smallbatchMemOpt --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20 --bootstrap_train=True --keep_frac=1.0 --repeat_ssb=1 --draw_ssb=1
+# python mnist_launch.py --exp_root=mnistexperiments --exp_name=0004-smallbatchMemOpt --simple=True --lr=0.000645 --weight_decay=5.687505e-05 --batch_size=20 --bootstrap_train=True --keep_frac=1.0 --repeat_ssb=1 --draw_ssb=1
