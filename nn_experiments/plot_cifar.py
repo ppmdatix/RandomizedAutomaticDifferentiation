@@ -10,15 +10,15 @@ from matplotlib.patches import Ellipse
 EXP_ROOT = './cifarexperiments'
 
 params = {
-    'axes.labelsize': 12,
-    'font.size': 12,
-    'legend.fontsize': 12,
-    'xtick.labelsize': 12,
-    'ytick.labelsize': 12,
-    'text.usetex': True,
-    'figure.figsize': [6, 4],
-    'text.latex.preamble': r'\usepackage{amsmath} \usepackage{amssymb}',
-}
+  'axes.labelsize': 12,
+  'font.size': 12,
+  'legend.fontsize': 12,
+  'xtick.labelsize': 12,
+  'ytick.labelsize': 12,
+  'text.usetex': True,
+  'figure.figsize': [6, 4],
+  'text.latex.preamble': r'\usepackage{amsmath} \usepackage{amssymb}',
+   }
 plt.rcParams.update(params)
 
 list_of_colors = list(mcolors.BASE_COLORS.keys())
