@@ -7,9 +7,12 @@
     <list default="true" id="26f08218-7e83-4616-a8cb-9c8aaa958cf9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nn_experiments/plot_cifar.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plot_cifar.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/plot_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plot_mnist.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nn_experiments/plots/box_plot_CIFAR.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plots/box_plot_CIFAR.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nn_experiments/plots/cifar_all_curves_full.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plots/cifar_all_curves_full.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/plots/mnist_all_curves_full.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plots/mnist_all_curves_full.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nn_experiments/plots/stats_resultsCIFAR.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plots/stats_resultsCIFAR.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nn_experiments/plots/stats_resultsMNIST.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plots/stats_resultsMNIST.pdf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,9 +72,12 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
+  }
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\PaulPeseux\RandomizedAutomaticDifferentiation\nn_experiments" />

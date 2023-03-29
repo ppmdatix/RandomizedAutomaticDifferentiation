@@ -36,7 +36,7 @@ list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', '
 def mylabelization(worker_name):
 
     worker_name = worker_name.replace("ssb-Kmax1-M1-", "RAD-")
-    worker_name = worker_name.replace("ssb-", "supersub-")
+    worker_name = worker_name.replace("ssb-", "SPAD-")
     if "-0o1kf" in worker_name:
         worker_name = worker_name.replace("-0o1kf", "")
 

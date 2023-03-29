@@ -10,15 +10,15 @@ from matplotlib.patches import Ellipse
 EXP_ROOT = './mnistexperiments'
 
 params = {
-  'axes.labelsize': 12,
-  'font.size': 12,
-  'legend.fontsize': 8,
-  'xtick.labelsize': 12,
-  'ytick.labelsize': 12,
-  'text.usetex': False,
-  'figure.figsize': [6, 4],
-  'text.latex.preamble': r'\usepackage{amsmath} \usepackage{amssymb}',
-   }
+    'axes.labelsize': 12,
+    'font.size': 12,
+    'legend.fontsize': 12,
+    'xtick.labelsize': 12,
+    'ytick.labelsize': 12,
+    'text.usetex': True,
+    'figure.figsize': [6, 4],
+    'text.latex.preamble': r'\usepackage{amsmath} \usepackage{amssymb}',
+}
 plt.rcParams.update(params)
 
 list_of_colors = list(mcolors.BASE_COLORS.keys())
@@ -35,10 +35,12 @@ list_of_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', '
 
 def mylabelization(worker_name):
     mylabel = worker_name.replace("MemOpt", "")
+    if "dropout" in mylabel:
+        return "dropout"
     if mylabel.startswith("."):
         mylabel = mylabel[24:]
     if "ssb-from-rad" in mylabel:
-        mylabel = mylabel.replace("ssb-from-rad", "supersub")
+        mylabel = mylabel.replace("ssb-from-rad", "SPAD")
         mylabel = mylabel.replace("K", "Kmax")
 
         mylabel = mylabel.replace("-1choice", "-M1")
@@ -46,7 +48,7 @@ def mylabelization(worker_name):
         mylabel = mylabel.replace("-100choice", "-M100")
         mylabel = mylabel.replace("-memOpt", "-")
         mylabel = mylabel.replace("-0o1kf", "")
-        if mylabel.endswith("supersub--Kmax1-M1"):
+        if mylabel.endswith("SPAD--Kmax1-M1"):
             mylabel = "RAD"
 
     return mylabel
@@ -165,8 +167,8 @@ def plot_everything(workers):
 
     fig, ax = plt.subplots()
     ratio = 0.7
-    y_low, y_high = 0.975, 0.982
-    x_left, x_right = 0.74, 0.83
+    y_low, y_high = 0.9755, 0.9825
+    x_left, x_right = 0.745, 0.83
 
     ax.set_xlim(x_left, x_right)
     ax.set_ylim(y_low, y_high)
@@ -250,7 +252,7 @@ for j in range(len(pre_workers)):
     for i in range(nb_curves):
         c = j % len(list_of_colors)
         m = j % len(list_of_markers)
-        if '000%i-%s' % (i, pre_worker) in os.listdir(EXP_ROOT) and "memopt" in pre_worker.lower():
+        if '000%i-%s' % (i, pre_worker) in os.listdir(EXP_ROOT) and ("memopt" in pre_worker.lower() or "dropout" in pre_worker.lower() ):
             pth = os.listdir(EXP_ROOT + '/000%i-%s' % (i, pre_worker))
             if 'pickles' in pth:
                 if len(os.listdir(EXP_ROOT + '/000%i-%s' % (i, pre_worker) + "/pickles")) > 0:
