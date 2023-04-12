@@ -10,11 +10,11 @@ from matplotlib.patches import Ellipse
 EXP_ROOT = './cifarexperiments'
 
 params = {
-  'axes.labelsize': 12,
-  'font.size': 12,
-  'legend.fontsize': 12,
-  'xtick.labelsize': 12,
-  'ytick.labelsize': 12,
+  'axes.labelsize': 20,
+  'font.size': 32,
+  'legend.fontsize': 32,
+  'xtick.labelsize': 28,
+  'ytick.labelsize': 28,
   'text.usetex': True,
   'figure.figsize': [6, 4],
   'text.latex.preamble': r'\usepackage{amsmath} \usepackage{amssymb}',
@@ -49,29 +49,34 @@ def plot_everything(workers):
     worker_colors = [f[2] for f in workers]
     worker_markers = [f[3] for f in workers]
 
-    fig = plt.figure(figsize=(10, 40))
+    ratio = 2.0
+    figsize = (11 * ratio, 9 * ratio)
+
+    fig = plt.figure(figsize=figsize)
     plt.axes(frameon=0)  # turn off frames
     plt.grid(axis='y', color='0.9', linestyle='-', linewidth=1)
 
-    ax = plt.subplot(511)
-    plt.title('Training Loss vs Iterations for SmallConvNet on CIFAR-10')
+    ax = plt.subplot(221)
+    plt.title('Training Loss vs Iterations')# for SmallConvNet on CIFAR-10')
     ax.set_yscale('log')
 
-    ax2 = plt.subplot(512)
-    plt.title('Training Accuracy vs Iterations for SmallConvNet on CIFAR-10')
-    ax2.set_ylim((70, 101))
+    #ax2 = plt.subplot(222)
+    #plt.title('Training Accuracy vs Iterations for SmallConvNet on CIFAR-10')
+    #ax2.set_ylim((70, 101))
 
-    ax3 = plt.subplot(513)
-    plt.title('Test Loss vs Iterations for SmallConvNet on CIFAR-10')
+    ax3 = plt.subplot(222)
+    plt.title('Test Loss vs Iterations')# for SmallConvNet on CIFAR-10')
     ax3.set_yscale('log')
 
-    ax4 = plt.subplot(514)
-    plt.title('Test Accuracy vs Iterations for SmallConvNet on CIFAR-10')
-    ax4.set_ylim((60, 73.5))
+    ax4 = plt.subplot(223)
+    plt.title('Test Accuracy vs Iterations')# for SmallConvNet on CIFAR-10')
+    ax4.set_ylim((64, 73.5))
     ax4.grid(True)
 
-    ax5 = plt.subplot(515)
-    plt.title('Train Memory peak vs Iterations for SmallConvNet on CIFAR-10')
+    #ax5 = plt.subplot(325)
+    #plt.title('Train Memory peak vs Iterations for SmallConvNet on CIFAR-10')
+    ax6 = plt.subplot(224)
+
 
     final_results = []
     stats_results = {mylabelization(w): {'acc': [], 'mem': []} for w in worker_names}
@@ -118,7 +123,7 @@ def plot_everything(workers):
         elif "baseline" in lbd:
             color = "tab:blue"
         ax.plot(train_test_iterations, train_test_loss, marker=marker, label=worker_name, c=color, ms=marker_size)
-        ax2.plot(train_test_iterations, train_test_accuracy, marker=marker, label=worker_name, c=color, ms=marker_size)
+        #ax2.plot(train_test_iterations, train_test_accuracy, marker=marker, label=worker_name, c=color, ms=marker_size)
 
         test_iterations = [t[0] for t in test_curve if t[0] != 'final']
         test_loss = [t[1]['loss'] for t in test_curve if t[0] != 'final']
@@ -130,7 +135,8 @@ def plot_everything(workers):
 
         ti = [train_iterations[i] for i in range(len(train_iterations)) if i % 10 == 0]
         tm = [train_memory[i] for i in range(len(train_memory)) if i % 10 == 0]
-        ax5.plot(ti, tm, marker=marker, label=worker_name, c=color, ms=marker_size/2)#, markevery=10)
+        #ax5.plot(ti, tm, marker=marker, label=worker_name, c=color, ms=marker_size/2)#, markevery=10)
+        ax6.plot([], [], marker=marker, label=worker_name, c=color, ms=marker_size)
 
         final_results.append({
             'name': lbd,
@@ -140,19 +146,40 @@ def plot_everything(workers):
         })
 
     display(pd.DataFrame(final_results))
-    ax.legend()
-    ax2.legend()
-    ax3.legend()
-    ax4.legend()
-    ax5.legend()
+    #ax.legend()
+    #ax2.legend()
+    #ax3.legend()
+    #ax4.legend()
+    #ax5.legend()
+    ax6.axis("off")
+    ax6.legend(loc="center")
 
     fig.savefig('plots/cifar_all_curves_full.pdf')
     plt.close()
 
+    params = {
+        'axes.labelsize': 12,
+        'font.size': 12,
+        'legend.fontsize': 12,
+        'xtick.labelsize': 12,
+        'ytick.labelsize': 12,
+        'text.usetex': True,
+        'figure.figsize': [6, 4],
+        'text.latex.preamble': r'\usepackage{amsmath} \usepackage{amssymb}',
+    }
+    plt.rcParams.update(params)
+
     fig, ax = plt.subplots()
     ratio = 0.7
+
+    mem_max = 0
+    for worker in stats_results:
+        mem_max = max(np.max(stats_results[worker]["mem"]), mem_max)
+
+
+
     y_low, y_high = 0.666, 0.725
-    x_left, x_right = 0.6, 0.901
+    x_left, x_right = 0.6, 1.01
 
     ax.set_xlim(x_left, x_right)
     ax.set_ylim(y_low, y_high)
@@ -161,18 +188,18 @@ def plot_everything(workers):
     a = np.reshape(np.linspace(x_right, x_left, n ** 2), (n, n))
     cmap = mcolors.LinearSegmentedColormap.from_list('redToGreen', ["r", "g"], N=256)
     plotlim = (x_left, x_right, y_low, y_high)
-    ax.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.3)
+    ax.imshow(a, cmap=cmap, interpolation='gaussian', extent=plotlim, alpha=0.5)
     c = -1
     for worker in stats_results:
         if worker is not None:
             label = mylabelization(worker)
         c += 1
 
-        acc_data = [ d / 100.0 for d in stats_results[label]["acc"] ]
+        acc_data = [d / 100.0 for d in stats_results[label]["acc"]]
         acc_avg = np.mean(acc_data)
         acc_std = np.std(acc_data)
 
-        mem_data = [d /1000000.0 for d in  stats_results[worker]["mem"]]
+        mem_data = [d /mem_max for d in  stats_results[worker]["mem"]]
         mem_avg = np.mean(mem_data)
         mem_std = np.std(mem_data)
 
@@ -190,7 +217,7 @@ def plot_everything(workers):
             ell.set_facecolor(color)
         else:
             size = 100
-            ax.scatter(mem_data, acc_data, label=label, color=color, s = size)
+            ax.scatter(mem_data, acc_data, label=label, color=color, s=size)
 
     plt.xlabel("Scaled memory")
     plt.ylabel("Test accuracy")
@@ -245,7 +272,7 @@ pre_workers = os.listdir(EXP_ROOT)
 pre_workers = list(set([d[3:] for d in pre_workers]))
 pre_workers.sort()
 
-removed_words = ["K000max1-M1-"]
+removed_words = ["K000max1-M1-", "-Kmax1-M5", "-Kmax1-10", "-Kmax100-M1", "Kmax5-M1"]
 
 byebye = []
 for w in removed_words:

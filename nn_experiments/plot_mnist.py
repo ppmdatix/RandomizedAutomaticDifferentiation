@@ -10,15 +10,15 @@ from matplotlib.patches import Ellipse
 EXP_ROOT = './mnistexperiments'
 
 params = {
-    'axes.labelsize': 12,
-    'font.size': 12,
-    'legend.fontsize': 12,
-    'xtick.labelsize': 12,
-    'ytick.labelsize': 12,
-    'text.usetex': True,
-    'figure.figsize': [6, 4],
-    'text.latex.preamble': r'\usepackage{amsmath} \usepackage{amssymb}',
-}
+  'axes.labelsize': 20,
+  'font.size': 20,
+  'legend.fontsize': 21,
+  'xtick.labelsize': 20,
+  'ytick.labelsize': 20,
+  'text.usetex': True,
+  'figure.figsize': [6, 4],
+  'text.latex.preamble': r'\usepackage{amsmath} \usepackage{amssymb}',
+   }
 plt.rcParams.update(params)
 
 list_of_colors = list(mcolors.BASE_COLORS.keys())
@@ -60,29 +60,34 @@ def plot_everything(workers):
     worker_colors = [f[2] for f in workers]
     worker_markers = [f[3] for f in workers]
 
-    fig = plt.figure(figsize=(10,40))
+    ratio = 2.0
+    figsize = (10 * ratio, 10 * ratio)
+    fig = plt.figure(figsize=figsize)
     plt.axes(frameon=0) # turn off frames
     plt.grid(axis='y', color='0.9', linestyle='-', linewidth=1)
 
-    ax = plt.subplot(511)
+    ax = plt.subplot(321)
     plt.title('Training Loss vs Iterations for SmallFCNet on MNIST')
     ax.set_yscale('log')
 
-    ax3 = plt.subplot(513)
+    ax3 = plt.subplot(322)
     plt.title('Test Loss vs Iterations for SmallFCNet on MNIST')
     ax3.set_yscale('log')
 
-    ax4 = plt.subplot(514)
+    ax4 = plt.subplot(323)
     plt.title('Test Accuracy vs Iterations for SmallFCNet on MNIST')
     ax4.set_ylim((96, 98.5))
     ax4.grid(True)
 
-    ax5 = plt.subplot(512)
+    ax5 = plt.subplot(324)
     plt.title('Training time vs Iterations for SmallFCNet on MNIST')
 
-    ax6 = plt.subplot(515)
-
+    ax6 = plt.subplot(325)
     plt.title('Memory time vs Iterations for SmallFCNet on MNIST')
+
+    ax2 = plt.subplot(326)
+
+
 
     final_results = []
     stats_results = {w: {'acc': [], 'mem': []} for w in worker_names}
@@ -146,7 +151,7 @@ def plot_everything(workers):
 
         if len(train_memory) > 0:
             ax6.plot(train_iterations, train_memory, marker=marker, label=mylabel, c=color, ms=marker_size, markevery=10)
-
+        ax2.plot([],[], marker=marker, label=mylabel, c=color, ms=marker_size)
         final_results.append({
             'name': mylabel,
             'train_loss': train_test_loss[-1],
@@ -156,19 +161,34 @@ def plot_everything(workers):
         })
 
     display(pd.DataFrame(final_results))
-    ax.legend()
-    ax5.legend()
-    ax3.legend()
-    ax4.legend()
-    ax6.legend()
+    ax2.axis("off")
+    ax2.legend(loc="center")
 
     fig.savefig('plots/mnist_all_curves_full.pdf')
     plt.close()
 
+    params = {
+        'axes.labelsize': 12,
+        'font.size': 12,
+        'legend.fontsize': 12,
+        'xtick.labelsize': 12,
+        'ytick.labelsize': 12,
+        'text.usetex': True,
+        'figure.figsize': [6, 4],
+        'text.latex.preamble': r'\usepackage{amsmath} \usepackage{amssymb}',
+    }
+    plt.rcParams.update(params)
     fig, ax = plt.subplots()
     ratio = 0.7
+
+
+    mem_max = 0
+    for worker in stats_results:
+        mem_max = max(np.max(stats_results[worker]["mem"]), mem_max)
+
+
     y_low, y_high = 0.9755, 0.9825
-    x_left, x_right = 0.745, 0.83
+    x_left, x_right = 0.9, 1.01
 
     ax.set_xlim(x_left, x_right)
     ax.set_ylim(y_low, y_high)
@@ -187,8 +207,8 @@ def plot_everything(workers):
         acc_std = np.std(acc_data) / 100.0
 
         mem_data = stats_results[worker]["mem"]
-        mem_avg = np.mean(mem_data) / 400000.0
-        mem_std = np.std(mem_data) / 400000.0
+        mem_avg = np.mean(mem_data) / mem_max
+        mem_std = np.std(mem_data) /  mem_max
 
         if acc_avg > 0.1:
             label = "12"
