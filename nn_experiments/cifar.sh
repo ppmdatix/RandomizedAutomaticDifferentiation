@@ -44,5 +44,6 @@
 # python cifar_launch.py  --exp_root=cifarexperiments --exp_name=02-dropout --simple=True --lr=0.000435 --weight_decay=5.485464e-05 --keep_frac=0.1  --supersub=False --dropout=True
 
 
-python cifar_launch.py  --exp_root=cifarexperiments --exp_name=01-ssb-Kmax1-M1-0o1kf --simple=True --lr=0.000435 --weight_decay=5.485464e-05 --keep_frac=0.1   --repeat_ssb=1   --draw_ssb=1 --supersub=True
-python cifar_launch.py  --exp_root=cifarexperiments --exp_name=02-ssb-Kmax1-M1-0o1kf --simple=True --lr=0.000435 --weight_decay=5.485464e-05 --keep_frac=0.1   --repeat_ssb=1   --draw_ssb=1 --supersub=True
+python cifar_launch.py  --exp_root=cifarexperiments --exp_name=01-ssb-Kmax1000-M10-0o1kf --simple=True --lr=0.000435 --weight_decay=5.485464e-05 --keep_frac=0.1   --repeat_ssb=1000   --draw_ssb=10 --supersub=True
+python cifar_launch.py  --exp_root=cifarexperiments --exp_name=02-ssb-Kmax1000-M10-0o1kf --simple=True --lr=0.000435 --weight_decay=5.485464e-05 --keep_frac=0.1   --repeat_ssb=1000   --draw_ssb=10 --supersub=True
+python cifar_launch.py  --exp_root=cifarexperiments --exp_name=03-ssb-Kmax1000-M10-0o1kf --simple=True --lr=0.000435 --weight_decay=5.485464e-05 --keep_frac=0.1   --repeat_ssb=1000   --draw_ssb=10 --supersub=True
