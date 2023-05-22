@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="26f08218-7e83-4616-a8cb-9c8aaa958cf9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/cifar.sh" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/cifar.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn_experiments/plots/box_plot_CIFAR.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/nn_experiments/plots/box_plot_CIFAR.pdf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
